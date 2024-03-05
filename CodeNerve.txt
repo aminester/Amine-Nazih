@@ -3,7 +3,7 @@
 Hey there! My name is "<span id="k">Amine Nazih</span>". <!-- sjkfhskjf -->
 
 I'm a second year computer science student at <span id="a">Northeastern University</span> pursuing a concentration in Artificial Intelligence.<!-- laglaglaglaglaglaglaglaglaglaglaglag -->
-<p>Check out my <a href="https://drive.google.com/file/d/1wyQ7-ffPY14viGvQAWOfSEXWHlKl-iPZ/view?usp=sharing"><span id="c">resume</span></a>.
+<p>Check out my <a href="https://drive.google.com/file/d/1Ws62popNqtemfUZwbCsyVrCxmqoBYy8r/view?usp=sharing"><span id="c">resume</span></a>.
 <p>
 I am interested in full-stack web development, machine learning, and software engineering. I am currently looking for an internship for Summer 2024 and Fall/Winter 2024.</p> <!-- ksjdokhdfgdufdfkjhfkjahdfkjhafkjhakf -->
 <p> Here are some skills, frameworks, and languages I am proficient in.
@@ -31,7 +31,7 @@ I am interested in full-stack web development, machine learning, and software en
  <br><a href="https://pedestra.pages.dev"><span id="k">Pedestra</span></a>:
  <br> Full stack development of Pedestra website using Next.js for back end processes, and Vanilla JS, HTML, and CSS for the front end.
  <br> The website is designed with a responsive user interface compatible with mobile and desktop browsers.
- <br> Pedestra is focused on promoting livable and walkable urban design principles in the United States.
+ <br> Pedestra is focused on promoting livable and walkable urban design principles in the United States, generating an average monthly traffic of 3.6k visits.
  <br> Visit the website <a href="https://pedestra.pages.dev"><span id="c">here</span></a>.
  <br>
  <br><a href="https://github.com/aminester/distroGPT/"><span id="k">DistroGPT</span></a>:
