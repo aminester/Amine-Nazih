@@ -2,10 +2,12 @@
 <span id="a">amine@nazih</span>:<span id="b">~</span><span id="c">$</span> cat <!-- kjsdfhkjdhsfkjdshfkj -->personalwebsite.txt<br/><br/>
 Hey there! My name is "<span id="k">Amine Nazih</span>". <!-- sjkfhskjf -->
 
+Want a modern interface? <a href="gui.html"><span id="c">Switch to GUI version</span></a>. Also, hit ESC to fast-forward.
+
 I'm a rising senior computer science student at <span id="a">Northeastern University</span> pursuing a concentration in Artificial Intelligence.<!-- laglaglaglaglaglaglaglaglaglaglaglag -->
-<p>Check out my <a href="https://drive.google.com/file/d/1vUwsBh_QGVAtvUGqKpfNNN0ONYrxruLc/view?usp=sharing"><span id="c">resume</span></a>.
+<p>Check out my <a href="https://drive.google.com/file/d/19HEk77BZhkbU4vvRHmWVqe8yWGuUW5Ol/view?usp=sharing"><span id="c">resume</span></a>.
 <p>
-I am interested in full-stack web development, machine learning, and software engineering. I am currently looking for an internship for Fall 2025.</p> <!-- ksjdokhdfgdufdfkjhfkjahdfkjhafkjhakf -->
+I am interested in full-stack web development, machine learning, and software engineering. I am currently looking for an new grad role for Spring 2026.</p> <!-- ksjdokhdfgdufdfkjhfkjahdfkjhafkjhakf -->
 <p> Here are some skills, frameworks, and languages I am proficient in.
 <br><span id="a">Languages:</span> "Python", "JavaScript", "Java", "Perl", "SQL", "TypeScript", "PHP", "C#", "Bash", "R", "Swift"
 <br><span id="a">Frameworks:</span> "Vanilla JS", "Next.js", "React", "Angular", "Node.js", ".NET", "Flask", "Django", "HTML5", "CSS", "Pandas", "NumPy", "Matplotlib", "Tensorflow", "PyTorch", "D3.js", "Gherkin"
@@ -38,6 +40,11 @@ I am interested in full-stack web development, machine learning, and software en
 <br> Determined how different exploration strategies impact the learning process and the performance of the robot using <span id="b">stable-baselines</span> and <span id="b">PyBullet</span>.
 
  <br><br><br>Check out my personal projects!
+ <br>
+ <br><a href="#"><span id="k">Bronify</span></a>:
+ <br> A LeBron James–themed media streaming app that went viral with 7.8M+ page views in 48 hours.
+ <br> The project was publicly recognized by <a href="https://youtube.com/shorts/M8K1MSFHVv0?si=ne39KSSsgtDEVxu2"><span id="c">LeBron James himself</span></a> and <a href="https://www.tiktok.com/@primbyontwitch/video/7484759589095820575"><span id="c">LaVar Ball</span></a>.
+ <br> Built with Next.js, React, and TypeScript, utilizing Cloudflare R2 for efficient media storage and delivery.
  <br>
  <br><a href="https://pedestra.pages.dev"><span id="k">Pedestra</span></a>:
  <br> Full stack development of Pedestra website using Next.js for back end processes, and Vanilla JS, HTML, and CSS for the front end.
