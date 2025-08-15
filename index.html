@@ -2117,33 +2117,42 @@
                 this.currentChannel = 0;
                 this.isChangingChannel = false;
                 this.isPlaying = false;
-                // TV channels
-                this.channels = [
-                    { id: 1, type: 'video', src: 'https://i.imgur.com/VFwWAkP.mp4', title: 'FMAB', poster: 'images/album/immunity.png' },
-                    { id: 2, type: 'video', src: 'https://i.imgur.com/7a6iTIs.mp4', title: 'Cowboy Bebop', poster: 'images/album/igor.png' },
-                    { id: 3, type: 'video', src: 'https://i.imgur.com/C1sSdnE.mp4', title: 'Gachiakuta', poster: 'images/bronify.jpg' },
-                    { id: 4, type: 'video', src: 'https://i.imgur.com/XJj61LA.mp4', title: 'Gurren Lagann', poster: 'images/album/gkmc.png' },
-                    { id: 5, type: 'video', src: 'https://i.imgur.com/i7V5tHO.mp4', title: 'Son Heung Min', poster: 'images/one-piece.png' },
-                    { id: 6, type: 'video', src: 'https://i.imgur.com/fsIxOx8.mp4', title: 'Kobe', poster: 'images/bronify.jpg' },
-                    { id: 7, type: 'video', src: 'https://i.imgur.com/EZkhOzX.mp4', title: 'Motivation', poster: 'images/album/heaven knows.png' },
-                    { id: 8, type: 'video', src: 'https://i.imgur.com/CbW87rJ.mp4', title: 'Russ and KD', poster: 'images/bronify.jpg' },
-                    { id: 9, type: 'video', src: 'https://i.imgur.com/OoI33FV.mp4', title: 'Steph Zelda', poster: 'images/album/get up.png' },
-                    { id: 10, type: 'video', src: 'https://i.imgur.com/YmvP04q.mp4', title: 'Super Bronio', poster: 'images/bronify.jpg' },
-                    { id: 11, type: 'video', src: 'https://i.imgur.com/DiOpQzh.mp4', title: "Can't the future just wait", poster: 'images/album/igor.png' },
-                    { id: 12, type: 'video', src: 'https://i.imgur.com/qspcpYq.mp4', title: 'Kyrie and Bron', poster: 'images/bronify.jpg' },
-                    { id: 13, type: 'video', src: 'https://i.imgur.com/j1rIEVI.mp4', title: 'Curry Mindset', poster: 'images/album/gkmc.png' },
-                    { id: 14, type: 'video', src: 'https://i.imgur.com/aGOPZww.mp4', title: 'Kyrie ETA', poster: 'images/album/immunity.png' },
-                    { id: 15, type: 'video', src: 'https://i.imgur.com/tV8bAAY.mp4', title: 'Dame back to Portland', poster: 'images/album/igor.png' },
-                    { id: 16, type: 'video', src: 'https://i.imgur.com/9NJv548.mp4', title: 'Worst Generation', poster: 'images/one-piece.png' },
-                    { id: 17, type: 'video', src: 'https://i.imgur.com/wzmb6MT.mp4', title: 'Chris Paul back to Clippers', poster: 'images/bronify.jpg' },
-                    { id: 18, type: 'video', src: 'https://i.imgur.com/3kFGZ4L.mp4', title: 'Cowboy Bebop LeBron edit', poster: 'images/bronify.jpg' },
-                    { id: 19, type: 'video', src: 'https://i.imgur.com/DWdF62M.mp4', title: 'Blocked by James', poster: 'images/bronify.jpg' },
-                    { id: 20, type: 'video', src: 'https://i.imgur.com/QWimJz6.mp4', title: 'WTHellyburton??', poster: 'images/bronify.jpg' },
-                    { id: 21, type: 'video', src: 'https://i.imgur.com/vALPjxJ.mp4', title: 'Bronny Boy', poster: 'images/bronify.jpg' },
-                    { id: 22, type: 'video', src: 'https://i.imgur.com/zNUYbEm.mp4', title: 'Poole Party', poster: 'images/bronify.jpg' },
-                    { id: 23, type: 'video', src: 'https://i.imgur.com/4Liuh4x.mp4', title: '4 Yonkos of the NBA', poster: 'images/one-piece.png' },
-                    { id: 24, type: 'audio', src: 'https://stream.zeno.fm/f130a5e3v18uv', title: 'Shop Radio - Lofi', poster: 'images/album/igor.png' },
-                ];
+                // TV channels (reordered + sprinkled)
+this.channels = [
+  { id: 1,  type: 'video', src: 'https://i.imgur.com/VFwWAkP.mp4', title: 'FMAB', poster: 'images/album/immunity.png' },
+  { id: 2,  type: 'video', src: 'https://i.imgur.com/7a6iTIs.mp4', title: 'Cowboy Bebop', poster: 'images/album/igor.png' },
+
+  { id: 3,  type: 'video', src: 'https://i.imgur.com/C1sSdnE.mp4', title: 'Gachiakuta', poster: 'images/bronify.jpg' },
+  { id: 4,  type: 'video', src: 'https://i.imgur.com/IIOMs3I.mp4', title: 'Blue Locked In', poster: 'images/one-piece.png' },           // NEW
+  { id: 5,  type: 'video', src: 'https://i.imgur.com/XJj61LA.mp4', title: 'Gurren Lagann', poster: 'images/album/gkmc.png' },
+  { id: 6,  type: 'video', src: 'https://i.imgur.com/i7V5tHO.mp4', title: 'Son Heung Min', poster: 'images/one-piece.png' },
+  { id: 7,  type: 'video', src: 'https://i.imgur.com/5Gzz1dm.mp4', title: 'Mewtwo', poster: 'images/album/immunity.png' },                // NEW
+  { id: 8,  type: 'video', src: 'https://i.imgur.com/fsIxOx8.mp4', title: 'Kobe', poster: 'images/bronify.jpg' },
+  { id: 9,  type: 'video', src: 'https://i.imgur.com/EZkhOzX.mp4', title: 'Motivation', poster: 'images/album/heaven knows.png' },
+  { id:10,  type: 'video', src: 'https://i.imgur.com/CbW87rJ.mp4', title: 'Russ and KD', poster: 'images/bronify.jpg' },
+  { id:11,  type: 'video', src: 'https://i.imgur.com/OoI33FV.mp4', title: 'Steph Zelda', poster: 'images/album/get up.png' },
+  { id:12,  type: 'video', src: 'https://i.imgur.com/3bnn1to.mp4', title: 'LeRussian Roulette', poster: 'images/bronify.jpg' },          // NEW
+  { id:13,  type: 'video', src: 'https://i.imgur.com/YmvP04q.mp4', title: 'Super Bronio', poster: 'images/bronify.jpg' },
+  { id:14,  type: 'video', src: 'https://i.imgur.com/DiOpQzh.mp4', title: "Can't the future just wait", poster: 'images/album/igor.png' },
+  { id:15,  type: 'video', src: 'https://i.imgur.com/qspcpYq.mp4', title: 'Kyrie and Bron', poster: 'images/bronify.jpg' },
+  { id:16,  type: 'video', src: 'https://i.imgur.com/j1rIEVI.mp4', title: 'Curry Mindset', poster: 'images/album/gkmc.png' },
+  { id:17,  type: 'video', src: 'https://i.imgur.com/0hXDk8x.mp4', title: 'Ego in my DNA', poster: 'images/album/gkmc.png' },            // NEW
+  { id:18,  type: 'video', src: 'https://i.imgur.com/aGOPZww.mp4', title: 'Kyrie ETA', poster: 'images/album/immunity.png' },
+  { id:19,  type: 'video', src: 'https://i.imgur.com/tV8bAAY.mp4', title: 'Dame back to Portland', poster: 'images/album/igor.png' },
+  { id:20,  type: 'video', src: 'https://i.imgur.com/9NJv548.mp4', title: 'Worst Generation', poster: 'images/one-piece.png' },
+  { id:21,  type: 'video', src: 'https://i.imgur.com/wzmb6MT.mp4', title: 'Chris Paul back to Clippers', poster: 'images/bronify.jpg' },
+  { id:22,  type: 'video', src: 'https://i.imgur.com/3kFGZ4L.mp4', title: 'Cowboy Bebop LeBron edit', poster: 'images/bronify.jpg' },
+  { id:23,  type: 'video', src: 'https://i.imgur.com/UF37eJl.mp4', title: 'Let it Happen — Blue Lock', poster: 'images/one-piece.png' }, // NEW
+  { id:24,  type: 'video', src: 'https://i.imgur.com/DWdF62M.mp4', title: 'Blocked by James', poster: 'images/bronify.jpg' },
+  { id:25,  type: 'video', src: 'https://i.imgur.com/QWimJz6.mp4', title: 'WTHellyburton??', poster: 'images/bronify.jpg' },
+  { id:26,  type: 'video', src: 'https://i.imgur.com/7n6rLvM.mp4', title: 'Russ into the Night', poster: 'images/album/igor.png' },      // NEW
+  { id:27,  type: 'video', src: 'https://i.imgur.com/vALPjxJ.mp4', title: 'Bronny Boy', poster: 'images/bronify.jpg' },
+  { id:28,  type: 'video', src: 'https://i.imgur.com/zNUYbEm.mp4', title: 'Poole Party', poster: 'images/bronify.jpg' },
+  { id:29,  type: 'video', src: 'https://i.imgur.com/4Liuh4x.mp4', title: '4 Yonkos of the NBA', poster: 'images/one-piece.png' },
+
+  { id:30,  type: 'audio', src: 'https://stream.zeno.fm/f130a5e3v18uv', title: 'Shop Radio - Lofi', poster: 'images/album/igor.png' }
+];
+
                 if (this.video && this.staticCanvas && this.prevBtn && this.nextBtn) {
                     this.init();
                 }
