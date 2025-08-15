@@ -1,14 +1,2245 @@
-<html>
+<!DOCTYPE html>
+<html lang="en">
 <head>
-  <title>Amine Nazih</title>
-  <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.4.2/jquery.min.js"></script>
-  <link rel="stylesheet" type="text/css" href="index.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amine's Record Shop</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=Inter:wght@300;400;500;600&family=Space+Mono&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --wood-dark: #3d2a1f;
+            --wood-medium: #5D4E37;
+            --wood-light: #8B7355;
+            --vinyl-black: #1a1a1a;
+            --label-tan: #F3DEBA;
+            --shelf-green: #675D50;
+            --accent-sage: #ABC4AA;
+            --text-cream: #F4E4C1;
+            --gold: #DBB25E;
+            --gold-dark: #836930;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            min-height: 100vh;
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgb(61, 42, 28) 0%, 
+                rgb(45, 31, 20) 30%,
+                rgb(93, 78, 55) 80%,
+                rgb(61, 42, 28) 100%);
+            color: var(--text-cream);
+        }
+        
+        /* Rich wood grain texture overlay */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.6;
+            background-image: 
+                repeating-linear-gradient(90deg, 
+                    transparent, 
+                    transparent 5px,
+                    rgba(0,0,0,0.05) 5px, 
+                    rgba(0,0,0,0.1) 10px),
+                repeating-linear-gradient(0deg, 
+                    transparent, 
+                    transparent 200px,
+                    rgba(139, 115, 85, 0.1) 200px,
+                    rgba(139, 115, 85, 0.1) 201px),
+                radial-gradient(ellipse at top right, rgba(0,0,0,0.2) 10%, transparent 40%),
+                radial-gradient(ellipse at bottom left, rgba(0,0,0,0.3) 10%, transparent 40%),
+                linear-gradient(75deg, transparent 40%, rgba(0,0,0,0.2) 50%, transparent 60%);
+            mix-blend-mode: multiply;
+        }
+        
+        /* Additional wood texture */
+        body::after {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+            opacity: 0.3;
+            background: repeating-linear-gradient(
+                to bottom, 
+                transparent, 
+                transparent 0.2em,
+                rgba(0,0,0,0.11) 0.3em,
+                transparent 0.5em
+            );
+        }
+        
+        .container {
+            position: relative;
+            z-index: 2;
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        /* Store header */
+        .store-header {
+            text-align: center;
+            padding: 3rem 0 4rem;
+            position: relative;
+        }
+        
+        .store-sign {
+            display: inline-block;
+            background: linear-gradient(to bottom, 
+                var(--gold) 5%, 
+                #DBB25E 20%,
+                #907335 60%, 
+                var(--gold-dark) 80%);
+            padding: 1.5rem 3rem;
+            border-radius: 4px;
+            transform: rotate(-1deg);
+            box-shadow: 
+                inset 0 2px 4px rgba(255,255,255,0.2),
+                4px 4px 0 var(--wood-dark),
+                8px 8px 20px rgba(0,0,0,0.5);
+            margin-bottom: 2rem;
+            border: 2px solid var(--wood-dark);
+            position: relative;
+        }
+        
+        .store-sign::before {
+            content: '';
+            position: absolute;
+            top: -10px;
+            left: 20%;
+            width: 60%;
+            height: 10px;
+            background: radial-gradient(circle, rgba(0,0,0,0.3) 20%, transparent 40%);
+        }
+        
+        .store-name {
+            font-family: 'DM Serif Display', serif;
+            font-size: 3rem;
+            color: var(--wood-dark);
+            letter-spacing: 0.02em;
+            margin: 0;
+            text-shadow: 
+                1px 1px 0 rgba(255,255,255,0.3),
+                2px 2px 4px rgba(0,0,0,0.3);
+        }
+        
+        .tagline {
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--text-cream);
+            margin-top: 1.5rem;
+            letter-spacing: 0.05em;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .contact-row {
+            display: flex;
+            gap: 2rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+            font-size: 0.9rem;
+        }
+        
+        .contact-row a {
+            color: var(--label-tan);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-family: 'Space Mono', monospace;
+            padding: 0.5rem 1rem;
+            background: rgba(0,0,0,0.3);
+            border-radius: 20px;
+            border: 1px solid transparent;
+        }
+        
+        .contact-row a:hover {
+            background: rgba(171, 196, 170, 0.2);
+            border-color: var(--accent-sage);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+        }
+        
+        /* Section headers */
+        .section-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 2rem;
+            color: var(--text-cream);
+            margin: 3rem 0 2rem;
+            display: flex;
+            align-items: center;
+            text-shadow: 3px 3px 6px rgba(0,0,0,0.5);
+        }
+        
+        .section-title::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            margin-left: 1rem;
+            background: linear-gradient(90deg, 
+                var(--gold-dark) 0%, 
+                var(--gold) 50%, 
+                transparent 100%);
+        }
+        
+        /* Matcha cup loader */
+        .matcha-loader {
+            width: 28px;
+            height: 64px;
+            position: relative;
+            margin-left: 1rem;
+            transform: scale(0.8);
+        }
+        
+        .matcha-loader:after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            padding: 3px 5px;
+            border-top: 1px solid #bbb6aa;
+            border-bottom: 4px solid #bbb6aa;
+            background:
+                linear-gradient(#7FB069 0 0) bottom no-repeat content-box,
+                #e4e0d7;
+            mix-blend-mode: darken;
+            animation: drink 1.5s infinite linear;
+        }
+        
+        .matcha-loader:before {
+            content: "";
+            position: absolute;
+            inset: -18px calc(50% - 2px) 8px;
+            background: #5D8C49;
+            transform-origin: bottom;
+            transform: rotate(8deg);
+        }
+        
+        @keyframes drink {
+            0% {
+                background-size: 100% 100%;
+            }
+            100% {
+                background-size: 100% 5%;
+            }
+        }
+        
+        /* Realistic wooden shelf */
+        .shelf-unit {
+            background: linear-gradient(155deg, 
+                rgb(61, 42, 28) 15%,
+                rgb(45, 31, 20) 50%,
+                rgb(77, 53, 36) 100%);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 3rem;
+            position: relative;
+            box-shadow: 
+                inset 0 2px 10px rgba(0,0,0,0.5),
+                inset 0 -2px 10px rgba(0,0,0,0.3),
+                0 10px 30px rgba(0,0,0,0.4);
+        }
+        
+        /* Wood grain pattern on shelf */
+        .shelf-unit::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: 8px;
+            opacity: 0.4;
+            background: 
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 3px,
+                    rgba(0,0,0,0.1) 3px,
+                    rgba(0,0,0,0.1) 6px),
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 0.2em,
+                    rgba(0,0,0,0.15) 0.2em,
+                    rgba(0,0,0,0.15) 0.3em);
+            pointer-events: none;
+        }
+        
+        .records-container {
+            display: flex;
+            gap: 2.5rem;
+            padding: 1rem 1rem 3rem; /* Added more bottom padding */
+            overflow-x: auto;
+            position: relative;
+            z-index: 2;
+        }
+        
+        .records-container::-webkit-scrollbar {
+            height: 10px;
+        }
+        
+        .records-container::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.3);
+            border-radius: 5px;
+        }
+        
+        .records-container::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 5px;
+        }
+        
+        /* Vinyl record with realistic styling */
+        .vinyl-wrapper {
+            width: 200px;
+            height: 200px;
+            background: var(--accent-sage);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 5px 5px 0 0 var(--shelf-green);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 70px; /* Increased space for hover info */
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .vinyl-wrapper:hover {
+            transform: translateY(-10px) rotate(2deg);
+            box-shadow: 8px 8px 15px rgba(0,0,0,0.5);
+        }
+        
+        .vinyl-disc {
+            width: 170px;
+            height: 170px;
+            position: relative;
+            animation: spin 4s linear infinite paused;
+        }
+        
+        .vinyl-wrapper:hover .vinyl-disc {
+            animation-play-state: running;
+        }
+        
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .vinyl-black {
+            width: 100%;
+            height: 100%;
+            background: var(--vinyl-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                inset 0 0 30px rgba(0,0,0,0.8),
+                0 0 20px rgba(0,0,0,0.5);
+        }
+        
+        /* Vinyl grooves */
+        .vinyl-black::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: repeating-radial-gradient(
+                circle at center,
+                transparent 0,
+                transparent 3px,
+                rgba(255,255,255,0.02) 3px,
+                rgba(255,255,255,0.02) 4px
+            );
+        }
+        
+        /* Glossy shine effect */
+        .vinyl-black::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                transparent 40%,
+                rgba(255,255,255,0.1) 50%,
+                transparent 60%
+            );
+        }
+        
+        .vinyl-border {
+            width: 130px;
+            height: 130px;
+            border-radius: 50%;
+            border-top: 3px solid var(--label-tan);
+            border-bottom: 3px solid var(--label-tan);
+            border-left: 3px solid var(--shelf-green);
+            border-right: 3px solid var(--shelf-green);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .vinyl-label {
+            width: 85px;
+            height: 85px;
+            background: var(--label-tan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                inset 0 0 10px rgba(0,0,0,0.2),
+                0 0 5px rgba(0,0,0,0.3);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .vinyl-center {
+            width: 25px;
+            height: 25px;
+            background: var(--shelf-green);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5);
+        }
+        
+        .vinyl-text {
+            position: absolute;
+            width: auto;
+            text-align: center;
+            font-family: 'Space Mono', monospace;
+            font-size: 0.65rem;
+            color: var(--text-cream);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            background: rgba(0,0,0,0.7);
+            padding: 3px 6px;
+            border-radius: 3px;
+            left: 50%;
+            bottom: 8px;
+            transform: translateX(-50%);
+            max-width: 70px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        /* Tonearm */
+        .tonearm {
+            position: absolute;
+            bottom: 10px;
+            right: 10px;
+            width: fit-content;
+            transform: rotate(-45deg);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        
+        .vinyl-wrapper:hover .tonearm {
+            opacity: 1;
+        }
+        
+        .tonearm-base {
+            width: 25px;
+            height: 25px;
+            background: var(--label-tan);
+            border-radius: 50%;
+            position: relative;
+        }
+        
+        .tonearm-stick {
+            width: 10px;
+            height: 55px;
+            background: var(--label-tan);
+            position: absolute;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        
+        /* Album info below vinyl */
+        .album-info {
+            position: absolute;
+            bottom: -50px; /* Adjusted to give more space */
+            left: 0;
+            right: 0;
+            text-align: center;
+            padding: 0.5rem;
+            background: rgba(0,0,0,0.7);
+            border-radius: 0 0 12px 12px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+        
+        .vinyl-wrapper:hover .album-info {
+            opacity: 1;
+        }
+        
+        .album-title {
+            font-family: 'DM Serif Display', serif;
+            font-size: 0.9rem;
+            color: var(--text-cream);
+            margin-bottom: 0.2rem;
+        }
+        
+        .album-role {
+            font-size: 0.7rem;
+            color: var(--accent-sage);
+            font-family: 'Space Mono', monospace;
+        }
+        
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(29, 20, 14, 0.95);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            backdrop-filter: blur(10px);
+        }
+        
+        .modal-overlay.active {
+            display: flex;
+            animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        .modal-overlay.closing {
+            animation: fadeOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes fadeIn {
+            from { 
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+            to { 
+                opacity: 1;
+                backdrop-filter: blur(10px);
+            }
+        }
+        
+        @keyframes fadeOut {
+            from { 
+                opacity: 1;
+                backdrop-filter: blur(10px);
+            }
+            to { 
+                opacity: 0;
+                backdrop-filter: blur(0px);
+            }
+        }
+        
+        .modal-content {
+            background: linear-gradient(135deg, 
+                rgb(77, 53, 36) 0%, 
+                rgb(61, 42, 28) 100%);
+            border-radius: 12px;
+            width: 90%;
+            max-width: 900px;
+            max-height: 85vh;
+            display: flex;
+            overflow: hidden;
+            box-shadow: 
+                0 20px 60px rgba(0,0,0,0.5),
+                inset 0 2px 4px rgba(255,255,255,0.1);
+            border: 2px solid var(--gold-dark);
+            animation: modalSlideIn 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+            transform-origin: center;
+        }
+        
+        @keyframes modalSlideIn {
+            from {
+                transform: scale(0.8) translateY(50px);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+        }
+        
+        .modal-overlay.closing .modal-content {
+            animation: modalSlideOut 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        
+        @keyframes modalSlideOut {
+            from {
+                transform: scale(1) translateY(0);
+                opacity: 1;
+            }
+            to {
+                transform: scale(0.9) translateY(20px);
+                opacity: 0;
+            }
+        }
+        
+        .modal-vinyl-side {
+            width: 320px;
+            background: linear-gradient(135deg, 
+                var(--wood-medium) 0%, 
+                var(--wood-dark) 100%);
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            box-shadow: inset -2px 0 10px rgba(0,0,0,0.3);
+            position: relative;
+        }
+        
+        /* Spinning vinyl container */
+        .modal-vinyl-disc {
+            width: 250px;
+            height: 250px;
+            position: relative;
+            animation: spinModal 3s linear infinite;
+        }
+        
+        @keyframes spinModal {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        
+        .modal-vinyl-black {
+            width: 100%;
+            height: 100%;
+            background: var(--vinyl-black);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                inset 0 0 40px rgba(0,0,0,0.8),
+                0 0 30px rgba(0,0,0,0.5);
+        }
+        
+        /* Vinyl grooves for modal */
+        .modal-vinyl-black::before {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: repeating-radial-gradient(
+                circle at center,
+                transparent 0,
+                transparent 4px,
+                rgba(255,255,255,0.03) 4px,
+                rgba(255,255,255,0.03) 5px
+            );
+        }
+        
+        /* Glossy shine effect */
+        .modal-vinyl-black::after {
+            content: '';
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(
+                135deg,
+                transparent 40%,
+                rgba(255,255,255,0.15) 50%,
+                transparent 60%
+            );
+        }
+        
+        .modal-vinyl-label {
+            width: 120px;
+            height: 120px;
+            background: var(--label-tan);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            box-shadow: 
+                inset 0 0 15px rgba(0,0,0,0.3),
+                0 0 10px rgba(0,0,0,0.4);
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .modal-vinyl-center {
+            width: 35px;
+            height: 35px;
+            background: var(--shelf-green);
+            border-radius: 50%;
+            position: absolute;
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6);
+        }
+        
+        .modal-info {
+            flex: 1;
+            padding: 2rem;
+            overflow-y: auto;
+            background: rgba(0,0,0,0.2);
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .modal-info::-webkit-scrollbar {
+            width: 8px;
+        }
+        
+        .modal-info::-webkit-scrollbar-track {
+            background: rgba(0,0,0,0.2);
+            border-radius: 4px;
+        }
+        
+        .modal-info::-webkit-scrollbar-thumb {
+            background: var(--gold-dark);
+            border-radius: 4px;
+        }
+        
+        .modal-info h2 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--text-cream);
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .modal-info h3 {
+            color: var(--accent-sage);
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 0.5rem;
+        }
+        
+        .modal-info .period {
+            color: var(--gold);
+            font-size: 0.9rem;
+            margin-bottom: 1.5rem;
+            font-family: 'Space Mono', monospace;
+        }
+        
+        .modal-info ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        
+        .modal-info li {
+            position: relative;
+            padding: 0.75rem;
+            padding-left: 2.5rem;
+            margin-bottom: 0.75rem;
+            line-height: 1.5;
+            color: var(--label-tan);
+            background: rgba(219, 178, 94, 0.05);
+            border-radius: 8px;
+            border-left: 3px solid var(--gold);
+            transition: all 0.3s ease;
+            font-size: 0.95rem;
+        }
+        
+        .modal-info li:hover {
+            background: rgba(219, 178, 94, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .modal-info li::before {
+            content: '◈';
+            position: absolute;
+            left: 1rem;
+            color: var(--gold);
+            font-size: 0.8rem;
+        }
+        
+        /* Music specific modal styles */
+        .modal-tracklist {
+            margin-top: 1rem;
+        }
+        
+        .modal-tracklist h4 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--text-cream);
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .track-item {
+            display: flex;
+            align-items: center;
+            padding: 0.5rem 1rem;
+            margin-bottom: 0.5rem;
+            background: rgba(171, 196, 170, 0.05);
+            border-radius: 6px;
+            color: var(--label-tan);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .track-item:hover {
+            background: rgba(171, 196, 170, 0.1);
+            transform: translateX(5px);
+        }
+        
+        .track-number {
+            width: 30px;
+            color: var(--gold);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .track-name {
+            flex: 1;
+        }
+        
+        .track-duration {
+            color: var(--accent-sage);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.85rem;
+        }
+        
+        .spotify-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.8rem 1.5rem;
+            background: #1DB954;
+            color: white;
+            text-decoration: none;
+            border-radius: 25px;
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            margin-top: 1.5rem;
+            box-shadow: 0 3px 8px rgba(29, 185, 84, 0.3);
+        }
+        
+        .spotify-btn:hover {
+            background: #1ed760;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(29, 185, 84, 0.4);
+        }
+        
+        .close-modal {
+            position: absolute;
+            top: 1.5rem;
+            right: 1.5rem;
+            width: 32px;
+            height: 32px;
+            background: var(--gold);
+            border: 2px solid var(--gold-dark);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: var(--wood-dark);
+            transition: all 0.3s ease;
+            z-index: 10;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .close-modal:hover {
+            background: var(--gold-dark);
+            color: var(--text-cream);
+            transform: rotate(90deg);
+        }
+        
+        /* Education card */
+        .edu-card {
+            background: linear-gradient(135deg, 
+                rgba(171, 196, 170, 0.1) 0%, 
+                rgba(103, 93, 80, 0.1) 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 
+                0 4px 10px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .edu-card h3 {
+            font-family: 'DM Serif Display', serif;
+            color: var(--text-cream);
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        .edu-card p {
+            color: var(--label-tan);
+            line-height: 1.6;
+        }
+        
+        /* Skills section */
+        .skills-grid {
+            display: grid;
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .skill-category {
+            background: linear-gradient(135deg, 
+                rgba(171, 196, 170, 0.1) 0%, 
+                rgba(103, 93, 80, 0.1) 100%);
+            border: 1px solid var(--gold-dark);
+            border-radius: 8px;
+            padding: 1.5rem;
+            box-shadow: 
+                0 4px 10px rgba(0,0,0,0.3),
+                inset 0 1px 0 rgba(255,255,255,0.1);
+            backdrop-filter: blur(5px);
+        }
+        
+        .skill-category h3 {
+            font-family: 'Space Mono', monospace;
+            color: var(--gold);
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            margin-bottom: 1rem;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
+        }
+        
+        .skill-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+        
+        .skill-tag {
+            background: rgba(219, 178, 94, 0.2);
+            border: 1px solid var(--gold);
+            color: var(--text-cream);
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            transition: all 0.3s ease;
+        }
+        
+        .skill-tag:hover {
+            background: var(--gold);
+            color: var(--wood-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        /* Bronify buttons */
+        .bronify-links {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .bronify-btn {
+            padding: 0.6rem 1.2rem;
+            background: linear-gradient(135deg, var(--gold) 0%, var(--gold-dark) 100%);
+            color: var(--wood-dark);
+            text-decoration: none;
+            border-radius: 25px;
+            font-size: 0.85rem;
+            font-family: 'Space Mono', monospace;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid var(--gold-dark);
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+        }
+        
+        .bronify-btn:hover {
+            background: linear-gradient(135deg, var(--gold-dark) 0%, var(--gold) 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 10px rgba(0,0,0,0.4);
+            color: var(--text-cream);
+        }
+
+        /* TV styles */
+        .tv-container { display:flex; align-items:center; justify-content:center; padding:2rem; position:relative; }
+        .tv-frame { position:relative; background:linear-gradient(135deg,rgb(93,78,55) 0%,rgb(61,42,28) 50%,rgb(45,31,20) 100%); padding:2rem; border-radius:1.5rem; box-shadow:inset 0 2px 10px rgba(0,0,0,0.5), inset 0 -2px 10px rgba(0,0,0,0.3), 0 10px 30px rgba(0,0,0,0.4); border:3px solid var(--wood-dark); }
+        .tv-wood-texture { position:absolute; inset:0; border-radius:inherit; opacity:0.4; background:repeating-linear-gradient(90deg,transparent,transparent 5px,rgba(0,0,0,0.05) 5px,rgba(0,0,0,0.1) 10px), repeating-linear-gradient(0deg,transparent,transparent 200px,rgba(139,115,85,0.1) 200px,rgba(139,115,85,0.1) 201px); pointer-events:none; mix-blend-mode:multiply; }
+        .tv-bezel { position:relative; background:linear-gradient(to bottom,rgb(45,31,20) 0%,rgb(29,20,14) 100%); padding:1rem 1rem 0 1rem; border-radius:1rem; box-shadow:inset 0 2px 8px rgba(0,0,0,0.8), inset 0 -2px 4px rgba(0,0,0,0.6); }
+        .tv-screen { position:relative; width:640px; height:480px; background:black; border-radius:0.5rem; overflow:hidden; box-shadow:inset 0 0 20px rgba(0,0,0,0.9); }
+        .tv-controls-bottom { display:flex; justify-content:center; gap:3rem; padding:1rem 0; align-items:center; }
+        .tv-sound-toggle { --color:#a5a5b0; --size:30px; display:flex; justify-content:center; align-items:center; position:relative; cursor:pointer; font-size:var(--size); user-select:none; fill:var(--color); width:var(--size); height:var(--size); }
+        .tv-sound-toggle .mute { position:absolute; animation:keyframes-fill .5s; }
+        .tv-sound-toggle .voice { position:absolute; display:none; animation:keyframes-fill .5s; }
+        .tv-sound-toggle input:checked ~ .mute { display:none; }
+        .tv-sound-toggle input:checked ~ .voice { display:block; }
+        .tv-sound-toggle input { position:absolute; opacity:0; cursor:pointer; height:0; width:0; }
+        @keyframes keyframes-fill { 0%{ transform:rotate(0deg) scale(0); opacity:0 } 50%{ transform:rotate(-10deg) scale(1.2) } }
+        .tv-btn { width:3rem; height:3rem; background:linear-gradient(135deg,rgb(139,115,85) 0%,rgb(93,78,55) 100%); border:2px solid var(--wood-dark); border-radius:50%; color:var(--text-cream); font-size:1.2rem; cursor:pointer; transition:all 0.3s ease; box-shadow:inset 0 -2px 4px rgba(0,0,0,0.5), 0 2px 4px rgba(0,0,0,0.3); }
+        .tv-btn:hover { background:linear-gradient(135deg,rgb(103,93,80) 0%,rgb(61,42,28) 100%); transform:scale(1.05); box-shadow:inset 0 -2px 6px rgba(0,0,0,0.6), 0 3px 6px rgba(0,0,0,0.4); }
+        .tv-static { position:absolute; inset:0; width:100%; height:100%; z-index:20; opacity:1; transition:opacity 0.3s ease; }
+        .tv-static.hidden { opacity:0; pointer-events:none; }
+        .tv-video { position:absolute; inset:0; width:100%; height:100%; object-fit:cover; opacity:0; transition:opacity 0.3s ease; }
+        .tv-video.active { opacity:1; }
+        .tv-audio-viz { position:absolute; inset:0; display:flex; align-items:center; justify-content:center; background:linear-gradient(135deg,rgb(61,42,28) 0%, rgb(26,26,26) 100%); opacity:0; transition:opacity 0.3s ease; }
+        .tv-audio-viz.active { opacity:1; }
+        .vinyl-spin { width:200px; height:200px; margin:0 auto 1.5rem; animation:none; }
+        .vinyl-spin.playing { animation:vinylRotate 10s linear infinite; }
+        @keyframes vinylRotate { from{ transform:rotate(0) } to{ transform:rotate(360deg) } }
+        .vinyl-disc { width:100%; height:100%; background:var(--vinyl-black); border-radius:50%; position:relative; box-shadow:inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5); }
+        .vinyl-grooves { position:absolute; inset:0; border-radius:50%; background:repeating-radial-gradient(circle at center,transparent 0,transparent 3px,rgba(255,255,255,0.02) 3px,rgba(255,255,255,0.02) 4px); }
+        .album-art { position:absolute; inset:20%; width:60%; height:60%; border-radius:50%; object-fit:cover; }
+        .audio-title { color:var(--text-cream); font-family:'DM Serif Display', serif; font-size:1.5rem; margin-bottom:1rem; text-shadow:2px 2px 4px rgba(0,0,0,0.5); }
+        .audio-bars { display:flex; justify-content:center; gap:0.5rem; }
+        .audio-bar { width:0.5rem; height:20px; background:var(--accent-sage); border-radius:0.25rem; }
+        .tv-audio-viz.active .audio-bar:nth-child(1){ animation:audioBar 0.8s ease-in-out infinite }
+        .tv-audio-viz.active .audio-bar:nth-child(2){ animation:audioBar 0.8s ease-in-out infinite 0.1s }
+        .tv-audio-viz.active .audio-bar:nth-child(3){ animation:audioBar 0.8s ease-in-out infinite 0.2s }
+        .tv-audio-viz.active .audio-bar:nth-child(4){ animation:audioBar 0.8s ease-in-out infinite 0.3s }
+        .tv-audio-viz.active .audio-bar:nth-child(5){ animation:audioBar 0.8s ease-in-out infinite 0.4s }
+        @keyframes audioBar { 0%,100%{ height:20px } 50%{ height:60px } }
+        .tv-channel-info { position:absolute; top:1rem; left:1rem; background:rgba(29,20,14,0.85); color:var(--text-cream); padding:0.5rem 1rem; border-radius:0.25rem; font-family:'Space Mono', monospace; font-size:0.9rem; opacity:0; transition:opacity 0.3s ease; border:1px solid rgba(139,115,85,0.3); }
+        .tv-channel-info.active { opacity:1; }
+        .tv-scanlines { position:absolute; inset:0; pointer-events:none; opacity:0.2; background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.1) 2px,rgba(0,0,0,0.1) 4px); animation:scanlines 8s linear infinite; }
+        @keyframes scanlines { 0%{ transform:translateY(0) } 100%{ transform:translateY(10px) } }
+        .tv-reflection { position:absolute; inset:0; background:linear-gradient(135deg,rgba(255,255,255,0.1) 0%, transparent 50%); pointer-events:none; }
+        .tv-speaker-left, .tv-speaker-right { position:absolute; top:50%; transform:translateY(-50%); display:flex; flex-direction:column; gap:0.25rem; }
+        .tv-speaker-left { left:0.5rem; }
+        .tv-speaker-right { right:0.5rem; }
+        .tv-speaker-left span, .tv-speaker-right span { width:1rem; height:0.25rem; background:var(--wood-dark); border-radius:0.125rem; opacity:0.4; }
+        .tv-power-led { position:absolute; top:1rem; right:1rem; width:0.75rem; height:0.75rem; border-radius:50%; background:rgba(139,115,85,0.5); box-shadow:inset 0 0 3px rgba(0,0,0,0.5); transition:all 0.3s ease; }
+        .tv-power-led.on { background:var(--accent-sage); box-shadow:0 0 10px var(--accent-sage); }
+        .tv-stand { position:absolute; bottom:-1rem; left:50%; transform:translateX(-50%); width:8rem; height:2rem; background:linear-gradient(to bottom, rgb(61,42,28) 0%, rgb(45,31,20) 100%); border-radius:0 0 0.5rem 0.5rem; box-shadow:0 10px 20px rgba(0,0,0,0.3); }
+        @media (max-width: 768px) { .tv-screen { width:320px; height:240px; } .tv-frame { padding:1.5rem; } .tv-btn { width:2.5rem; height:2.5rem; font-size:1rem; } .tv-controls-bottom { gap:2rem; padding:0.75rem 0; } }
+        
+        /* TV styles */
+        .tv-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            position: relative;
+        }
+        .tv-frame {
+            position: relative;
+            background: linear-gradient(135deg, 
+                rgb(93, 78, 55) 0%,
+                rgb(61, 42, 28) 50%,
+                rgb(45, 31, 20) 100%);
+            padding: 2rem;
+            border-radius: 1.5rem;
+            box-shadow: 
+                inset 0 2px 10px rgba(0,0,0,0.5),
+                inset 0 -2px 10px rgba(0,0,0,0.3),
+                0 10px 30px rgba(0,0,0,0.4);
+            border: 3px solid var(--wood-dark);
+        }
+        .tv-wood-texture {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            border-radius: inherit;
+            opacity: 0.4;
+            background: 
+                repeating-linear-gradient(90deg,
+                    transparent,
+                    transparent 5px,
+                    rgba(0,0,0,0.05) 5px,
+                    rgba(0,0,0,0.1) 10px),
+                repeating-linear-gradient(0deg,
+                    transparent,
+                    transparent 200px,
+                    rgba(139, 115, 85, 0.1) 200px,
+                    rgba(139, 115, 85, 0.1) 201px);
+            pointer-events: none;
+            mix-blend-mode: multiply;
+        }
+        .tv-bezel {
+            position: relative;
+            background: linear-gradient(to bottom, 
+                rgb(45, 31, 20) 0%,
+                rgb(29, 20, 14) 100%);
+            padding: 1rem 1rem 0 1rem;
+            border-radius: 1rem;
+            box-shadow: 
+                inset 0 2px 8px rgba(0,0,0,0.8),
+                inset 0 -2px 4px rgba(0,0,0,0.6);
+        }
+        .tv-screen {
+            position: relative;
+            width: 640px;
+            height: 480px;
+            background: black;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+        }
+        .tv-controls-bottom {
+            display: flex;
+            justify-content: center;
+            gap: 3rem;
+            padding: 1rem 0;
+            align-items: center;
+        }
+        .tv-btn {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, 
+                rgb(139, 115, 85) 0%,
+                rgb(93, 78, 55) 100%);
+            border: 2px solid var(--wood-dark);
+            border-radius: 50%;
+            color: var(--text-cream);
+            font-size: 1.2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: 
+                inset 0 -2px 4px rgba(0,0,0,0.5),
+                0 2px 4px rgba(0,0,0,0.3);
+        }
+        .tv-btn:hover {
+            background: linear-gradient(135deg, 
+                rgb(103, 93, 80) 0%,
+                rgb(61, 42, 28) 100%);
+            transform: scale(1.05);
+            box-shadow: 
+                inset 0 -2px 6px rgba(0,0,0,0.6),
+                0 3px 6px rgba(0,0,0,0.4);
+        }
+        .tv-btn:active {
+            transform: scale(0.95);
+            box-shadow: 
+                inset 0 2px 4px rgba(0,0,0,0.7),
+                0 1px 2px rgba(0,0,0,0.3);
+        }
+        .tv-static {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 20;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+        }
+        .tv-static.hidden { opacity: 0; pointer-events: none; }
+        .tv-video {
+            position: absolute;
+            inset: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .tv-video.active { opacity: 1; }
+        .tv-audio-viz {
+            position: absolute;
+            inset: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, 
+                rgb(61, 42, 28) 0%,
+                rgb(26, 26, 26) 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+        .tv-audio-viz.active { opacity: 1; }
+        .audio-viz-content { text-align: center; }
+        .vinyl-spin { width: 200px; height: 200px; margin: 0 auto 1.5rem; animation: none; }
+        .vinyl-spin.playing { animation: vinylRotate 10s linear infinite; }
+        @keyframes vinylRotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .vinyl-disc { width: 100%; height: 100%; background: var(--vinyl-black); border-radius: 50%; position: relative; box-shadow: inset 0 0 30px rgba(0,0,0,0.8), 0 0 20px rgba(0,0,0,0.5); }
+        .vinyl-grooves { position: absolute; inset: 0; border-radius: 50%; background: repeating-radial-gradient(circle at center, transparent 0, transparent 3px, rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 4px); }
+        .album-art { position: absolute; inset: 20%; width: 60%; height: 60%; border-radius: 50%; object-fit: cover; }
+        .audio-title { color: var(--text-cream); font-family: 'DM Serif Display', serif; font-size: 1.5rem; margin-bottom: 1rem; text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
+        .audio-bars { display: flex; justify-content: center; gap: 0.5rem; }
+        .audio-bar { width: 0.5rem; height: 20px; background: var(--accent-sage); border-radius: 0.25rem; animation: none; }
+        .tv-audio-viz.active .audio-bar:nth-child(1) { animation: audioBar 0.8s ease-in-out infinite; }
+        .tv-audio-viz.active .audio-bar:nth-child(2) { animation: audioBar 0.8s ease-in-out infinite 0.1s; }
+        .tv-audio-viz.active .audio-bar:nth-child(3) { animation: audioBar 0.8s ease-in-out infinite 0.2s; }
+        .tv-audio-viz.active .audio-bar:nth-child(4) { animation: audioBar 0.8s ease-in-out infinite 0.3s; }
+        .tv-audio-viz.active .audio-bar:nth-child(5) { animation: audioBar 0.8s ease-in-out infinite 0.4s; }
+        @keyframes audioBar { 0%, 100% { height: 20px; } 50% { height: 60px; } }
+        .tv-channel-info { position: absolute; top: 1rem; left: 1rem; background: rgba(29, 20, 14, 0.85); color: var(--text-cream); padding: 0.5rem 1rem; border-radius: 0.25rem; font-family: 'Space Mono', monospace; font-size: 0.9rem; opacity: 0; transition: opacity 0.3s ease; border: 1px solid rgba(139, 115, 85, 0.3); }
+        .tv-channel-info.active { opacity: 1; }
+        .tv-scanlines { position: absolute; inset: 0; pointer-events: none; opacity: 0.2; background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px); animation: scanlines 8s linear infinite; }
+        @keyframes scanlines { 0% { transform: translateY(0); } 100% { transform: translateY(10px); } }
+        .tv-reflection { position: absolute; inset: 0; background: linear-gradient(135deg, rgba(255,255,255,0.1) 0%, transparent 50%); pointer-events: none; }
+        .tv-speaker-left, .tv-speaker-right { position: absolute; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 0.25rem; }
+        .tv-speaker-left { left: 0.5rem; }
+        .tv-speaker-right { right: 0.5rem; }
+        .tv-speaker-left span, .tv-speaker-right span { width: 1rem; height: 0.25rem; background: var(--wood-dark); border-radius: 0.125rem; opacity: 0.4; }
+        .tv-power-led { position: absolute; top: 1rem; right: 1rem; width: 0.75rem; height: 0.75rem; border-radius: 50%; background: rgba(139, 115, 85, 0.5); box-shadow: inset 0 0 3px rgba(0,0,0,0.5); transition: all 0.3s ease; }
+        .tv-power-led.on { background: var(--accent-sage); box-shadow: 0 0 10px var(--accent-sage); }
+        .tv-stand { position: absolute; bottom: -1rem; left: 50%; transform: translateX(-50%); width: 8rem; height: 2rem; background: linear-gradient(to bottom, rgb(61, 42, 28) 0%, rgb(45, 31, 20) 100%); border-radius: 0 0 0.5rem 0.5rem; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        @media (max-width: 768px) { .tv-screen { width: 320px; height: 240px; } .tv-frame { padding: 1.5rem; } .tv-btn { width: 2.5rem; height: 2.5rem; font-size: 1rem; } .tv-controls-bottom { gap: 2rem; padding: 0.75rem 0; } }
+        
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 3rem 0 2rem;
+            color: var(--text-cream);
+            margin-top: 4rem;
+            border-top: 2px solid var(--gold-dark);
+            font-family: 'Space Mono', monospace;
+            font-size: 0.9rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .store-name {
+                font-size: 2rem;
+            }
+            
+            .modal-content {
+                flex-direction: column;
+                max-height: 90vh;
+                width: 95%;
+            }
+            
+            .modal-vinyl-side {
+                width: 100%;
+                padding: 1.5rem;
+                min-height: auto;
+            }
+            
+            .modal-vinyl-disc {
+                width: 180px;
+                height: 180px;
+            }
+            
+            .modal-vinyl-label {
+                width: 90px;
+                height: 90px;
+            }
+            
+            .modal-info {
+                padding: 1.5rem;
+            }
+            
+            .modal-info h2 {
+                font-size: 1.5rem;
+            }
+            
+            .modal-info li {
+                font-size: 0.9rem;
+                padding: 0.6rem;
+                padding-left: 2rem;
+            }
+            
+            .vinyl-wrapper {
+                width: 160px;
+                height: 160px;
+            }
+            
+            .vinyl-disc {
+                width: 140px;
+                height: 140px;
+            }
+            
+            .track-item {
+                font-size: 0.85rem;
+                padding: 0.4rem 0.8rem;
+            }
+        }
+    </style>
 </head>
 <body>
-<script type="text/javascript" src="index.js">
-</script>
-<div id="console"></div>
+    <div class="container">
+        <header class="store-header">
+            <div class="store-sign">
+                <h1 class="store-name">amine's record shop</h1>
+            </div>
+            <p class="tagline">full-stack developer × creative technologist</p>
+            <div class="contact-row">
+                <a href="mailto:nazih.a@northeastern.edu">email</a>
+                <a href="tel:617-595-1013">phone</a>
+                <a href="https://github.com/aminester" target="_blank">github</a>
+                <a href="https://aminenazih.pages.dev" target="_blank">website</a>
+            </div>
+        </header>
+        
+        <section>
+            <h2 class="section-title">
+                education
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="edu-card">
+                <h3>Northeastern University</h3>
+                <p>Khoury College of Computer Sciences, Boston, MA</p>
+                <p style="color: var(--gold); margin-top: 0.5rem;">B.S. Computer Science • Expected May 2026</p>
+                <p style="margin-top: 1rem; color: var(--accent-sage);">Honors: UPLIFT Scholar 2022, ColorStack Member</p>
+            </div>
+        </section>
+        
+        
 
-</script>
+        
+        
+        <section>
+            <h2 class="section-title">
+                experience collection
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="shelf-unit">
+                <div class="records-container" id="experience-grid">
+                    <!-- Experience records will be generated here -->
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="section-title">
+                project releases
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="shelf-unit">
+                <div class="records-container" id="projects-grid">
+                    <!-- Project records will be generated here -->
+                </div>
+            </div>
+        </section>
+        
+        <!-- Shop TV between projects and albums -->
+        <section>
+            <h2 class="section-title">
+                shop tv
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="shelf-unit" style="padding: 3rem 2rem;">
+                <p class="tagline" style="margin-bottom: 2rem; text-align: center; color: var(--accent-sage);">
+                    Take a break — vibe in the shop
+                </p>
+                <div class="tv-container">
+                    <div class="tv-frame">
+                        <div class="tv-wood-texture"></div>
+                        <div class="tv-bezel">
+                            <div class="tv-screen">
+                                <canvas id="staticCanvas" class="tv-static"></canvas>
+                                <video id="tvVideo" class="tv-video" muted loop playsinline></video>
+                                <div id="audioViz" class="tv-audio-viz">
+                                    <div class="audio-viz-content">
+                                        <div class="vinyl-spin" id="vinylSpin">
+                                            <div class="vinyl-disc">
+                                                <div class="vinyl-grooves"></div>
+                                                <img id="albumArt" class="album-art" src="" alt="" />
+                                            </div>
+                                        </div>
+                                        <h3 id="audioTitle" class="audio-title"></h3>
+                                        <div class="audio-bars">
+                                            <div class="audio-bar"></div>
+                                            <div class="audio-bar"></div>
+                                            <div class="audio-bar"></div>
+                                            <div class="audio-bar"></div>
+                                            <div class="audio-bar"></div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div id="channelInfo" class="tv-channel-info"></div>
+                                <div class="tv-scanlines"></div>
+                                <div class="tv-reflection"></div>
+                            </div>
+                            <div class="tv-controls-bottom">
+                                <button class="tv-btn" id="prevChannel">◀</button>
+                                <!-- Sound toggle control -->
+                                <label class="tv-sound-toggle" id="tvSoundToggle" title="Mute / Unmute">
+                                  <input type="checkbox" id="tvSoundCheckbox">
+                                  <svg viewBox="0 0 576 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="mute"><path d="M301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3zM425 167l55 55 55-55c9.4-9.4 24.6-9.4 33.9 0s9.4 24.6 0 33.9l-55 55 55 55c9.4 9.4 9.4 24.6 0 33.9s-24.6 9.4-33.9 0l-55-55-55 55c-9.4 9.4-24.6 9.4-33.9 0s-9.4-24.6 0-33.9l55-55-55-55c-9.4-9.4-9.4-24.6 0-33.9s24.6-9.4 33.9 0z"></path></svg>
+                                  <svg viewBox="0 0 448 512" height="1em" xmlns="http://www.w3.org/2000/svg" class="voice"><path d="M301.1 34.8C312.6 40 320 51.4 320 64V448c0 12.6-7.4 24-18.9 29.2s-25 3.1-34.4-5.3L131.8 352H64c-35.3 0-64-28.7-64-64V224c0-35.3 28.7-64 64-64h67.8L266.7 40.1c9.4-8.4 22.9-10.4 34.4-5.3zM412.6 181.5C434.1 199.1 448 225.9 448 256s-13.9 56.9-35.4 74.5c-10.3 8.4-25.4 6.8-33.8-3.5s-6.8-25.4 3.5-33.8C393.1 284.4 400 271 400 256s-6.9-28.4-17.7-37.3c-10.3-8.4-11.8-23.5-3.5-33.8s23.5-11.8 33.8-3.5z"></path></svg>
+                                </label>
+                                <button class="tv-btn" id="nextChannel">▶</button>
+                            </div>
+                        </div>
+                        <div class="tv-speaker-left"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                        <div class="tv-speaker-right"><span></span><span></span><span></span><span></span><span></span><span></span><span></span><span></span></div>
+                        <div id="powerLED" class="tv-power-led"></div>
+                    </div>
+                    <div class="tv-stand"></div>
+                </div>
+                <audio id="tvAudio"></audio>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="section-title">
+                currently spinning
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="shelf-unit">
+                <div class="records-container" id="music-grid">
+                    <!-- Music albums will be generated here -->
+                </div>
+            </div>
+        </section>
+        
+        <section>
+            <h2 class="section-title">
+                skills & technologies
+                <div class="matcha-loader"></div>
+            </h2>
+            <div class="skills-grid">
+                <div class="skill-category">
+                    <h3>Languages</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Python</span>
+                        <span class="skill-tag">JavaScript</span>
+                        <span class="skill-tag">TypeScript</span>
+                        <span class="skill-tag">Java</span>
+                        <span class="skill-tag">Kotlin</span>
+                        <span class="skill-tag">Swift</span>
+                        <span class="skill-tag">C#</span>
+                        <span class="skill-tag">SQL</span>
+                        <span class="skill-tag">PHP</span>
+                        <span class="skill-tag">Perl</span>
+                        <span class="skill-tag">Bash</span>
+                        <span class="skill-tag">R</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Frameworks</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">React</span>
+                        <span class="skill-tag">Next.js</span>
+                        <span class="skill-tag">Angular</span>
+                        <span class="skill-tag">Node.js</span>
+                        <span class="skill-tag">.NET</span>
+                        <span class="skill-tag">Flask</span>
+                        <span class="skill-tag">Django</span>
+                        <span class="skill-tag">Spring Boot</span>
+                        <span class="skill-tag">GraphQL</span>
+                        <span class="skill-tag">LangChain</span>
+                        <span class="skill-tag">TensorFlow</span>
+                        <span class="skill-tag">PyTorch</span>
+                    </div>
+                </div>
+                
+                <div class="skill-category">
+                    <h3>Tools</h3>
+                    <div class="skill-tags">
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Docker</span>
+                        <span class="skill-tag">Linux</span>
+                        <span class="skill-tag">Jupyter</span>
+                        <span class="skill-tag">Figma</span>
+                        <span class="skill-tag">Splunk</span>
+                        <span class="skill-tag">Apache/Nginx</span>
+                        <span class="skill-tag">ML/AI</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <footer>
+            <p>© 2025 amine nazih • spinning records & shipping code</p>
+        </footer>
+    </div>
+    
+    <!-- Modal -->
+    <div class="modal-overlay" id="modal">
+        <div class="modal-content">
+            <button class="close-modal" onclick="closeModal()">×</button>
+            <div class="modal-vinyl-side">
+                <div class="modal-vinyl-disc">
+                    <div class="modal-vinyl-black">
+                        <div class="modal-vinyl-label" id="modalVinylLabel">
+                            <div class="modal-vinyl-center"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-info" id="modalInfo">
+                <!-- Dynamic content -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Hidden global audio element for reliable autoplay -->
+    <audio id="globalAudio" preload="auto" style="display:none"></audio>
+    
+    <script>
+        // Experience data
+        const experiences = [
+            {
+                id: 'expedia',
+                company: 'Expedia',
+                role: 'Mobile Engineering',
+                location: 'Seattle, WA',
+                period: 'June 2025 - Present',
+                label: 'EXPEDIA',
+                // Replace with actual workplace images - can be office photos, logos, or workspace shots
+                image: 'images/Expedia_Group_logo.png', // Local image
+                details: [
+                    'Leading development of two agentic AI features for Expedia in Kotlin and Swift, cutting p99 latency from 60s+ to ~120 ms in testing',
+                    'Building production-ready AI chat feature using GraphQL APIs and LangChain, with comprehensive testing strategy and Swift UI components'
+                ]
+            },
+            {
+                id: 'nber',
+                company: 'NBER',
+                role: 'Jr. Web Developer',
+                location: 'Cambridge, MA',
+                period: 'Jan 2025 - June 2025',
+                label: 'NBER',
+                image: 'images/nber.jpeg', // Local image
+                details: [
+                    'Modernized subscriber analytics dashboard with React, enabling real-time insights',
+                    'Built automated whitespace analyzer with Playwright & Gemini API, cutting design QA by 20 hours per sprint',
+                    'Detected spacing issues across 500+ pages daily using regression testing',
+                    'Engineered ETL pipelines and GA4 dashboards, reducing report prep time by 60%',
+                    'Created file inventory system indexing 500k+ assets via graph search',
+                    'Implemented subscription tracking, reducing support inquiries by 15%'
+                ]
+            },
+            {
+                id: 'verisk',
+                company: 'Verisk',
+                role: 'QA Engineer',
+                location: 'Boston, MA',
+                period: 'Jan 2024 - June 2024',
+                label: 'VERISK',
+                image: 'images/verisk.png', // Replace with actual Verisk office image
+                details: [
+                    'Designed and executed 10,000+ Gherkin and C# tests for Azure DevOps deployment',
+                    'Developed test scripts using Python and D3.js, improving efficiency by 30%',
+                    'Leveraged SQL to validate client investigations and patch validation failures'
+                ]
+            },
+            {
+                id: 'groundbreaking',
+                company: 'GroundBreaking',
+                role: 'Web Developer',
+                location: 'Remote',
+                period: 'May 2023 - Aug 2023',
+                label: 'GB LABS',
+                image: 'images/gb-labs.png', // Replace with actual remote work image
+                details: [
+                    'Designed front-end with HTML, CSS, and Vanilla JavaScript',
+                    'Leveraged FIGMA for animations, increased user retention by 25%',
+                    'Built Next.js backend with robust server-side logic',
+                    'Optimized performance with Node.js and SQL, reducing loading time by 30%'
+                ]
+            },
+            {
+                id: 'neu',
+                company: 'Northeastern',
+                role: 'Research Assistant',
+                location: 'Boston, MA',
+                period: 'Sep 2022 - Apr 2023',
+                label: 'NEU',
+                image: 'images/northeastern.png', // Local image
+                details: [
+                    'Deployed RL agents in PyBullet for autonomous robot navigation',
+                    'Compared epsilon-greedy, softmax, and UCB exploration strategies',
+                    'Quantified impacts on learning efficiency and performance'
+                ]
+            }
+        ];
+        
+        // Projects data  
+        const projects = [
+            {
+                id: 'bronify',
+                name: 'Bronify',
+                role: 'Creator',
+                period: 'March 2025',
+                label: 'BRONIFY',
+                image: 'images/bronify.jpg',
+                details: [
+                    'Built viral LeBron James–themed media streaming platform blending basketball culture, music, and short-form video',
+                    '7.8M+ page views in 48 hours with 75,000 peak concurrent users and 1M+ video plays',
+                    'Engineered fullstack using Next.js, React, Tailwind, and Cloudflare R2 with custom Media Session API players',
+                    'Sparked viral trend with 37.5M+ TikTok hashtag views',
+                    'Earned public recognition from LeBron James, LaVar Ball, and major sports media',
+                    'Scaled to 200% traffic surges at 99.9% uptime while reducing media storage costs by 75%'
+                ],
+                links: [
+                    { text: 'Visit Bronify', url: 'https://bronifytest.vercel.app', icon: '🌐' },
+                    { text: 'GitHub', url: 'https://github.com/aminester/bronify', icon: '💻' },
+                ]
+            },
+            {
+                id: 'pedestra',
+                name: 'Pedestra',
+                role: 'Full Stack Developer',
+                period: 'May 2023 - Feb 2025',
+                label: 'PEDESTRA',
+                image: 'images/Pedestra.png', // Add pedestra image
+                details: [
+                    'Full stack development of Pedestra website using Next.js for backend and Vanilla JS, HTML, CSS for frontend',
+                    'Platform focused on promoting livable and walkable urban design principles in the United States',
+                    'Generated average monthly traffic of 4.6k visits',
+                    'Implemented responsive design and user-friendly interface for urban planning resources'
+                ],
+                links: [
+                    { text: 'Visit Pedestra', url: 'https://pedestra.pages.dev', icon: '🚶' }
+                ]
+            },
+            {
+                id: 'gini-predictor',
+                name: 'Gini Predictor',
+                role: 'Data Scientist',
+                period: 'September 2024',
+                label: 'GINI',
+                image: 'images/gini-predictor.png', // Add gini image
+                details: [
+                    'Developed advanced tool for forecasting Gini Coefficient of multiple countries up to 2030',
+                    'Implemented robust ARIMA models using Python\'s pandas and statsmodels for time series predictions',
+                    'Built streamlined Streamlit application visualizing historical trends and future forecasts',
+                    'Utilized joblib for efficient model storage and seaborn for sophisticated data visualization',
+                    'Provides valuable insights for policymakers and researchers on global income disparities'
+                ],
+                links: [
+                    { text: 'Try Gini Forecast', url: 'https://giniforecast.streamlit.app', icon: '📊' }
+                ]
+            },
+            {
+                id: 'one-piece-fighterz',
+                name: 'One Piece FighterZ',
+                role: 'Game Developer',
+                period: 'Feb 2023 - Mar 2023',
+                label: 'OP-FZ',
+                image: 'images/one-piece.png', // Add one piece image
+                details: [
+                    'Developed 2-D fighting game using HTML and JavaScript with smooth, interactive gameplay',
+                    'Implemented responsive controls and local two-player support for enhanced engagement',
+                    'Featured One Piece characters with unique movesets and combos',
+                    'Integrated sound effects and inspired soundtrack to bring the game to life',
+                    'Marineford stage with dynamic backgrounds and effects'
+                ],
+                links: [
+                    { text: 'Play Game', url: 'https://aminester.github.io/One-Piece-FighterZ', icon: '🎮' },
+                    { text: 'GitHub', url: 'https://github.com/aminester/One-Piece-FighterZ', icon: '💻' }
+                ]
+            },
+            {
+                id: 'distrogpt',
+                name: 'distroGPT',
+                role: 'ML Engineer',
+                period: 'Jan 2023 - Mar 2023',
+                label: 'DISTRO',
+                image: 'images/distrogpt.png', // Add distro image
+                details: [
+                    'Developed fast and simple repository for training and fine-tuning GPT models',
+                    'Reproduced GPT-2 (124M) on OpenWebText with single 40GB node in ~4 days',
+                    'Implemented efficient 300-line training loop and GPT model definition',
+                    'Utilized PyTorch and GPU acceleration to optimize training performance',
+                    'Achieved 2.85 loss baseline reproduction for GPT-2 model'
+                ],
+                links: [
+                    { text: 'GitHub', url: 'https://github.com/aminester/distroGPT', icon: '🤖' }
+                ]
+            },
+            {
+                id: 'gojogpt',
+                name: 'GojoGPT',
+                role: 'AI Developer',
+                period: '2023',
+                label: 'GOJO',
+                image: 'images/gojogpt.png', // Add gojo image
+                details: [
+                    'Created Jujutsu Kaisen-themed chatbot generating character-inspired phrases',
+                    'Trained on dataset of show dialogue and trending user-generated content',
+                    'Features iconic quotes like "Nah, I\'d win" and philosophical Gojo questions',
+                    'Built interactive web interface for engaging character conversations'
+                ],
+                links: [
+                    { text: 'Chat with Gojo', url: 'https://gojogpt.pages.dev', icon: '💬' }
+                ]
+            }
+        ];
+        
+        // Music albums data with tracklists and Spotify links
+        const musicAlbums = [
+            {
+                id: 'album1',
+                name: 'good kid, m.A.A.d city',
+                artist: 'Kendrick Lamar',
+                label: 'GKMC',
+                image: 'images/album/gkmc.png',
+                spotifyUrl: 'https://open.spotify.com/album/3DGQ1iZ9XKUQxAUWjfC34w',
+                audioSample: 'audio/gkmc-sample.mp3', // Add your mp3 file
+                tracklist: [
+                    { number: 1, name: 'Sherane a.k.a Master Splinter\'s Daughter', duration: '4:33' },
+                    { number: 2, name: 'Bitch, Don\'t Kill My Vibe', duration: '5:10' },
+                    { number: 3, name: 'Backseat Freestyle', duration: '3:32' },
+                    { number: 4, name: 'The Art of Peer Pressure', duration: '5:24' },
+                    { number: 5, name: 'Money Trees (feat. Jay Rock)', duration: '6:26' },
+                    { number: 6, name: 'Poetic Justice (feat. Drake)', duration: '5:00' },
+                    { number: 7, name: 'good kid', duration: '3:34' },
+                    { number: 8, name: 'm.A.A.d city (feat. MC Eiht)', duration: '5:50' },
+                    { number: 9, name: 'Swimming Pools (Drank)', duration: '5:13' },
+                    { number: 10, name: 'Sing About Me, I\'m Dying of Thirst', duration: '12:03' }
+                ]
+            },
+            {
+                id: 'album2', 
+                name: 'IGOR',
+                artist: 'Tyler, The Creator',
+                label: 'IGOR',
+                image: 'images/album/igor.png',
+                spotifyUrl: 'https://open.spotify.com/album/5zi7WsKlIiUXv09tbGLKsE',
+                audioSample: 'audio/igor-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'IGOR\'S THEME', duration: '3:20' },
+                    { number: 2, name: 'EARFQUAKE', duration: '3:10' },
+                    { number: 3, name: 'I THINK', duration: '3:32' },
+                    { number: 4, name: 'EXACTLY WHAT YOU RUN FROM', duration: '0:14' },
+                    { number: 5, name: 'RUNNING OUT OF TIME', duration: '2:57' },
+                    { number: 6, name: 'NEW MAGIC WAND', duration: '3:15' },
+                    { number: 7, name: 'A BOY IS A GUN*', duration: '2:30' },
+                    { number: 8, name: 'PUPPET', duration: '2:59' },
+                    { number: 9, name: 'WHAT\'S GOOD', duration: '3:25' },
+                    { number: 10, name: 'GONE, GONE / THANK YOU', duration: '6:15' },
+                    { number: 11, name: 'I DON\'T LOVE YOU ANYMORE', duration: '2:41' },
+                    { number: 12, name: 'ARE WE STILL FRIENDS?', duration: '4:25' }
+                ]
+            },
+            {
+                id: 'album3',
+                name: 'Immunity',
+                artist: 'Clairo',
+                label: 'IMMUNITY',
+                image: 'images/album/immunity.png',
+                spotifyUrl: 'https://open.spotify.com/album/4SBMJ6In8AW0PzLyD5yLjP',
+                audioSample: 'audio/immunity-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'Alewife', duration: '3:59' },
+                    { number: 2, name: 'Impossible', duration: '3:51' },
+                    { number: 3, name: 'Closer To You', duration: '4:13' },
+                    { number: 4, name: 'North', duration: '3:00' },
+                    { number: 5, name: 'Bags', duration: '4:20' },
+                    { number: 6, name: 'Softly', duration: '2:16' },
+                    { number: 7, name: 'Sofia', duration: '3:07' },
+                    { number: 8, name: 'White Flag', duration: '3:34' },
+                    { number: 9, name: 'Feel Something', duration: '3:07' },
+                    { number: 10, name: 'Sinking', duration: '2:42' },
+                    { number: 11, name: 'I Wouldn\'t Ask You', duration: '3:01' }
+                ]
+            },
+            {
+                id: 'album4',
+                name: 'Die Lit',
+                artist: 'Playboi Carti',
+                label: 'DIE LIT',
+                image: 'images/album/die lit.png',
+                spotifyUrl: 'https://open.spotify.com/album/7dAm8ShwJLFm9SaJ6Yc58O',
+                audioSample: 'audio/die-lit-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'Long Time - Intro', duration: '3:31' },
+                    { number: 2, name: 'R.I.P.', duration: '3:13' },
+                    { number: 3, name: 'Lean 4 Real (feat. Skepta)', duration: '3:56' },
+                    { number: 4, name: 'Old Money', duration: '2:24' },
+                    { number: 5, name: 'Love Hurts (feat. Travis Scott)', duration: '2:28' },
+                    { number: 6, name: 'Shoota (feat. Lil Uzi Vert)', duration: '2:23' },
+                    { number: 7, name: 'Right Now (feat. Pi\'erre Bourne)', duration: '3:18' },
+                    { number: 8, name: 'Poke It Out (feat. Nicki Minaj)', duration: '4:29' },
+                    { number: 9, name: 'Home (KOD)', duration: '3:43' },
+                    { number: 10, name: 'Fell In Luv (feat. Bryson Tiller)', duration: '3:26' }
+                ]
+            },
+            {
+                id: 'album5',
+                name: 'heaven knows',
+                artist: 'PinkPantheress',
+                label: 'HEAVEN',
+                image: 'images/album/heaven knows.png',
+                spotifyUrl: 'https://open.spotify.com/album/0PIXqM5HrCR7LMVL5a8QT7',
+                audioSample: 'audio/heaven-knows-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'Another life (feat. Rema)', duration: '2:20' },
+                    { number: 2, name: 'True romance', duration: '2:07' },
+                    { number: 3, name: 'Worth it all', duration: '2:11' },
+                    { number: 4, name: 'Mosquito', duration: '2:05' },
+                    { number: 5, name: 'The aisle', duration: '1:59' },
+                    { number: 6, name: 'Nice to meet you (feat. Central Cee)', duration: '2:17' },
+                    { number: 7, name: 'Boy\'s a liar Pt. 2', duration: '2:10' },
+                    { number: 8, name: 'Internet baby (interlude)', duration: '1:31' },
+                    { number: 9, name: 'Blue', duration: '1:44' },
+                    { number: 10, name: 'Capable of love', duration: '2:36' }
+                ]
+            },
+            {
+                id: 'album6',
+                name: 'Get Up',
+                artist: 'NewJeans',
+                label: 'GET UP',
+                image: 'images/album/get up.png',
+                spotifyUrl: 'https://open.spotify.com/album/4N1fROq2oeyLGAlQ1C1j18',
+                audioSample: 'audio/get-up-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'New Jeans', duration: '1:48' },
+                    { number: 2, name: 'Super Shy', duration: '2:34' },
+                    { number: 3, name: 'ETA', duration: '2:30' },
+                    { number: 4, name: 'Cool With You', duration: '2:27' },
+                    { number: 5, name: 'Get Up', duration: '0:36' },
+                    { number: 6, name: 'ASAP', duration: '2:14' }
+                ]
+            },
+            {
+                id: 'album7',
+                name: 'My Beautiful Dark Twisted Fantasy',
+                artist: 'Kanye West',
+                label: 'MBDTF',
+                image: 'images/album/my beautiful dark twisted fantasy.png',
+                spotifyUrl: 'https://open.spotify.com/album/20r762YmB5HeofjMCiPMLv',
+                audioSample: 'audio/mbdtf-sample.mp3',
+                tracklist: [
+                    { number: 1, name: 'Dark Fantasy', duration: '4:59' },
+                    { number: 2, name: 'Gorgeous (feat. Kid Cudi)', duration: '5:57' },
+                    { number: 3, name: 'POWER', duration: '4:52' },
+                    { number: 4, name: 'All Of The Lights (Interlude)', duration: '1:02' },
+                    { number: 5, name: 'All Of The Lights', duration: '4:59' },
+                    { number: 6, name: 'Monster (feat. Jay-Z, Rick Ross, Nicki Minaj)', duration: '6:18' },
+                    { number: 7, name: 'So Appalled', duration: '6:37' },
+                    { number: 8, name: 'Devil In A New Dress', duration: '5:51' },
+                    { number: 9, name: 'Runaway (feat. Pusha T)', duration: '9:07' },
+                    { number: 10, name: 'Hell Of A Life', duration: '5:27' },
+                    { number: 11, name: 'Blame Game', duration: '7:49' },
+                    { number: 12, name: 'Lost In The World', duration: '4:16' },
+                    { number: 13, name: 'Who Will Survive In America', duration: '1:38' }
+                ]
+            }
+        ];
+        
+        // Audio management with user-gesture unlock and single global audio element
+        let audioUnlocked = false;
+        let currentAlbumId = null;
+        let modalIsOpen = false;
+        const globalAudio = () => document.getElementById('globalAudio');
+
+        function unlockAudioOnce() {
+            if (audioUnlocked) return;
+            const a = globalAudio();
+            if (!a) return;
+            // Attempt a silent play to satisfy autoplay policies
+            a.src = 'data:audio/mp3;base64,//uQZAAAAAAAAAAAAAAAAAAAA';
+            a.volume = 0; // silent
+            a.play().catch(() => {}).finally(() => {
+                a.pause();
+                a.currentTime = 0;
+                a.removeAttribute('src');
+                audioUnlocked = true;
+            });
+        }
+
+        ['pointerdown','touchstart','keydown'].forEach(evt => {
+            window.addEventListener(evt, unlockAudioOnce, { once: true, passive: true });
+        });
+
+        function playAudio(albumId) {
+            const album = musicAlbums.find(alb => alb.id === albumId);
+            if (!album || !album.audioSample) return;
+            const a = globalAudio();
+            if (!a) return;
+            
+            // Always reset and reload when switching albums or restarting
+            a.pause();
+            a.currentTime = 0;
+            a.src = album.audioSample;
+            a.loop = true;
+            a.volume = 0.3;
+            currentAlbumId = albumId;
+            
+            const tryPlay = () => a.play().catch(() => {});
+            if (audioUnlocked) {
+                tryPlay();
+            } else {
+                // Queue play on first unlock gesture
+                const queued = () => { tryPlay(); window.removeEventListener('pointerdown', queued); window.removeEventListener('touchstart', queued); window.removeEventListener('keydown', queued); };
+                window.addEventListener('pointerdown', queued, { once: true, passive: true });
+                window.addEventListener('touchstart', queued, { once: true, passive: true });
+                window.addEventListener('keydown', queued, { once: true });
+            }
+        }
+
+        function stopAudio() {
+            // Don't stop if modal is open and playing
+            if (modalIsOpen) return;
+            
+            const a = globalAudio();
+            if (!a) return;
+            a.pause();
+            a.currentTime = 0;
+            currentAlbumId = null;
+        }
+        
+        // Generate vinyl record HTML
+        function createVinyl(item, type) {
+            const vinyl = document.createElement('div');
+            vinyl.className = 'vinyl-wrapper';
+            vinyl.onclick = () => openModal(item.id, type);
+            
+            // Add hover audio for music albums
+            if (type === 'music' && item.audioSample) {
+                vinyl.addEventListener('mouseenter', () => {
+                    // Only play hover audio if modal is not open
+                    if (!modalIsOpen) {
+                        playAudio(item.id);
+                    }
+                });
+                vinyl.addEventListener('mouseleave', () => {
+                    // Only stop hover audio if modal is not open
+                    if (!modalIsOpen) {
+                        stopAudio();
+                    }
+                });
+            }
+            
+            // Set background image for the wrapper if available
+            if (item.image) {
+                vinyl.style.backgroundImage = `linear-gradient(rgba(171, 196, 170, 0.15), rgba(171, 196, 170, 0.15)), url('${item.image}')`;
+            }
+            
+            const title = item.company || item.name;
+            const subtitle = item.role || item.artist || '';
+            
+            vinyl.innerHTML = `
+                <div class="vinyl-disc">
+                    <div class="vinyl-black">
+                        <div class="vinyl-border">
+                            <div class="vinyl-label">
+                                <div class="vinyl-text">${item.label}</div>
+                                <div class="vinyl-center"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="tonearm">
+                    <div class="tonearm-stick"></div>
+                    <div class="tonearm-base"></div>
+                </div>
+                <div class="album-info">
+                    <div class="album-title">${title}</div>
+                    <div class="album-role">${subtitle}</div>
+                </div>
+            `;
+            
+            return vinyl;
+        }
+        
+        // Generate all records
+        function generateRecords() {
+            const expGrid = document.getElementById('experience-grid');
+            const projGrid = document.getElementById('projects-grid');
+            const musicGrid = document.getElementById('music-grid');
+            
+            experiences.forEach(exp => {
+                expGrid.appendChild(createVinyl(exp, 'experience'));
+            });
+            
+            projects.forEach(proj => {
+                projGrid.appendChild(createVinyl(proj, 'project'));
+            });
+            
+            musicAlbums.forEach(album => {
+                musicGrid.appendChild(createVinyl(album, 'music'));
+            });
+        }
+        
+        // Modal functions
+        function openModal(id, type) {
+            const items = type === 'experience' ? experiences : (type === 'project' ? projects : musicAlbums);
+            const item = items.find(i => i.id === id);
+            if (!item) return;
+            
+            modalIsOpen = true;
+            
+            const modal = document.getElementById('modal');
+            const modalVinylLabel = document.getElementById('modalVinylLabel');
+            const modalInfo = document.getElementById('modalInfo');
+            
+            // Set vinyl label image
+            modalVinylLabel.style.backgroundImage = item.image ? `url('${item.image}')` : 'none';
+            
+            // Play audio for music albums when modal opens
+            // Small delay to ensure audio plays after any mouseleave events
+            if (type === 'music' && item.audioSample) {
+                setTimeout(() => playAudio(item.id), 50);
+            }
+            
+            // Generate modal content based on type
+            if (type === 'music') {
+                // Music album modal with tracklist
+                const tracklistHtml = item.tracklist ? `
+                    <div class="modal-tracklist">
+                        <h4>Tracklist</h4>
+                        ${item.tracklist.map(track => `
+                            <div class="track-item">
+                                <span class="track-number">${track.number}.</span>
+                                <span class="track-name">${track.name}</span>
+                                <span class="track-duration">${track.duration}</span>
+                            </div>
+                        `).join('')}
+                    </div>
+                ` : '';
+                
+                modalInfo.innerHTML = `
+                    <h2>${item.name}</h2>
+                    <h3>${item.artist}</h3>
+                    <p class="period">${item.label}</p>
+                    ${tracklistHtml}
+                    ${item.spotifyUrl ? `
+                        <a href="${item.spotifyUrl}" target="_blank" class="spotify-btn">
+                            <span>🎵</span>
+                            <span>Listen on Spotify</span>
+                        </a>
+                    ` : ''}
+                `;
+            } else {
+                // Experience/Project modal
+            let linksHtml = '';
+            if (item.links) {
+                linksHtml = `
+                    <div class="bronify-links">
+                        ${item.links.map(link => `
+                            <a href="${link.url}" ${link.url.startsWith('http') ? 'target="_blank"' : ''} class="bronify-btn">
+                                <span>${link.icon}</span>
+                                <span>${link.text}</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                `;
+            }
+            
+            const headingHtml = `
+                <h2>${item.company || item.name}</h2>
+                ${item.role ? `<h3>${item.role}</h3>` : ''}
+                ${item.location || item.period ? `<p class="period">${item.location ? item.location + ' • ' : ''}${item.period || ''}</p>` : ''}
+            `;
+                
+            const detailsHtml = item.details && item.details.length
+                ? `<ul>${item.details.map(detail => `<li>${detail}</li>`).join('')}</ul>`
+                : '';
+
+            modalInfo.innerHTML = `
+                        ${headingHtml}
+                        ${detailsHtml}
+                        ${linksHtml}
+            `;
+            }
+            
+            modal.classList.add('active');
+            modal.classList.remove('closing');
+        }
+        
+        function closeModal() {
+            const modal = document.getElementById('modal');
+            modal.classList.add('closing');
+            
+            modalIsOpen = false;
+            
+            // Force stop audio when modal closes
+            const a = globalAudio();
+            if (a) {
+                a.pause();
+                a.currentTime = 0;
+                currentAlbumId = null;
+            }
+            
+            setTimeout(() => {
+                modal.classList.remove('active');
+                modal.classList.remove('closing');
+            }, 300);
+        }
+        
+        // Close modal on outside click
+        document.getElementById('modal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                closeModal();
+            }
+        });
+        
+        // Initialize
+        document.addEventListener('DOMContentLoaded', () => {
+            generateRecords();
+            // Ensure audio element is available early
+            globalAudio();
+        });
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // TV Component JavaScript
+        class VintageTV {
+            constructor() {
+                this.video = document.getElementById('tvVideo');
+                this.audio = document.getElementById('tvAudio');
+                this.staticCanvas = document.getElementById('staticCanvas');
+                this.audioViz = document.getElementById('audioViz');
+                this.channelInfo = document.getElementById('channelInfo');
+                this.powerLED = document.getElementById('powerLED');
+                this.vinylSpin = document.getElementById('vinylSpin');
+                this.albumArt = document.getElementById('albumArt');
+                this.audioTitle = document.getElementById('audioTitle');
+                this.prevBtn = document.getElementById('prevChannel');
+                this.nextBtn = document.getElementById('nextChannel');
+                this.soundCheckbox = document.getElementById('tvSoundCheckbox');
+                this.soundToggle = document.getElementById('tvSoundToggle');
+                // Persisted mute state
+                const savedMuted = localStorage.getItem('tvMuted');
+                this.muted = savedMuted === null ? true : savedMuted === 'true';
+                this.currentChannel = 0;
+                this.isChangingChannel = false;
+                this.isPlaying = false;
+                // TV channels
+                this.channels = [
+                    { id: 1, type: 'video', src: 'https://i.imgur.com/VFwWAkP.mp4', title: 'FMAB', poster: 'images/album/immunity.png' },
+                    { id: 2, type: 'video', src: 'https://i.imgur.com/7a6iTIs.mp4', title: 'Cowboy Bebop', poster: 'images/album/igor.png' },
+                    { id: 3, type: 'video', src: 'https://i.imgur.com/C1sSdnE.mp4', title: 'Gachiakuta', poster: 'images/bronify.jpg' },
+                    { id: 4, type: 'video', src: 'https://i.imgur.com/XJj61LA.mp4', title: 'Gurren Lagann', poster: 'images/album/gkmc.png' },
+                    { id: 5, type: 'video', src: 'https://i.imgur.com/i7V5tHO.mp4', title: 'Son Heung Min', poster: 'images/one-piece.png' },
+                    { id: 6, type: 'video', src: 'https://i.imgur.com/fsIxOx8.mp4', title: 'Kobe', poster: 'images/bronify.jpg' },
+                    { id: 7, type: 'video', src: 'https://i.imgur.com/EZkhOzX.mp4', title: 'Motivation', poster: 'images/album/heaven knows.png' },
+                    { id: 8, type: 'video', src: 'https://i.imgur.com/CbW87rJ.mp4', title: 'Russ and KD', poster: 'images/bronify.jpg' },
+                    { id: 9, type: 'video', src: 'https://i.imgur.com/OoI33FV.mp4', title: 'Steph Zelda', poster: 'images/album/get up.png' },
+                    { id: 10, type: 'video', src: 'https://i.imgur.com/YmvP04q.mp4', title: 'Super Bronio', poster: 'images/bronify.jpg' },
+                    { id: 11, type: 'video', src: 'https://i.imgur.com/DiOpQzh.mp4', title: "Can't the future just wait", poster: 'images/album/igor.png' },
+                    { id: 12, type: 'video', src: 'https://i.imgur.com/qspcpYq.mp4', title: 'Kyrie and Bron', poster: 'images/bronify.jpg' },
+                    { id: 13, type: 'video', src: 'https://i.imgur.com/j1rIEVI.mp4', title: 'Curry Mindset', poster: 'images/album/gkmc.png' },
+                    { id: 14, type: 'video', src: 'https://i.imgur.com/aGOPZww.mp4', title: 'Kyrie ETA', poster: 'images/album/immunity.png' },
+                    { id: 15, type: 'video', src: 'https://i.imgur.com/tV8bAAY.mp4', title: 'Dame back to Portland', poster: 'images/album/igor.png' },
+                    { id: 16, type: 'video', src: 'https://i.imgur.com/9NJv548.mp4', title: 'Worst Generation', poster: 'images/one-piece.png' },
+                    { id: 17, type: 'video', src: 'https://i.imgur.com/wzmb6MT.mp4', title: 'Chris Paul back to Clippers', poster: 'images/bronify.jpg' },
+                    { id: 18, type: 'video', src: 'https://i.imgur.com/3kFGZ4L.mp4', title: 'Cowboy Bebop LeBron edit', poster: 'images/bronify.jpg' },
+                    { id: 19, type: 'video', src: 'https://i.imgur.com/DWdF62M.mp4', title: 'Blocked by James', poster: 'images/bronify.jpg' },
+                    { id: 20, type: 'video', src: 'https://i.imgur.com/QWimJz6.mp4', title: 'WTHellyburton??', poster: 'images/bronify.jpg' },
+                    { id: 21, type: 'video', src: 'https://i.imgur.com/vALPjxJ.mp4', title: 'Bronny Boy', poster: 'images/bronify.jpg' },
+                    { id: 22, type: 'video', src: 'https://i.imgur.com/zNUYbEm.mp4', title: 'Poole Party', poster: 'images/bronify.jpg' },
+                    { id: 23, type: 'video', src: 'https://i.imgur.com/4Liuh4x.mp4', title: '4 Yonkos of the NBA', poster: 'images/one-piece.png' },
+                    { id: 24, type: 'audio', src: 'https://stream.zeno.fm/f130a5e3v18uv', title: 'Shop Radio - Lofi', poster: 'images/album/igor.png' },
+                ];
+                if (this.video && this.staticCanvas && this.prevBtn && this.nextBtn) {
+                    this.init();
+                }
+            }
+            init() {
+                this.staticCanvas.width = 640;
+                this.staticCanvas.height = 480;
+                this.showStatic();
+                setTimeout(() => { this.hideStatic(); this.playChannel(); }, 1200);
+                this.prevBtn.addEventListener('click', () => this.changeChannel('prev'));
+                this.nextBtn.addEventListener('click', () => this.changeChannel('next'));
+                if (this.soundCheckbox) {
+                    this.soundCheckbox.checked = !this.muted;
+                    this.soundCheckbox.addEventListener('change', () => this.toggleSound());
+                }
+                this.animateStatic();
+            }
+            animateStatic() {
+                const ctx = this.staticCanvas.getContext('2d');
+                const render = () => {
+                    if (!this.staticCanvas.classList.contains('hidden')) {
+                        const imageData = ctx.createImageData(this.staticCanvas.width, this.staticCanvas.height);
+                        const data = imageData.data;
+                        for (let i = 0; i < data.length; i += 4) {
+                            const v = Math.random() * 255;
+                            data[i] = v; data[i + 1] = v; data[i + 2] = v; data[i + 3] = 255;
+                        }
+                        ctx.putImageData(imageData, 0, 0);
+                    }
+                    requestAnimationFrame(render);
+                };
+                render();
+            }
+            showStatic() {
+                this.staticCanvas.classList.remove('hidden');
+                this.video.classList.remove('active');
+                this.audioViz.classList.remove('active');
+                this.channelInfo.classList.remove('active');
+                this.powerLED.classList.remove('on');
+            }
+            hideStatic() {
+                this.staticCanvas.classList.add('hidden');
+                this.channelInfo.classList.add('active');
+                this.powerLED.classList.add('on');
+            }
+            playChannel() {
+                const ch = this.channels[this.currentChannel];
+                if (!ch) return;
+                this.channelInfo.textContent = `CH ${this.currentChannel + 1}: ${ch.title}`;
+                if (ch.type === 'video') {
+                    this.video.src = ch.src;
+                    this.video.load();
+                    // Ensure autoplay works when channel becomes video; default muted
+                    this.video.muted = this.muted; // respect persisted state
+                    this.video.autoplay = true;
+                    this.video.play().catch(() => {});
+                    this.video.classList.add('active');
+                    this.audioViz.classList.remove('active');
+                    this.audio.pause();
+                    this.vinylSpin.classList.remove('playing');
+                } else {
+                    this.audio.src = ch.src;
+                    this.audio.load();
+                    // Autoplay audio stream when switching to audio channel
+                    this.audio.autoplay = true;
+                    this.audio.muted = this.muted; // respect persisted state
+                    this.audio.play().catch(() => {});
+                    this.audioViz.classList.add('active');
+                    this.video.classList.remove('active');
+                    this.video.pause();
+                    this.albumArt.src = ch.poster || '';
+                    this.audioTitle.textContent = ch.title || '';
+                    this.vinylSpin.classList.add('playing');
+                }
+            }
+            toggleSound() {
+                this.muted = !(this.soundCheckbox && this.soundCheckbox.checked);
+                if (this.video) this.video.muted = this.muted;
+                if (this.audio) this.audio.muted = this.muted;
+                localStorage.setItem('tvMuted', String(this.muted));
+            }
+            changeChannel(dir) {
+                if (this.isChangingChannel) return;
+                this.isChangingChannel = true;
+                this.video.pause();
+                this.audio.pause();
+                this.showStatic();
+                setTimeout(() => {
+                    this.currentChannel = dir === 'next' ? (this.currentChannel + 1) % this.channels.length : (this.currentChannel - 1 + this.channels.length) % this.channels.length;
+                    setTimeout(() => { this.hideStatic(); this.playChannel(); this.isChangingChannel = false; }, 700);
+                }, 350);
+            }
+        }
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('tvVideo')) new VintageTV();
+        });
+    </script>
 </body>
 </html>
