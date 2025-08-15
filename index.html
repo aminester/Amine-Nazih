@@ -540,6 +540,7 @@
             align-items: center;
             justify-content: center;
             backdrop-filter: blur(10px);
+            overscroll-behavior: contain; /* prevent scroll chaining to body */
         }
         
         .modal-overlay.active {
@@ -721,6 +722,8 @@
             background: rgba(0,0,0,0.2);
             display: flex;
             flex-direction: column;
+            -webkit-overflow-scrolling: touch; /* smooth scrolling on iOS */
+            overscroll-behavior: contain; /* keep scroll within modal */
         }
         
         .modal-info::-webkit-scrollbar {
@@ -2123,6 +2126,9 @@
             }
             
             modal.classList.add('active');
+            // Lock background scroll while modal is open
+            document.documentElement.style.overflow = 'hidden';
+            document.body.style.overflow = 'hidden';
             modal.classList.remove('closing');
         }
         
@@ -2143,6 +2149,9 @@
             setTimeout(() => {
                 modal.classList.remove('active');
                 modal.classList.remove('closing');
+                // Restore background scroll
+                document.documentElement.style.overflow = '';
+                document.body.style.overflow = '';
             }, 300);
         }
 
@@ -2212,11 +2221,20 @@
         }
         
         // Close modal on outside click
-        document.getElementById('modal').addEventListener('click', function(e) {
-            if (e.target === this) {
-                closeModal();
-            }
-        });
+        (function(){
+            const modal = document.getElementById('modal');
+            modal.addEventListener('click', function(e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+            // Prevent touchmove scroll from leaking to body
+            modal.addEventListener('touchmove', function(e){
+                if (modal.classList.contains('active')) {
+                    e.stopPropagation();
+                }
+            }, { passive: false });
+        })();
         
         // Initialize
         document.addEventListener('DOMContentLoaded', () => {
