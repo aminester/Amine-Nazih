@@ -25,6 +25,8 @@
             --gold: #DBB25E;
             --gold-dark: #836930;
             --wood-offset: 0px;
+            --card-footer-height: 64px;
+            --footer-icon-size: 28px;
         }
         
         body {
@@ -322,7 +324,7 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            margin-bottom: 70px; /* Increased space for hover info */
+            margin-bottom: calc(var(--card-footer-height) + 10px);
             background-size: cover;
             background-position: center;
         }
@@ -336,11 +338,12 @@
             width: 170px;
             height: 170px;
             position: relative;
-            animation: spin 4s linear infinite paused;
+            animation: spin 4s linear infinite;
         }
         
-        .vinyl-wrapper:hover .vinyl-disc {
-            animation-play-state: running;
+        .vinyl-wrapper:hover .vinyl-disc,
+        .vinyl-wrapper:active .vinyl-disc {
+            animation-play-state: paused;
         }
 
         /* Disable hover transforms/animations on touch devices */
@@ -418,7 +421,7 @@
         .vinyl-label {
             width: 85px;
             height: 85px;
-            background: var(--label-tan);
+            background: rgba(243, 222, 186, 0.7);
             border-radius: 50%;
             display: flex;
             align-items: center;
@@ -495,24 +498,45 @@
             transform: translateX(-50%);
         }
         
-        /* Album info below vinyl */
+        /* Album info hover panel (now above footer) */
         .album-info {
             position: absolute;
-            bottom: -50px; /* Adjusted to give more space */
-            left: 0;
-            right: 0;
+            left: 0; right: 0;
+            bottom: calc(var(--card-footer-height));
             text-align: center;
-            padding: 0.5rem;
-            background: rgba(0,0,0,0.7);
-            border-radius: 0 0 12px 12px;
+            padding: 0.5rem 0.5rem 0.4rem;
+            background: rgba(0,0,0,0.8);
+            border-radius: 8px;
             opacity: 0;
-            transition: opacity 0.3s ease;
-            backdrop-filter: blur(5px);
+            transform: translateY(6px);
+            transition: opacity 0.25s ease, transform 0.25s ease;
+            backdrop-filter: blur(6px);
+            z-index: 3;
+            margin: 0 6px;
         }
-        
-        .vinyl-wrapper:hover .album-info {
-            opacity: 1;
+        .vinyl-wrapper:hover .album-info { opacity: 1; transform: translateY(0); }
+
+        /* Always-visible footer label + logo */
+        .vinyl-footer {
+            position: absolute;
+            left: 0; right: 0; bottom: calc(-1 * var(--card-footer-height));
+            height: var(--card-footer-height);
+            display: grid; grid-template-columns: var(--footer-icon-size) 1fr;
+            align-items: center; gap: 0.6rem;
+            padding: 0 0.85rem;
+            background: rgba(20,20,20,0.65);
+            border-radius: 0 0 12px 12px;
+            backdrop-filter: blur(6px);
         }
+        .vinyl-footer-logo {
+            width: var(--footer-icon-size); height: var(--footer-icon-size); flex: 0 0 var(--footer-icon-size);
+            border-radius: 6px;
+            background-size: cover; background-position: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+        }
+        .vinyl-footer-text { display: flex; flex-direction: column; line-height: 1.15; overflow: hidden; }
+        .vinyl-footer-text .footer-title { font-family: 'DM Serif Display', serif; font-size: 0.95rem; color: var(--text-cream); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+        .vinyl-footer-text .footer-sub { font-size: 0.78rem; color: var(--accent-sage); font-family: 'Space Mono', monospace; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
         
         .album-title {
             font-family: 'DM Serif Display', serif;
@@ -1063,6 +1087,52 @@
             padding: 2rem;
             position: relative;
         }
+        /* TV wall grid */
+        .tv-wall-grid {
+            display: grid;
+            grid-template-columns: repeat(4, minmax(180px, 1fr));
+            gap: 1rem;
+            width: 100%;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        @media (max-width: 900px) { .tv-wall-grid { grid-template-columns: repeat(3, minmax(160px, 1fr)); } }
+        @media (max-width: 640px) { .tv-wall-grid { grid-template-columns: repeat(2, minmax(150px, 1fr)); } }
+
+        .mini-tv {
+            position: relative;
+            background: linear-gradient(135deg, rgb(93, 78, 55) 0%, rgb(61, 42, 28) 50%, rgb(45, 31, 20) 100%);
+            border: 2px solid var(--wood-dark);
+            border-radius: 12px;
+            box-shadow: inset 0 2px 8px rgba(0,0,0,0.5), 0 8px 20px rgba(0,0,0,0.4);
+            padding: 0.5rem 0.5rem 0.75rem;
+        }
+        .mini-bezel { background: linear-gradient(to bottom, rgb(45,31,20) 0%, rgb(29,20,14) 100%); border-radius: 10px; padding: 0.4rem 0.4rem 0; box-shadow: inset 0 2px 6px rgba(0,0,0,0.85), inset 0 -2px 4px rgba(0,0,0,0.65); }
+        .mini-screen { position: relative; width: 100%; aspect-ratio: 4/3; border-radius: 1rem; overflow: hidden; background: black; box-shadow: inset 0 0 45px rgba(0,0,0,0.9), inset 0 0 140px rgba(0,0,0,0.5); }
+        .mini-screen::before { content: ''; position: absolute; inset: 0; pointer-events: none; background: radial-gradient(120% 100% at 50% 50%, rgba(255,255,255,0.08), rgba(255,255,255,0) 55%); mix-blend-mode: screen; }
+        .mini-screen::after { content: ''; position: absolute; left: 6%; top: 6%; width: 62%; height: 42%; background: linear-gradient(135deg, rgba(255,255,255,0.28), rgba(255,255,255,0.08) 60%, rgba(255,255,255,0.0) 80%); filter: blur(1.5px); border-radius: 60%/45%; transform: rotate(-7deg); pointer-events: none; }
+        .mini-video, .mini-static { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+        .mini-video { opacity: 0; transition: opacity .3s ease; }
+        .mini-video.active { opacity: 1; }
+        .mini-channel-info { position: absolute; top: 6px; left: 6px; background: rgba(0,0,0,0.6); color: var(--text-cream); font-family: 'Space Mono', monospace; font-size: 0.75rem; padding: 0.15rem 0.35rem; border-radius: 4px; border: 1px solid rgba(139,115,85,0.35); opacity: 0.9; }
+
+        /* Flicker effect during tune */
+        @keyframes tvFlicker { 0%{ opacity:1 } 20%{ opacity:0.7 } 40%{ opacity:1 } 60%{ opacity:0.6 } 80%{ opacity:1 } 100%{ opacity:0.85 } }
+        .flicker { animation: tvFlicker 300ms linear 1; }
+
+        /* Knobs */
+        .knobs { display: flex; gap: 0.4rem; padding: 0.4rem; justify-content: flex-end; }
+        .knob { width: 28px; height: 28px; position: relative; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #d7d7d7 0%, #b4b4b4 45%, #7c7c7c 100%); box-shadow: 0 2px 4px rgba(0,0,0,0.5), inset 0 -1px 2px rgba(255,255,255,0.25), inset 0 2px 4px rgba(0,0,0,0.35); cursor: grab; }
+        .knob:active { cursor: grabbing; }
+        .knob-pointer { position: absolute; top: 3px; left: 50%; width: 2px; height: 10px; background: var(--gold); transform-origin: center 12px; transform: translateX(-50%) rotate(0deg); box-shadow: 0 0 3px rgba(219,178,94,0.6); transition: transform 80ms linear; }
+
+        /* Color/shape variants */
+        .mini-tv.variant-wood { background: linear-gradient(135deg, #6d523b 0%, #4e3a2b 100%); border-color: #2a1e15; }
+        .mini-tv.variant-red { background: linear-gradient(135deg, #c94b3a 0%, #873225 100%); border-color: #4a1a14; }
+        .mini-tv.variant-mint { background: linear-gradient(135deg, #b3d4b9 0%, #86a790 100%); border-color: #496054; }
+        .mini-tv.variant-beige { background: linear-gradient(135deg, #d9cfb8 0%, #b4a890 100%); border-color: #6a5f4b; }
+        .mini-tv.variant-black { background: linear-gradient(135deg, #4a4a4a 0%, #2b2b2b 100%); border-color: #171717; }
+        .mini-tv.variant-round .mini-screen { border-radius: 1.25rem; }
         .tv-frame {
             position: relative;
             background: linear-gradient(135deg, 
@@ -1099,6 +1169,17 @@
             pointer-events: none;
             mix-blend-mode: multiply;
         }
+        /* Wall of TVs background */
+        .tv-wall {
+            position: absolute; inset: -0.25rem -0.25rem auto -0.25rem; top: -0.75rem;
+            height: 120px;
+            background-image: url('images/tv-wall-placeholder.jpg');
+            background-size: cover; background-position: center;
+            border-radius: 0.75rem 0.75rem 0 0;
+            opacity: 0.25;
+            filter: contrast(1.05) saturate(0.8);
+            pointer-events: none;
+        }
         .tv-bezel {
             position: relative;
             background: linear-gradient(to bottom, 
@@ -1116,9 +1197,20 @@
             height: auto;
             aspect-ratio: 4 / 3;
             background: black;
-            border-radius: 0.5rem;
+            border-radius: 1rem;
             overflow: hidden;
-            box-shadow: inset 0 0 20px rgba(0,0,0,0.9);
+            box-shadow: inset 0 0 35px rgba(0,0,0,0.9);
+            /* Subtle CRT convexity */
+            background-image: radial-gradient(120% 100% at 50% 50%, rgba(255,255,255,0.04), rgba(0,0,0,0.2) 60%, rgba(0,0,0,0.35) 100%);
+            transform: perspective(800px) translateZ(0);
+        }
+        /* Stronger curvature overlay */
+        .tv-screen::before {
+            content: '';
+            position: absolute; inset: 0;
+            pointer-events: none;
+            background: radial-gradient(120% 100% at 50% 50%, rgba(255,255,255,0.06), rgba(255,255,255,0) 55%);
+            mix-blend-mode: screen;
         }
         .tv-controls-bottom {
             display: flex;
@@ -1276,17 +1368,12 @@
             .records-container > * { scroll-snap-align: start; }
             .records-container::after{ content:''; flex:0 0 1rem; }
 
-            .vinyl-wrapper{
-                width: clamp(128px, 40vw, 170px);
-                height: clamp(128px, 40vw, 170px);
-                margin-bottom: 56px;
-                box-shadow: 4px 4px 0 0 var(--shelf-green);
-            }
+            .vinyl-wrapper{ width: clamp(128px, 40vw, 170px); height: clamp(128px, 40vw, 170px); margin-bottom: calc(var(--card-footer-height) + 6px); box-shadow: 4px 4px 0 0 var(--shelf-green); }
             .vinyl-disc{ width: 82%; height: 82%; }
             .vinyl-border{ width: 65%; height: 65%; }
             .vinyl-label{ width: 54%; height: 54%; }
             .vinyl-text{ font-size: 0.6rem; bottom: 6px; max-width: 72px; }
-            .album-info{ bottom: -44px; padding: 0.4rem; }
+            .album-info{ bottom: calc(var(--card-footer-height)); padding: 0.4rem; margin: 0 4px; }
 
             .modal-content { flex-direction: column; max-height: 90vh; width: 95%; }
             .modal-vinyl-side{ padding: 1.25rem; width: 100%; min-height: auto; }
@@ -1421,8 +1508,9 @@
                 <p class="tagline tv-tagline" style="text-align: center; color: var(--accent-sage);">
                     Take a break — vibe in the shop
                 </p>
-                <div class="tv-container">
+                <div class="tv-container single-tv" style="display:none">
                     <div class="tv-frame">
+                        <div class="tv-wall" aria-hidden="true"></div>
                         <div class="tv-wood-texture"></div>
                         <div class="tv-bezel">
                             <div class="tv-screen">
@@ -1468,6 +1556,7 @@
                     <div class="tv-stand"></div>
                 </div>
                 <audio id="tvAudio"></audio>
+                <div id="tvWall" class="tv-wall-grid"></div>
             </div>
         </section>
         
@@ -2001,6 +2090,8 @@
             
             const title = item.company || item.name;
             const subtitle = item.role || item.artist || '';
+            // Build an always-visible footer with logo + name for clarity
+            const footerLogo = item.image ? `<div class="vinyl-footer-logo" style="background-image:url('${item.image}')"></div>` : '';
             
             vinyl.innerHTML = `
                 <div class="vinyl-disc">
@@ -2020,6 +2111,13 @@
                 <div class="album-info">
                     <div class="album-title">${title}</div>
                     <div class="album-role">${subtitle}</div>
+                </div>
+                <div class="vinyl-footer">
+                    ${footerLogo}
+                    <div class="vinyl-footer-text">
+                        <div class="footer-title">${title}</div>
+                        ${subtitle ? `<div class="footer-sub">${subtitle}</div>` : ''}
+                    </div>
                 </div>
             `;
             
@@ -2162,19 +2260,11 @@
             function spinVinylOnce(wrapper) {
                 const disc = wrapper.querySelector('.vinyl-disc');
                 if (!disc) return;
-                const cssDelayRaw = getComputedStyle(wrapper).getPropertyValue('--reveal-delay');
-                const cssDelay = parseInt(cssDelayRaw || '0', 10) || 0;
-                const startDelayMs = cssDelay + 100; // let swoop start first
-                setTimeout(() => {
-                    disc.classList.add('spin-once');
-                    const onEnd = (e) => {
-                        if (e.animationName === 'spin') {
-                            disc.classList.remove('spin-once');
-                            disc.removeEventListener('animationend', onEnd);
-                        }
-                    };
-                    disc.addEventListener('animationend', onEnd);
-                }, startDelayMs);
+                // Short celebratory spin boost on reveal, then keep normal spin
+                const prev = disc.style.animation;
+                disc.style.animation = 'spin 1.2s linear 0s 1, spin 4s linear 1.2s infinite';
+                const onEnd = () => { disc.style.animation = 'spin 4s linear infinite'; disc.removeEventListener('animationend', onEnd); };
+                disc.addEventListener('animationend', onEnd);
             }
 
             const observer = new IntersectionObserver((entries, obs) => {
@@ -2452,6 +2542,145 @@ this.channels = [
         }
         document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById('tvVideo')) new VintageTV();
+        });
+
+        // TV wall implementation
+        class TVWall {
+            constructor(containerId) {
+                this.container = document.getElementById(containerId);
+                this.channels = (window.__channelsForWall ||= [
+                    'https://i.imgur.com/VFwWAkP.mp4','https://i.imgur.com/7a6iTIs.mp4','https://i.imgur.com/IIOMs3I.mp4','https://i.imgur.com/C1sSdnE.mp4','https://i.imgur.com/XJj61LA.mp4','https://i.imgur.com/i7V5tHO.mp4','https://i.imgur.com/5Gzz1dm.mp4','https://i.imgur.com/fsIxOx8.mp4','https://i.imgur.com/EZkhOzX.mp4','https://i.imgur.com/CbW87rJ.mp4','https://i.imgur.com/OoI33FV.mp4','https://i.imgur.com/3bnn1to.mp4','https://i.imgur.com/YmvP04q.mp4','https://i.imgur.com/DiOpQzh.mp4','https://i.imgur.com/qspcpYq.mp4','https://i.imgur.com/j1rIEVI.mp4','https://i.imgur.com/0hXDk8x.mp4','https://i.imgur.com/aGOPZww.mp4','https://i.imgur.com/tV8bAAY.mp4','https://i.imgur.com/9NJv548.mp4','https://i.imgur.com/wzmb6MT.mp4','https://i.imgur.com/3kFGZ4L.mp4','https://i.imgur.com/UF37eJl.mp4','https://i.imgur.com/DWdF62M.mp4','https://i.imgur.com/QWimJz6.mp4','https://i.imgur.com/7n6rLvM.mp4','https://i.imgur.com/vALPjxJ.mp4','https://i.imgur.com/zNUYbEm.mp4','https://i.imgur.com/4Liuh4x.mp4'
+                ]);
+                this.maxAudible = 2;
+                this.audibleSet = new Set();
+                this.knobSound = null;
+                this.staticSound = null;
+                this.init();
+            }
+            init() {
+                if (!this.container) return;
+                const tvCount = 12; // 12-16
+                for (let i = 0; i < tvCount; i++) this.container.appendChild(this.createTV(i));
+                // random cycling
+                this.container.querySelectorAll('.mini-tv').forEach((tv) => this.scheduleChannel(tv));
+            }
+            createTV(idx) {
+                const wrap = document.createElement('div');
+                // randomize variants
+                const variants = ['variant-wood','variant-red','variant-mint','variant-beige','variant-black'];
+                const shape = Math.random() < 0.4 ? 'variant-round' : '';
+                wrap.className = `mini-tv ${variants[Math.floor(Math.random()*variants.length)]} ${shape}`;
+                wrap.innerHTML = `
+                    <div class="mini-bezel">
+                        <div class="mini-screen">
+                            <canvas class="mini-static"></canvas>
+                            <video class="mini-video" muted loop playsinline></video>
+                            <div class="mini-channel-info">CH --</div>
+                        </div>
+                    </div>
+                    <div class="knobs">
+                        <div class="knob knob-channel"><div class="knob-pointer"></div></div>
+                        <div class="knob knob-volume"><div class="knob-pointer"></div></div>
+                        <div class="knob knob-bright"><div class="knob-pointer"></div></div>
+                    </div>`;
+                const video = wrap.querySelector('.mini-video');
+                const canvas = wrap.querySelector('.mini-static');
+                this.initStatic(canvas);
+                // pick initial channel
+                this.tuneToRandom(wrap, { showStatic: false });
+                // knob interactions
+                this.bindKnob(wrap.querySelector('.knob-channel'), (angle) => {
+                    // every 30deg change channel
+                    const step = Math.round(((angle + 180) % 360) / 30);
+                    video.dataset.__step !== String(step) && (video.dataset.__step = String(step), this.tuneToRandom(wrap));
+                });
+                this.bindKnob(wrap.querySelector('.knob-volume'), (angle) => {
+                    const norm = (Math.sin((angle/180)*Math.PI) + 1) / 2; // 0..1
+                    video.volume = 0.05 + 0.95 * norm;
+                    this.claimAudio(video);
+                });
+                this.bindKnob(wrap.querySelector('.knob-bright'), (angle) => {
+                    const norm = (Math.cos((angle/180)*Math.PI) + 1) / 2; // 0..1
+                    const bright = 0.7 + norm * 0.6;
+                    const contrast = 0.9 + norm * 0.4;
+                    video.style.filter = `brightness(${bright}) contrast(${contrast})`;
+                });
+                // click sets this TV as audible
+                wrap.addEventListener('pointerdown', () => this.claimAudio(video));
+                wrap.addEventListener('mouseenter', () => { this.claimAudio(video, { hover: true }); });
+                wrap.addEventListener('mouseleave', () => { if (!this.audibleSet.has(video)) { video.volume = 0.0; video.muted = true; } });
+                return wrap;
+            }
+            claimAudio(video, opts={}) {
+                const hover = !!opts.hover;
+                // Only allow one primary audible TV; others fully muted unless hovering
+                this.audibleSet.clear();
+                this.audibleSet.add(video);
+                this.container.querySelectorAll('.mini-video').forEach(v => {
+                    if (v === video) { v.muted = false; v.volume = hover ? 0.15 : 0.35; }
+                    else { v.volume = 0.0; v.muted = true; }
+                });
+            }
+            bindKnob(el, onRotate) {
+                if (!el) return;
+                const pointer = el.querySelector('.knob-pointer');
+                let dragging = false;
+                const center = () => { const r = el.getBoundingClientRect(); return { x: r.left + r.width/2, y: r.top + r.height/2 }; };
+                const calcAngle = (e) => { const c = center(); const x = (e.clientX ?? e.touches[0].clientX) - c.x; const y = (e.clientY ?? e.touches[0].clientY) - c.y; return (Math.atan2(y, x) * 180/Math.PI + 360) % 360; };
+                const move = (e) => { if (!dragging) return; e.preventDefault(); const a = calcAngle(e); pointer.style.transform = `translateX(-50%) rotate(${a}deg)`; onRotate(a); };
+                const up = () => { dragging = false; document.removeEventListener('pointermove', move); document.removeEventListener('pointerup', up); document.removeEventListener('touchmove', move); document.removeEventListener('touchend', up); };
+                el.addEventListener('pointerdown', (e) => { dragging = true; move(e); document.addEventListener('pointermove', move); document.addEventListener('pointerup', up); });
+                el.addEventListener('touchstart', (e) => { dragging = true; move(e); document.addEventListener('touchmove', move, { passive:false }); document.addEventListener('touchend', up); }, { passive:false });
+            }
+            initStatic(canvas) {
+                const ctx = canvas.getContext('2d');
+                const render = () => {
+                    const { width, height } = canvas;
+                    const img = ctx.createImageData(width, height);
+                    const data = img.data;
+                    for (let i=0; i<data.length; i+=4) { const v = Math.random()*255; data[i]=v; data[i+1]=v; data[i+2]=v; data[i+3]=255; }
+                    ctx.putImageData(img, 0, 0);
+                    requestAnimationFrame(render);
+                };
+                const resize = () => { const r = canvas.parentElement.getBoundingClientRect(); canvas.width = Math.max(1, Math.floor(r.width)); canvas.height = Math.max(1, Math.floor(r.height)); };
+                resize();
+                new ResizeObserver(resize).observe(canvas.parentElement);
+                render();
+            }
+            tuneToRandom(tv, opts={}) {
+                const video = tv.querySelector('.mini-video');
+                const canvas = tv.querySelector('.mini-static');
+                const chInfo = tv.querySelector('.mini-channel-info');
+                const showStatic = opts.showStatic !== false ? true : false;
+                const next = () => {
+                    const pickIndex = Math.floor(Math.random()*this.channels.length);
+                    const pick = Math.random() < 0.15 ? null : this.channels[pickIndex];
+                    if (!pick) { video.classList.remove('active'); chInfo.textContent = 'CH --'; return; }
+                    chInfo.textContent = `CH ${String(pickIndex + 1).padStart(2,'0')}`;
+                    tv.classList.add('flicker'); setTimeout(()=>tv.classList.remove('flicker'), 250);
+                    video.src = pick; video.load(); video.autoplay = true; const p = video.play(); if (p && p.catch) p.catch(()=>{}); video.classList.add('active');
+                };
+                if (showStatic) {
+                    video.classList.remove('active');
+                    setTimeout(next, 1500 + Math.random()*1000);
+                } else {
+                    next();
+                }
+            }
+            scheduleChannel(tv) {
+                const cycle = () => {
+                    this.tuneToRandom(tv, { showStatic: true });
+                    const t = 20000 + Math.random()*20000;
+                    tv.__timer = setTimeout(cycle, t);
+                };
+                cycle();
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            if (document.getElementById('tvWall')) {
+                new TVWall('tvWall');
+            }
         });
     </script>
 </body>
