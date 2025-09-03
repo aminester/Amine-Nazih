@@ -108,6 +108,43 @@
             position: relative;
         }
         
+        /* Profile image badge */
+        .profile-badge {
+            display: inline-block;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            z-index: 5;
+            transform: rotate(-1.5deg);
+        }
+        .profile-badge .profile-avatar {
+            width: 136px;
+            height: 136px;
+            border-radius: 50%;
+            object-fit: cover;
+            display: block;
+            border: 2px solid var(--wood-dark);
+            box-shadow: 0 0 0 4px var(--gold), 0 8px 18px rgba(0,0,0,0.45);
+            background: var(--wood-dark);
+            transition: transform 0.25s ease, box-shadow 0.25s ease;
+        }
+        .profile-badge::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            left: 50%;
+            width: 42%;
+            height: 10px;
+            transform: translateX(-50%) rotate(-4deg);
+            background: radial-gradient(circle, rgba(0,0,0,0.35) 25%, transparent 60%);
+            filter: blur(0.5px);
+            pointer-events: none;
+        }
+        .profile-badge:hover .profile-avatar {
+            transform: translateY(-2px);
+            box-shadow: 0 0 0 4px var(--gold), 0 12px 22px rgba(0,0,0,0.55);
+        }
+        
         .store-sign {
             display: inline-block;
             background: linear-gradient(to bottom, 
@@ -1352,6 +1389,8 @@
         @media (max-width: 768px) {
             .container { padding: 1rem; }
             .store-header { padding: 2rem 0 2.5rem; }
+            .profile-badge { top: 0.75rem; right: 0.75rem; transform: rotate(-1deg); }
+            .profile-badge .profile-avatar { width: 96px; height: 96px; }
             .store-name { font-size: clamp(1.8rem, 6.5vw, 2.2rem); }
             .tagline { font-size: 0.85rem; }
             .contact-row { gap: 0.75rem; }
@@ -1445,6 +1484,9 @@
 <body>
     <div class="container">
         <header class="store-header">
+            <div class="profile-badge">
+                <img src="images/mepfp.png" alt="Amine Nazih" class="profile-avatar">
+            </div>
             <div class="store-sign">
                 <h1 class="store-name">amine's record shop</h1>
             </div>
@@ -1662,18 +1704,19 @@
     <script>
         // Experience data
         const experiences = [
-            {
+        {
                 id: 'expedia',
                 company: 'Expedia',
                 role: 'Mobile Engineering',
                 location: 'Seattle, WA',
-                period: 'June 2025 - Present',
+                period: 'June 2025 - August 2025',
                 label: 'EXPEDIA',
                 // Replace with actual workplace images - can be office photos, logos, or workspace shots
                 image: 'images/Expedia_Group_logo.png', // Local image
                 details: [
-                    'Leading development of two agentic AI features for Expedia in Kotlin and Swift, cutting p99 latency from 60s+ to ~120 ms in testing',
-                    'Building production-ready AI chat feature using GraphQL APIs and LangChain, with comprehensive testing strategy and Swift UI components'
+                    'Optimized large-scale search infrastructure in Kotlin + Spring Boot, reducing end-to-end latency by approximately 99%',
+                    'Developed AI-powered query handling for flexible search inputs, integrating multiple backend services with dynamic UI components',
+                    'Built monitoring and validation pipelines with SQL, logging, and observability tools to ensure full request coverage and sub-second reliability'
                 ]
             },
             {
