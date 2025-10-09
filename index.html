@@ -12,6 +12,8 @@
             padding: 0;
             box-sizing: border-box;
         }
+
+        
         
         :root {
             --wood-dark: #3d2a1f;
@@ -29,6 +31,17 @@
             --footer-icon-size: 28px;
         }
         
+        * {
+            -ms-overflow-style: none;  /* IE and Edge */
+            scrollbar-width: none;  /* Firefox */
+        }
+        *::-webkit-scrollbar {
+            display: none;  /* Chrome, Safari, Opera */
+        }
+        
+        html, body {
+            overflow-x: hidden; /* Prevent horizontal scroll */
+        }
         body {
             font-family: 'Inter', sans-serif;
             min-height: 100vh;
