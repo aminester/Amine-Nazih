@@ -2606,6 +2606,7 @@ this.channels = [
                 ]);
                 this.maxAudible = 2;
                 this.audibleSet = new Set();
+                this.currentlyPlaying = new Set(); // Track videos currently playing to ensure diversity
                 this.knobSound = null;
                 this.staticSound = null;
                 this.init();
@@ -2706,12 +2707,35 @@ this.channels = [
                 const chInfo = tv.querySelector('.mini-channel-info');
                 const showStatic = opts.showStatic !== false ? true : false;
                 const next = () => {
-                    const pickIndex = Math.floor(Math.random()*this.channels.length);
-                    const pick = Math.random() < 0.15 ? null : this.channels[pickIndex];
-                    if (!pick) { video.classList.remove('active'); chInfo.textContent = 'CH --'; return; }
-                    chInfo.textContent = `CH ${String(pickIndex + 1).padStart(2,'0')}`;
-                    tv.classList.add('flicker'); setTimeout(()=>tv.classList.remove('flicker'), 250);
-                    video.src = pick; video.load(); video.autoplay = true; const p = video.play(); if (p && p.catch) p.catch(()=>{}); video.classList.add('active');
+                    // Remove current video from playing set before picking a new one
+                    if (video.src) this.currentlyPlaying.delete(video.src);
+                    
+                    // Get available channels (not currently playing on other TVs)
+                    const available = this.channels.filter(ch => !this.currentlyPlaying.has(ch));
+                    const pool = available.length > 0 ? available : this.channels; // Fallback if all are taken
+                    
+                    // Pick random from available pool
+                    const pickIndex = Math.floor(Math.random() * pool.length);
+                    const pick = Math.random() < 0.15 ? null : pool[pickIndex];
+                    
+                    if (!pick) { 
+                        video.classList.remove('active'); 
+                        chInfo.textContent = 'CH --'; 
+                        return; 
+                    }
+                    
+                    // Update tracking and display
+                    this.currentlyPlaying.add(pick);
+                    const channelNum = this.channels.indexOf(pick) + 1;
+                    chInfo.textContent = `CH ${String(channelNum).padStart(2,'0')}`;
+                    tv.classList.add('flicker'); 
+                    setTimeout(()=>tv.classList.remove('flicker'), 250);
+                    video.src = pick; 
+                    video.load(); 
+                    video.autoplay = true; 
+                    const p = video.play(); 
+                    if (p && p.catch) p.catch(()=>{}); 
+                    video.classList.add('active');
                 };
                 if (showStatic) {
                     video.classList.remove('active');
