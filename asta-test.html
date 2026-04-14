@@ -1,0 +1,1279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Asta — Sprite Demo</title>
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #08080f;
+  color: #ddd;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow: hidden;
+  user-select: none;
+}
+
+/* ── Tabs ─────────────────────────── */
+#tabs {
+  display: flex;
+  background: #0d0d18;
+  border-bottom: 1px solid #1e1e2e;
+  flex-shrink: 0;
+}
+.tab {
+  padding: 10px 22px;
+  font-size: 13px;
+  cursor: pointer;
+  color: #666;
+  border-bottom: 2px solid transparent;
+  transition: color .15s, border-color .15s;
+}
+.tab:hover { color: #aaa; }
+.tab.active { color: #aaf; border-bottom-color: #6c6cf5; }
+
+/* ── Both views fill remaining height ── */
+#view-play, #view-browse { flex: 1; display: none; overflow: hidden; }
+#view-play.active, #view-browse.active { display: flex; }
+
+/* ═══════════════════════════════════
+   PLAY VIEW
+═══════════════════════════════════ */
+#view-play {
+  flex-direction: column;
+  position: relative;
+}
+
+#game-canvas {
+  width: 100%;
+  flex: 1;
+  display: block;
+  image-rendering: pixelated;
+  cursor: default;
+}
+
+/* HUD */
+#hud {
+  position: absolute;
+  top: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  pointer-events: none;
+}
+#hud-anim {
+  font-size: 13px;
+  color: rgba(200,200,255,0.8);
+  background: rgba(0,0,0,.45);
+  padding: 3px 12px;
+  border-radius: 20px;
+  letter-spacing: .05em;
+}
+#hud-state {
+  font-size: 10px;
+  color: rgba(150,150,200,0.6);
+}
+
+/* Controls legend */
+#legend {
+  background: #0d0d18;
+  border-top: 1px solid #1a1a2a;
+  padding: 8px 20px;
+  display: flex;
+  gap: 28px;
+  flex-wrap: wrap;
+  flex-shrink: 0;
+  align-items: center;
+}
+.legend-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.legend-group span {
+  font-size: 11px;
+  color: #555;
+}
+kbd {
+  background: #1e1e30;
+  border: 1px solid #333;
+  border-radius: 4px;
+  padding: 2px 6px;
+  font-size: 11px;
+  color: #aaa;
+  font-family: inherit;
+}
+
+/* form toggle */
+#form-btns {
+  margin-left: auto;
+  display: flex;
+  gap: 6px;
+}
+.form-btn {
+  background: #1a1a28;
+  border: 1px solid #2a2a3e;
+  color: #888;
+  padding: 4px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 11px;
+  transition: all .15s;
+}
+.form-btn:hover { background: #24243a; color: #bbb; }
+.form-btn.active { background: #2e2e50; border-color: #5a5af0; color: #aaf; }
+
+/* ═══════════════════════════════════
+   BROWSE VIEW
+═══════════════════════════════════ */
+#view-browse {
+  flex-direction: row;
+}
+
+#sidebar {
+  width: 250px;
+  min-width: 250px;
+  background: #0d0d18;
+  border-right: 1px solid #1a1a2a;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#sidebar-head {
+  padding: 10px 14px 6px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  border-bottom: 1px solid #1a1a2a;
+}
+#sidebar-head h3 { font-size: 12px; color: #666; text-transform: uppercase; letter-spacing: .08em; }
+#search {
+  padding: 6px 10px;
+  background: #161624;
+  border: 1px solid #252535;
+  border-radius: 5px;
+  color: #ccc;
+  font-size: 12px;
+  outline: none;
+  width: 100%;
+}
+#search:focus { border-color: #5a5af0; }
+#action-list {
+  flex: 1;
+  overflow-y: auto;
+  padding: 4px 0;
+}
+#action-list::-webkit-scrollbar { width: 5px; }
+#action-list::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 3px; }
+.act-item {
+  padding: 6px 14px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border-left: 3px solid transparent;
+}
+.act-item:hover { background: #181828; }
+.act-item.active { background: #1c1c30; border-left-color: #6c6cf5; }
+.act-id   { font-size: 10px; color: #444; min-width: 30px; font-variant-numeric: tabular-nums; }
+.act-name { font-size: 12px; color: #bbb; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.act-fc   { font-size: 10px; color: #3a3a50; flex-shrink: 0; }
+
+/* browse right panel */
+#browse-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+#browse-topbar {
+  background: #0d0d18;
+  border-bottom: 1px solid #1a1a2a;
+  padding: 8px 16px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-shrink: 0;
+  flex-wrap: wrap;
+}
+#browse-title { font-size: 14px; font-weight: 600; flex: 1; }
+#browse-sub   { font-size: 11px; color: #555; }
+.ctrl-row { display: flex; align-items: center; gap: 8px; }
+.ctrl-row label { font-size: 11px; color: #555; }
+button {
+  background: #1e1e30;
+  border: 1px solid #2a2a3e;
+  color: #aaa;
+  padding: 4px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 12px;
+  transition: background .12s;
+}
+button:hover { background: #28283e; color: #ddd; }
+button.on { background: #303050; border-color: #5a5af0; color: #aaf; }
+select {
+  background: #161624;
+  border: 1px solid #252535;
+  color: #ccc;
+  padding: 4px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  outline: none;
+}
+input[type=range] { accent-color: #6c6cf5; }
+
+#browse-canvas-wrap {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(ellipse, #13131e 0%, #09090f 100%);
+  position: relative;
+  overflow: hidden;
+}
+#browse-canvas { image-rendering: pixelated; }
+
+#strip {
+  height: 60px;
+  background: #0e0e1a;
+  border-top: 1px solid #1a1a2a;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  padding: 0 10px;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+#strip::-webkit-scrollbar { height: 4px; }
+#strip::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+.sf {
+  width: 46px; height: 46px;
+  flex-shrink: 0;
+  background: #161624;
+  border: 1.5px solid #1e1e2e;
+  border-radius: 4px;
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+.sf:hover { border-color: #333; }
+.sf.active { border-color: #6c6cf5; }
+.sf img { max-width: 100%; max-height: 100%; image-rendering: pixelated; object-fit: contain; }
+.sf .fd  { position: absolute; bottom: 1px; right: 2px; font-size: 8px; color: #444; }
+
+#infobar {
+  background: #0d0d18;
+  border-top: 1px solid #1a1a2a;
+  padding: 6px 16px;
+  display: flex;
+  gap: 20px;
+  font-size: 10px;
+  color: #444;
+  font-variant-numeric: tabular-nums;
+  flex-shrink: 0;
+}
+#infobar b { color: #666; }
+
+/* BG swatches */
+.bgsw {
+  width: 18px; height: 18px;
+  border-radius: 3px;
+  border: 2px solid transparent;
+  cursor: pointer; padding: 0;
+}
+.bgsw.sel { border-color: #88f; }
+
+#b-loading {
+  position: absolute; inset: 0;
+  background: rgba(8,8,15,.6);
+  display: flex; align-items: center; justify-content: center;
+  font-size: 13px; color: #666;
+  opacity: 0; pointer-events: none;
+  transition: opacity .2s;
+}
+#b-loading.show { opacity: 1; }
+</style>
+</head>
+<body>
+
+<!-- Tabs -->
+<div id="tabs">
+  <div class="tab active" data-tab="play">🎮 Play</div>
+  <div class="tab" data-tab="browse">🔍 Browse Animations</div>
+</div>
+
+<!-- ══ PLAY VIEW ══════════════════════════════════ -->
+<div id="view-play" class="active">
+  <canvas id="game-canvas"></canvas>
+
+  <div id="hud">
+    <div id="hud-anim">Stand</div>
+    <div id="hud-state"></div>
+  </div>
+
+  <div id="legend">
+    <div class="legend-group">
+      <span>Move</span>
+      <kbd>←</kbd><kbd>→</kbd>
+    </div>
+    <div class="legend-group">
+      <span>Crouch</span>
+      <kbd>↓</kbd>
+    </div>
+    <div class="legend-group">
+      <span>Jump</span>
+      <kbd>↑</kbd> <span>or</span> <kbd>Space</kbd>
+    </div>
+    <div class="legend-group">
+      <span>Guard</span>
+      <kbd>S</kbd>
+    </div>
+    <div class="legend-group">
+      <span>Light</span><kbd>Z</kbd>
+      <span>Medium</span><kbd>X</kbd>
+      <span>Heavy</span><kbd>C</kbd>
+    </div>
+    <div class="legend-group">
+      <span>Specials</span>
+      <kbd>A</kbd><kbd>D</kbd><kbd>Q</kbd><kbd>E</kbd>
+    </div>
+    <div id="form-btns">
+      <button class="form-btn active" data-form="base">Base Form</button>
+      <button class="form-btn" data-form="demon">Demon Form</button>
+      <button class="form-btn" data-form="union">Union Mode</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ BROWSE VIEW ════════════════════════════════ -->
+<div id="view-browse">
+  <div id="sidebar">
+    <div id="sidebar-head">
+      <h3>Animations <span id="anim-count" style="float:right;color:#333;font-weight:400;font-size:10px"></span></h3>
+      <input type="text" id="search" placeholder="Search name or ID…">
+    </div>
+    <div id="action-list"></div>
+  </div>
+
+  <div id="browse-main">
+    <div id="browse-topbar">
+      <div>
+        <div id="browse-title">—</div>
+        <div id="browse-sub"></div>
+      </div>
+      <div class="ctrl-row">
+        <button id="btn-prev">◀</button>
+        <button id="btn-play" class="on">⏸</button>
+        <button id="btn-next">▶</button>
+      </div>
+      <div class="ctrl-row">
+        <label>Speed</label>
+        <input type="range" id="speed" min="0.1" max="4" step="0.1" value="1" style="width:80px">
+        <span id="sv" style="font-size:11px;color:#666;width:26px">1×</span>
+      </div>
+      <div class="ctrl-row">
+        <label>Scale</label>
+        <select id="sc-sel">
+          <option value="2">2×</option>
+          <option value="3">3×</option>
+          <option value="4" selected>4×</option>
+          <option value="6">6×</option>
+        </select>
+      </div>
+      <div class="ctrl-row">
+        <label>BG</label>
+        <button class="bgsw sel" style="background:#09090f" data-bg="#09090f"></button>
+        <button class="bgsw" style="background:#1a1a2e" data-bg="#1a1a2e"></button>
+        <button class="bgsw" style="background:#333" data-bg="#333"></button>
+        <button class="bgsw" style="background:#eee" data-bg="#eee"></button>
+        <button class="bgsw" style="background:#4a1a1a" data-bg="#4a1a1a"></button>
+      </div>
+    </div>
+
+    <div id="browse-canvas-wrap">
+      <canvas id="browse-canvas"></canvas>
+      <div id="b-loading">Loading sprites…</div>
+    </div>
+
+    <div id="strip"></div>
+
+    <div id="infobar">
+      <span><b>Frame</b> <span id="inf-f">—</span></span>
+      <span><b>Sprite</b> <span id="inf-s">—</span></span>
+      <span><b>Size</b> <span id="inf-sz">—</span></span>
+      <span><b>Axis</b> <span id="inf-ax">—</span></span>
+      <span><b>Duration</b> <span id="inf-d">—</span></span>
+      <span><b>Loop from</b> <span id="inf-l">—</span></span>
+    </div>
+  </div>
+</div>
+
+<script>
+// ═══════════════════════════════════════════════
+//  SHARED DATA + IMAGE CACHE
+// ═══════════════════════════════════════════════
+const SPRITE_BASE = 'images/asta_sprites/';
+const ANIM_JSON   = 'images/asta2/animations.json';
+const MANIFEST    = 'images/asta2/sprite_manifest.json';
+
+let anims = {};        // id(str) → {name, loop, frames:[{x,y,w,h,ax,ay,ox,oy,dur,flip,_src,_gi}]}
+let manifest = {};     // "x_y" → "g-i"
+let imgCache = {};     // src → HTMLImageElement
+
+function getImg(src) {
+  if (!imgCache[src]) {
+    const img = new Image();
+    img.src = src;
+    imgCache[src] = img;
+  }
+  return imgCache[src];
+}
+
+function patchFrames(raw) {
+  for (const anim of Object.values(raw)) {
+    for (const f of anim.frames) {
+      const gi = manifest[`${f.x}_${f.y}`];
+      if (gi) {
+        f._src = SPRITE_BASE + `asta_sprite_${gi}.png`;
+        f._gi  = gi;
+        getImg(f._src); // pre-load
+      }
+    }
+  }
+  return raw;
+}
+
+// ── Tabs ─────────────────────────────────────────
+document.querySelectorAll('.tab').forEach(t => {
+  t.addEventListener('click', () => {
+    document.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    const id = t.dataset.tab;
+    document.getElementById('view-play').classList.toggle('active', id === 'play');
+    document.getElementById('view-browse').classList.toggle('active', id === 'browse');
+    if (id === 'browse' && !browseInited) initBrowse();
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  PLAY VIEW
+// ═══════════════════════════════════════════════
+const gc = document.getElementById('game-canvas');
+const gx = gc.getContext('2d');
+gx.imageSmoothingEnabled = false;
+
+const SCALE    = 4;
+const FPS      = 60;
+const GRAVITY  = 0.5 * SCALE;
+const JUMP_V   = -12 * SCALE;
+const WALK_SPD = 2 * SCALE;
+const RUN_SPD  = 4 * SCALE;
+const GROUND_FRAC = 0.65; // ground line at 65% height
+
+// Action IDs — base form
+const A = {
+  // base
+  STAND:0, TURN:5,
+  CROUCH_DOWN:10, CROUCH:11, STAND_UP:12,
+  WALK_F:20, WALK_B:21,
+  JUMP_START:40, JUMP_AIR:41, JUMP_F:42, JUMP_B:43, JUMP_FALL:44, JUMP_LAND:47,
+  RUN_F:100, RUN_B:105,
+  GUARD_START:120, GUARD:130, GUARD_END:140,
+  WIN:180, LOSE:170, INTRO:190,
+  LIGHT:200, LIGHT2:210, LIGHT3:220,
+  MED1:300, MED2:310,
+  HEAVY:400,
+  BLACK_SLASH:1000, BLACK_STRONG:1100, BULL_THRUST:1200, BLACK_COMBO:1300, ANTI_MAGIC:1400,
+  POWER_START:500, POWER_END:501,
+  TELEPORT:810,
+  // demon offsets at +2000
+};
+const D = {}; // Demon form — same IDs + 2000
+for (const [k,v] of Object.entries(A)) D[k] = v + 2000;
+D.STAND = 2000; D.TURN = 2005;
+
+// Union mode around 13000+
+const U = {
+  STAND: 13000, WALK_F: 13020, WALK_B: 13021,
+  CROUCH_DOWN:13007, CROUCH:13011, STAND_UP:13014,
+  JUMP_START:13040, JUMP_AIR:13041, JUMP_FALL:13044, JUMP_LAND:13047,
+  LIGHT:15200, MED1:15300, HEAVY:15400,
+  BULL_THRUST:16400, SWORD_COMBO:16500, DARK_LOTUS:16000, ANTI_MAGIC:16100,
+  POWER_START:15500, POWER_END:15501,
+};
+
+let form = 'base'; // 'base' | 'demon' | 'union'
+function ACTS() { return form === 'demon' ? D : form === 'union' ? U : A; }
+function hasAnim(id) { return !!anims[String(id)]; }
+function getAnim(id) { return anims[String(id)]; }
+
+// Character state
+let ch = {
+  x: 0, y: 0, vy: 0,
+  facingRight: true,
+  onGround: true,
+  state: 'stand',       // stand|walk|run|crouch|jump|attack|guard|win|lose|intro
+  actionId: 0,
+  frameIdx: 0,
+  tickAcc: 0,
+  lockFrames: 0,        // frames left until state can change (for attacks)
+  attacking: false,
+  guarding: false,
+};
+
+const keys = {};
+document.addEventListener('keydown', e => {
+  keys[e.code] = true;
+  handleKeyDown(e.code);
+});
+document.addEventListener('keyup', e => { keys[e.code] = false; handleKeyUp(e.code); });
+
+function handleKeyDown(code) {
+  if (!anims || Object.keys(anims).length === 0) return;
+  const ac = ACTS();
+
+  // Attacks (only when on ground and not locked)
+  if (ch.lockFrames <= 0) {
+    const atk = {
+      'KeyZ': ac.LIGHT,
+      'KeyX': ac.MED1,
+      'KeyC': ac.HEAVY,
+      'KeyA': ac.BLACK_SLASH || ac.DARK_LOTUS,
+      'KeyD': ac.BULL_THRUST,
+      'KeyQ': ac.BLACK_COMBO || ac.SWORD_COMBO,
+      'KeyE': ac.ANTI_MAGIC,
+    }[code];
+    if (atk !== undefined && hasAnim(atk)) {
+      triggerAttack(atk);
+      return;
+    }
+  }
+  // Guard
+  if (code === 'KeyS') { ch.guarding = true; }
+  // Win/Lose special
+  if (code === 'Enter' && hasAnim(ac.WIN)) triggerOnce(ac.WIN);
+}
+
+function handleKeyUp(code) {
+  if (code === 'KeyS') { ch.guarding = false; }
+}
+
+function triggerAttack(id) {
+  const anim = getAnim(id);
+  if (!anim) return;
+  ch.attacking = true;
+  ch.state = 'attack';
+  ch.actionId = id;
+  ch.frameIdx = 0;
+  ch.tickAcc = 0;
+  // lock for total duration of anim
+  ch.lockFrames = anim.frames.reduce((s, f) => s + f.dur, 0);
+}
+
+function triggerOnce(id) {
+  const anim = getAnim(id);
+  if (!anim) return;
+  ch.state = 'special';
+  ch.actionId = id;
+  ch.frameIdx = 0;
+  ch.tickAcc = 0;
+  ch.lockFrames = anim.frames.reduce((s, f) => s + f.dur, 0) + 10;
+}
+
+let playLastT = null;
+let playRaf = null;
+
+function playLoop(now) {
+  playRaf = requestAnimationFrame(playLoop);
+  const dt = playLastT == null ? 0 : Math.min((now - playLastT) / 1000, 0.05);
+  playLastT = now;
+
+  if (!anims || Object.keys(anims).length === 0) return;
+
+  const W = gc.clientWidth; const H = gc.clientHeight;
+  gc.width = W; gc.height = H;
+  gx.imageSmoothingEnabled = false;
+
+  const groundY = Math.floor(H * GROUND_FRAC);
+
+  // Physics
+  if (!ch.onGround) {
+    ch.vy += GRAVITY;
+    ch.y += ch.vy;
+    if (ch.y >= groundY) {
+      ch.y = groundY;
+      ch.vy = 0;
+      ch.onGround = true;
+      if (ch.lockFrames <= 0) {
+        const ac = ACTS();
+        setAction(ac.JUMP_LAND || ac.STAND);
+        ch.state = 'land';
+        ch.lockFrames = 8;
+      }
+    }
+  } else {
+    ch.y = groundY;
+  }
+
+  // Tick lock down
+  if (ch.lockFrames > 0) {
+    ch.lockFrames -= dt * FPS;
+    if (ch.lockFrames < 0) ch.lockFrames = 0;
+  }
+
+  // State machine (only when not locked)
+  if (ch.lockFrames <= 0) {
+    ch.attacking = false;
+    updateMovement(dt, groundY);
+  }
+
+  // Advance animation frames
+  advanceFrames(dt);
+
+  // Draw
+  drawGame(W, H, groundY);
+}
+
+function updateMovement(dt, groundY) {
+  const ac = ACTS();
+  const leftHeld  = keys['ArrowLeft']  || keys['KeyH'];
+  const rightHeld = keys['ArrowRight'] || keys['KeyL'];
+  const downHeld  = keys['ArrowDown'];
+  const jumpHeld  = keys['ArrowUp'] || keys['Space'];
+
+  // Guard
+  if (ch.guarding && ch.onGround && !downHeld) {
+    const gid = hasAnim(ac.GUARD) ? ac.GUARD : null;
+    if (gid && ch.actionId !== gid) setAction(gid);
+    ch.state = 'guard';
+    return;
+  }
+
+  // Crouch
+  if (downHeld && ch.onGround) {
+    if (ch.state !== 'crouch' && ch.state !== 'crouch_down') {
+      setAction(hasAnim(ac.CROUCH_DOWN) ? ac.CROUCH_DOWN : ac.CROUCH);
+      ch.lockFrames = 6;
+      ch.state = 'crouch_down';
+    } else if (ch.lockFrames <= 0) {
+      if (ch.actionId !== ac.CROUCH) setAction(ac.CROUCH);
+      ch.state = 'crouch';
+    }
+    return;
+  }
+  if (ch.state === 'crouch' || ch.state === 'crouch_down') {
+    setAction(hasAnim(ac.STAND_UP) ? ac.STAND_UP : ac.STAND);
+    ch.lockFrames = 6;
+    ch.state = 'stand';
+    return;
+  }
+
+  // Jump
+  if (jumpHeld && ch.onGround && ch.state !== 'jump') {
+    ch.vy = JUMP_V;
+    ch.onGround = false;
+    ch.state = 'jump';
+    const jid = rightHeld ? (ac.JUMP_F || ac.JUMP_AIR) :
+                leftHeld  ? (ac.JUMP_B || ac.JUMP_AIR) :
+                (ac.JUMP_AIR || ac.JUMP_START);
+    setAction(hasAnim(jid) ? jid : (ac.JUMP_START || ac.STAND));
+    return;
+  }
+
+  // Horizontal
+  if (ch.onGround) {
+    if (rightHeld) {
+      ch.facingRight = true;
+      ch.x += WALK_SPD;
+      if (ch.state !== 'walk') { setAction(ac.WALK_F); ch.state = 'walk'; }
+    } else if (leftHeld) {
+      ch.facingRight = false;
+      ch.x -= WALK_SPD;
+      if (ch.state !== 'walkb') { setAction(ac.WALK_B); ch.state = 'walkb'; }
+    } else {
+      if (ch.state === 'walk' || ch.state === 'walkb' || ch.state === 'land' || ch.state === 'guard') {
+        setAction(ac.STAND); ch.state = 'stand';
+      }
+      if (ch.state !== 'stand') { setAction(ac.STAND); ch.state = 'stand'; }
+    }
+  }
+
+  // Clamp to screen (rough)
+  const W = gc.width;
+  ch.x = Math.max(40, Math.min(W - 40, ch.x));
+}
+
+function setAction(id) {
+  if (!hasAnim(id)) return;
+  if (ch.actionId === id) return;
+  ch.actionId = id;
+  ch.frameIdx = 0;
+  ch.tickAcc = 0;
+}
+
+function advanceFrames(dt) {
+  const anim = getAnim(ch.actionId);
+  if (!anim || anim.frames.length === 0) return;
+  ch.tickAcc += dt * FPS;
+  const f = anim.frames[ch.frameIdx];
+  if (ch.tickAcc >= f.dur) {
+    ch.tickAcc -= f.dur;
+    ch.frameIdx++;
+    if (ch.frameIdx >= anim.frames.length) {
+      if (ch.state === 'attack' || ch.state === 'special') {
+        ch.frameIdx = anim.loop || 0; // loop or freeze on last
+        // freeze on last frame if no loop
+        if (!anim.loop) ch.frameIdx = anim.frames.length - 1;
+      } else {
+        ch.frameIdx = anim.loop || 0;
+      }
+    }
+  }
+}
+
+function drawGame(W, H, groundY) {
+  // Background — simple gradient arena
+  const grad = gx.createLinearGradient(0, 0, 0, H);
+  grad.addColorStop(0, '#0a0a18');
+  grad.addColorStop(1, '#111120');
+  gx.fillStyle = grad;
+  gx.fillRect(0, 0, W, H);
+
+  // Floor
+  gx.fillStyle = '#161628';
+  gx.fillRect(0, groundY, W, H - groundY);
+  gx.fillStyle = '#1e1e38';
+  gx.fillRect(0, groundY, W, 2);
+
+  // Subtle glow under character
+  const glowX = ch.x;
+  const glowGrad = gx.createRadialGradient(glowX, groundY, 2, glowX, groundY, 60);
+  glowGrad.addColorStop(0, 'rgba(80,80,220,0.18)');
+  glowGrad.addColorStop(1, 'rgba(80,80,220,0)');
+  gx.fillStyle = glowGrad;
+  gx.fillRect(glowX - 80, groundY - 10, 160, 20);
+
+  // Draw character
+  const anim = getAnim(ch.actionId);
+  if (!anim || anim.frames.length === 0) return;
+  const f = anim.frames[Math.min(ch.frameIdx, anim.frames.length - 1)];
+  if (!f || !f._src) return;
+
+  const img = imgCache[f._src];
+  if (!img || !img.complete || !img.naturalWidth) return;
+
+  const drawW = f.w * SCALE;
+  const drawH = f.h * SCALE;
+  const drawX = ch.x - f.ax * SCALE + f.ox * SCALE;
+  const drawY = ch.y - f.ay * SCALE + f.oy * SCALE;
+
+  const flip = f.flip ? !ch.facingRight : !ch.facingRight;
+
+  gx.save();
+  if (flip) {
+    gx.scale(-1, 1);
+    gx.drawImage(img, -(drawX + drawW), drawY, drawW, drawH);
+  } else {
+    gx.drawImage(img, drawX, drawY, drawW, drawH);
+  }
+  gx.restore();
+
+  // HUD
+  const ac = ACTS();
+  const animName = anim.name || `Action ${ch.actionId}`;
+  document.getElementById('hud-anim').textContent = animName;
+  document.getElementById('hud-state').textContent =
+    `state: ${ch.state}  frame: ${ch.frameIdx + 1}/${anim.frames.length}  ${form} form`;
+}
+
+// Form buttons
+document.querySelectorAll('.form-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    form = btn.dataset.form;
+    document.querySelectorAll('.form-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    ch.state = 'stand';
+    ch.actionId = -1;
+    ch.frameIdx = 0;
+    ch.lockFrames = 0;
+    ch.attacking = false;
+    const ac = ACTS();
+    setAction(hasAnim(ac.STAND) ? ac.STAND : parseInt(Object.keys(anims)[0]));
+  });
+});
+
+// ═══════════════════════════════════════════════
+//  BROWSE VIEW
+// ═══════════════════════════════════════════════
+let browseInited = false;
+let browseActionId = null;
+let browseFrameIdx = 0;
+let browseTickAcc = 0;
+let browsePlaying = true;
+let browseScale = 4;
+let browseSpeed = 1;
+let browseBg = '#09090f';
+let browseRaf = null;
+let browseLastT = null;
+let browseFiltered = [];
+
+const bc  = document.getElementById('browse-canvas');
+const bx  = bc.getContext('2d');
+bx.imageSmoothingEnabled = false;
+
+function initBrowse() {
+  browseInited = true;
+  buildSidebar();
+  const firstId = Object.keys(anims).sort((a,b)=>parseInt(a)-parseInt(b))[0];
+  selectBrowseAnim(parseInt(firstId));
+  cancelAnimationFrame(browseRaf);
+  browseLastT = null;
+  browseLoop(performance.now());
+}
+
+function buildSidebar(filter = '') {
+  const list = document.getElementById('action-list');
+  list.innerHTML = '';
+  filter = filter.toLowerCase();
+  browseFiltered = Object.entries(anims)
+    .filter(([id, a]) => !filter || id.includes(filter) || (a.name||'').toLowerCase().includes(filter))
+    .sort((a, b) => parseInt(a[0]) - parseInt(b[0]));
+  document.getElementById('anim-count').textContent = browseFiltered.length;
+
+  for (const [id, anim] of browseFiltered) {
+    const d = document.createElement('div');
+    d.className = 'act-item' + (parseInt(id) === browseActionId ? ' active' : '');
+    d.dataset.id = id;
+    d.innerHTML =
+      `<span class="act-id">${id}</span>` +
+      `<span class="act-name">${anim.name || '—'}</span>` +
+      `<span class="act-fc">${anim.frames.length}f</span>`;
+    d.addEventListener('click', () => selectBrowseAnim(parseInt(id)));
+    list.appendChild(d);
+  }
+}
+
+document.getElementById('search').addEventListener('input', e => buildSidebar(e.target.value));
+
+function selectBrowseAnim(id) {
+  browseActionId = id;
+  browseFrameIdx = 0;
+  browseTickAcc  = 0;
+  const anim = anims[String(id)];
+  if (!anim) return;
+
+  document.querySelectorAll('.act-item').forEach(el =>
+    el.classList.toggle('active', parseInt(el.dataset.id) === id));
+  const active = document.querySelector('.act-item.active');
+  if (active) active.scrollIntoView({ block: 'nearest' });
+
+  document.getElementById('browse-title').textContent =
+    `Action ${id}` + (anim.name ? ` — ${anim.name}` : '');
+  document.getElementById('browse-sub').textContent =
+    `${anim.frames.length} frames · loop from frame ${anim.loop}`;
+  document.getElementById('inf-l').textContent = `frame ${anim.loop}`;
+
+  buildStrip(anim);
+  preloadBrowse(anim);
+}
+
+function preloadBrowse(anim) {
+  const ov = document.getElementById('b-loading');
+  let p = 0;
+  for (const f of anim.frames) {
+    if (!f._src) continue;
+    const img = getImg(f._src);
+    if (!img.complete) {
+      p++;
+      const done = () => { p--; if (p === 0) ov.classList.remove('show'); };
+      img.onload = img.onerror = done;
+    }
+  }
+  if (p > 0) ov.classList.add('show');
+}
+
+function buildStrip(anim) {
+  const strip = document.getElementById('strip');
+  strip.innerHTML = '';
+  anim.frames.forEach((f, i) => {
+    const d = document.createElement('div');
+    d.className = 'sf' + (i === browseFrameIdx ? ' active' : '');
+    if (f._src) {
+      const img = document.createElement('img');
+      img.src = f._src;
+      img.style.transform = f.flip ? 'scaleX(-1)' : '';
+      d.appendChild(img);
+    }
+    const dur = document.createElement('span');
+    dur.className = 'fd';
+    dur.textContent = f.dur;
+    d.appendChild(dur);
+    d.addEventListener('click', () => { browseFrameIdx = i; browseTickAcc = 0; updateStrip(); });
+    strip.appendChild(d);
+  });
+}
+
+function updateStrip() {
+  document.querySelectorAll('.sf').forEach((el, i) => {
+    el.classList.toggle('active', i === browseFrameIdx);
+    if (i === browseFrameIdx) el.scrollIntoView({ block: 'nearest', inline: 'nearest' });
+  });
+}
+
+function browseLoop(now) {
+  browseRaf = requestAnimationFrame(browseLoop);
+  const dt = browseLastT == null ? 0 : Math.min((now - browseLastT) / 1000, 0.05);
+  browseLastT = now;
+
+  const anim = anims[String(browseActionId)];
+  if (!anim || anim.frames.length === 0) return;
+
+  if (browsePlaying) {
+    browseTickAcc += dt * 60 * browseSpeed;
+    const f = anim.frames[browseFrameIdx];
+    if (browseTickAcc >= f.dur) {
+      browseTickAcc -= f.dur;
+      browseFrameIdx++;
+      if (browseFrameIdx >= anim.frames.length) browseFrameIdx = anim.loop || 0;
+      updateStrip();
+    }
+  }
+
+  const wrap = document.getElementById('browse-canvas-wrap');
+  const W = wrap.clientWidth, H = wrap.clientHeight;
+  bc.width = W; bc.height = H;
+  bx.imageSmoothingEnabled = false;
+  bx.fillStyle = browseBg;
+  bx.fillRect(0, 0, W, H);
+
+  const groundY = Math.floor(H * 0.62);
+  bx.strokeStyle = 'rgba(255,255,255,0.05)';
+  bx.lineWidth = 1;
+  bx.beginPath();
+  bx.moveTo(W*0.1, groundY); bx.lineTo(W*0.9, groundY);
+  bx.stroke();
+
+  const f = anim.frames[browseFrameIdx];
+  if (!f || !f._src) return;
+  const img = imgCache[f._src];
+  if (!img || !img.complete || !img.naturalWidth) return;
+
+  const dW = f.w * browseScale, dH = f.h * browseScale;
+  const cx = Math.floor(W / 2);
+  const dX = cx - f.ax * browseScale + f.ox * browseScale;
+  const dY = groundY - f.ay * browseScale + f.oy * browseScale;
+
+  bx.save();
+  if (f.flip) {
+    bx.scale(-1,1);
+    bx.drawImage(img, -(dX+dW), dY, dW, dH);
+  } else {
+    bx.drawImage(img, dX, dY, dW, dH);
+  }
+  bx.restore();
+
+  // axis dot
+  bx.strokeStyle = 'rgba(100,100,255,0.35)';
+  bx.lineWidth = 1;
+  bx.beginPath();
+  bx.moveTo(cx-6, groundY); bx.lineTo(cx+6, groundY);
+  bx.moveTo(cx, groundY-6); bx.lineTo(cx, groundY+6);
+  bx.stroke();
+
+  document.getElementById('inf-f').textContent  = `${browseFrameIdx+1}/${anim.frames.length}`;
+  document.getElementById('inf-s').textContent  = f._gi || '?';
+  document.getElementById('inf-sz').textContent = `${f.w}×${f.h}`;
+  document.getElementById('inf-ax').textContent = `${f.ax}, ${f.ay}`;
+  document.getElementById('inf-d').textContent  = `${f.dur} ticks`;
+}
+
+// Browse controls
+document.getElementById('btn-play').addEventListener('click', () => {
+  browsePlaying = !browsePlaying;
+  const btn = document.getElementById('btn-play');
+  btn.textContent = browsePlaying ? '⏸' : '▶';
+  btn.classList.toggle('on', browsePlaying);
+});
+document.getElementById('btn-prev').addEventListener('click', () => {
+  browsePlaying = false;
+  document.getElementById('btn-play').textContent = '▶';
+  document.getElementById('btn-play').classList.remove('on');
+  const anim = anims[String(browseActionId)];
+  if (anim) { browseFrameIdx = (browseFrameIdx - 1 + anim.frames.length) % anim.frames.length; updateStrip(); }
+});
+document.getElementById('btn-next').addEventListener('click', () => {
+  browsePlaying = false;
+  document.getElementById('btn-play').textContent = '▶';
+  document.getElementById('btn-play').classList.remove('on');
+  const anim = anims[String(browseActionId)];
+  if (anim) { browseFrameIdx = (browseFrameIdx + 1) % anim.frames.length; updateStrip(); }
+});
+document.getElementById('speed').addEventListener('input', e => {
+  browseSpeed = parseFloat(e.target.value);
+  document.getElementById('sv').textContent = browseSpeed.toFixed(1) + '×';
+});
+document.getElementById('sc-sel').addEventListener('change', e => { browseScale = parseInt(e.target.value); });
+document.querySelectorAll('.bgsw').forEach(b => {
+  b.addEventListener('click', () => {
+    browseBg = b.dataset.bg;
+    document.querySelectorAll('.bgsw').forEach(x => x.classList.remove('sel'));
+    b.classList.add('sel');
+  });
+});
+
+// Browse keyboard shortcuts
+document.addEventListener('keydown', e => {
+  if (!document.getElementById('view-browse').classList.contains('active')) return;
+  if (e.target.tagName === 'INPUT') return;
+  if (e.code === 'Space') { e.preventDefault(); document.getElementById('btn-play').click(); }
+  if (e.code === 'ArrowRight') document.getElementById('btn-next').click();
+  if (e.code === 'ArrowLeft')  document.getElementById('btn-prev').click();
+});
+
+// ═══════════════════════════════════════════════
+//  BOOTSTRAP
+// ═══════════════════════════════════════════════
+(async () => {
+  try {
+    const [animRes, manRes] = await Promise.all([
+      fetch(ANIM_JSON), fetch(MANIFEST)
+    ]);
+    manifest = await manRes.json();
+    anims    = patchFrames(await animRes.json());
+
+    // Init play view
+    ch.x = gc.clientWidth / 2 || 400;
+    ch.y = gc.clientHeight * GROUND_FRAC || 400;
+    const firstStand = hasAnim(A.STAND) ? A.STAND : parseInt(Object.keys(anims)[0]);
+    ch.actionId = firstStand;
+    playLoop(performance.now());
+
+    // Start play loop
+    requestAnimationFrame(t => { playLastT = null; playLoop(t); });
+
+  } catch(err) {
+    console.error(err);
+    document.getElementById('hud-anim').textContent =
+      'Error — run: python3 -m http.server 8181 in the project folder';
+  }
+})();
+</script>
+
+<!-- ── Input Recorder ──────────────────────────── -->
+<style>
+#recorder {
+  position: fixed;
+  bottom: 16px;
+  right: 16px;
+  width: 320px;
+  background: #0d0d18;
+  border: 1px solid #2a2a3e;
+  border-radius: 8px;
+  font-family: 'Segoe UI', system-ui, sans-serif;
+  font-size: 12px;
+  color: #ccc;
+  z-index: 9999;
+  overflow: hidden;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+}
+#rec-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 12px;
+  background: #111120;
+  border-bottom: 1px solid #1e1e30;
+  cursor: pointer;
+}
+#rec-dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: #444;
+  flex-shrink: 0;
+  transition: background .2s;
+}
+#rec-dot.recording { background: #f55; animation: blink 1s infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:.3} }
+#rec-label { flex: 1; font-size: 11px; color: #888; }
+#rec-hint  { font-size: 10px; color: #444; }
+#rec-body  { padding: 8px 12px; max-height: 260px; overflow-y: auto; display: none; }
+#rec-body.open { display: block; }
+#rec-body::-webkit-scrollbar { width: 4px; }
+#rec-body::-webkit-scrollbar-thumb { background: #2a2a3a; border-radius: 2px; }
+.rec-session {
+  margin-bottom: 12px;
+  border-left: 2px solid #2a2a3e;
+  padding-left: 8px;
+}
+.rec-session-head {
+  font-size: 10px;
+  color: #555;
+  margin-bottom: 4px;
+}
+.rec-event {
+  display: flex;
+  gap: 6px;
+  margin: 2px 0;
+  font-size: 11px;
+  font-variant-numeric: tabular-nums;
+}
+.rec-t   { color: #444; min-width: 48px; }
+.rec-key { 
+  background: #1e1e30; border: 1px solid #2a2a3e;
+  border-radius: 3px; padding: 0 5px;
+  color: #aaa; font-size: 10px;
+}
+.rec-key.down { color: #7af; border-color: #3a3a5e; }
+.rec-key.up   { color: #555; }
+.rec-anim { color: #888; font-size: 10px; font-style: italic; flex: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+#rec-copy {
+  display: block;
+  width: calc(100% - 24px);
+  margin: 0 12px 10px;
+  padding: 5px;
+  background: #1a1a28;
+  border: 1px solid #2a2a3a;
+  border-radius: 4px;
+  color: #aaa;
+  font-size: 11px;
+  cursor: pointer;
+  text-align: center;
+}
+#rec-copy:hover { background: #22223a; color: #ccc; }
+</style>
+
+<div id="recorder">
+  <div id="rec-header">
+    <div id="rec-dot"></div>
+    <span id="rec-label">Input Recorder — idle</span>
+    <span id="rec-hint">Press <kbd style="background:#1a1a2e;border:1px solid #333;padding:1px 4px;border-radius:3px;font-size:10px">S</kbd> in Play tab to start/stop</span>
+  </div>
+  <div id="rec-body">
+    <div id="rec-sessions"></div>
+    <button id="rec-copy">Copy last session as JSON</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const dot      = document.getElementById('rec-dot');
+  const label    = document.getElementById('rec-label');
+  const body     = document.getElementById('rec-body');
+  const sessions = document.getElementById('rec-sessions');
+  const copyBtn  = document.getElementById('rec-copy');
+  const header   = document.getElementById('rec-header');
+
+  let recording  = false;
+  let sessionStart = 0;
+  let currentSession = null; // DOM element
+  let sessionData = [];      // [{t, type, code, anim}]
+  let allSessions = [];      // array of sessionData arrays
+
+  header.addEventListener('click', () => {
+    body.classList.toggle('open');
+  });
+
+  // Listen to keydown/keyup on the play view
+  document.addEventListener('keydown', e => {
+    // S toggles recording (only in play tab)
+    if (e.code === 'KeyS' && document.getElementById('view-play').classList.contains('active')) {
+      if (!recording) {
+        startRecording();
+      } else {
+        stopRecording(e);
+        return; // don't log the stop S
+      }
+      return;
+    }
+    if (recording) logEvent('down', e.code);
+  });
+
+  document.addEventListener('keyup', e => {
+    if (e.code === 'KeyS' && !recording) return;
+    if (recording && e.code !== 'KeyS') logEvent('up', e.code);
+  });
+
+  function getAnimName() {
+    const hud = document.getElementById('hud-anim');
+    return hud ? hud.textContent.trim() : '?';
+  }
+
+  function startRecording() {
+    recording    = true;
+    sessionStart = performance.now();
+    sessionData  = [];
+
+    dot.classList.add('recording');
+    label.textContent = '● Recording…';
+    body.classList.add('open');
+
+    currentSession = document.createElement('div');
+    currentSession.className = 'rec-session';
+    const sessionIdx = allSessions.length + 1;
+    currentSession.innerHTML = `<div class="rec-session-head">Session ${sessionIdx} — in progress</div>`;
+    sessions.appendChild(currentSession);
+    sessions.scrollTop = sessions.scrollHeight;
+  }
+
+  function stopRecording() {
+    recording = false;
+    dot.classList.remove('recording');
+
+    const dur = ((performance.now() - sessionStart) / 1000).toFixed(2);
+    label.textContent = `Last session: ${sessionData.length} events, ${dur}s`;
+
+    if (currentSession) {
+      currentSession.querySelector('.rec-session-head').textContent =
+        `Session ${allSessions.length + 1} — ${sessionData.length} events · ${dur}s`;
+    }
+
+    allSessions.push([...sessionData]);
+    sessions.scrollTop = sessions.scrollHeight;
+  }
+
+  function logEvent(type, code) {
+    const t = ((performance.now() - sessionStart) / 1000).toFixed(3);
+    const anim = getAnimName();
+    const entry = { t: parseFloat(t), type, code, anim };
+    sessionData.push(entry);
+
+    if (!currentSession) return;
+
+    const row = document.createElement('div');
+    row.className = 'rec-event';
+
+    const friendlyKey = {
+      'ArrowLeft':'←', 'ArrowRight':'→', 'ArrowUp':'↑', 'ArrowDown':'↓',
+      'Space':'SPC', 'KeyZ':'Z', 'KeyX':'X', 'KeyC':'C',
+      'KeyA':'A', 'KeyD':'D', 'KeyQ':'Q', 'KeyE':'E',
+      'Enter':'↵',
+    }[code] || code.replace('Key','');
+
+    row.innerHTML =
+      `<span class="rec-t">${t}s</span>` +
+      `<span class="rec-key ${type}">${type === 'down' ? '▼' : '▲'} ${friendlyKey}</span>` +
+      `<span class="rec-anim">${anim}</span>`;
+
+    currentSession.appendChild(row);
+    sessions.scrollTop = sessions.scrollHeight;
+  }
+
+  copyBtn.addEventListener('click', () => {
+    const last = allSessions[allSessions.length - 1];
+    if (!last || last.length === 0) return;
+    navigator.clipboard.writeText(JSON.stringify(last, null, 2))
+      .then(() => { copyBtn.textContent = 'Copied!'; setTimeout(() => copyBtn.textContent = 'Copy last session as JSON', 1500); });
+  });
+})();
+</script>
+</body>
+</html>

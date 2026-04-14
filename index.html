@@ -1482,6 +1482,149 @@
         @media (prefers-reduced-motion: reduce){
             * { animation: none !important; transition: none !important; }
         }
+
+/* ══════════════════════════════════════
+   BLACK CLOVER / ASTA THEME LAYER
+══════════════════════════════════════ */
+@font-face {
+  font-family:'BlackClover';
+  src:url('black_clover/BlackCloverFont.woff') format('woff'),
+      url('black_clover/BlackCloverFont.ttf') format('truetype'),
+      url('black_clover/BlackCloverFont.otf') format('opentype');
+  font-weight:normal; font-style:normal;
+}
+:root[data-theme="asta"] {
+  --wood-dark:#07070f; --wood-medium:#0c0c1c; --wood-light:#14142a;
+  --vinyl-black:#000000; --label-tan:#d8d0ec; --shelf-green:#0c0c1c;
+  --accent-sage:#c41234; --text-cream:#e0d8f2; --gold:#dbb25e;
+  --gold-dark:#8a5520; --demon-red:#ff2244; --demon-dark:#aa0022;
+  --mirror-blue:#1a3060; --bb-navy:#0a0a18; --bb-crimson:#c41234;
+}
+:root[data-theme="asta"] body { background:linear-gradient(135deg,#07070f 0%,#0c0818 25%,#100a1e 60%,#07070f 100%); }
+:root[data-theme="asta"] body::before {
+  background-image:
+    radial-gradient(ellipse at 40% 15%,rgba(180,20,50,0.08) 0%,transparent 50%),
+    radial-gradient(ellipse at 75% 80%,rgba(20,30,120,0.06) 0%,transparent 50%),
+    repeating-linear-gradient(0deg,transparent,transparent 58px,rgba(180,140,40,0.018) 58px,rgba(180,140,40,0.018) 59px),
+    repeating-linear-gradient(90deg,transparent,transparent 58px,rgba(180,140,40,0.015) 58px,rgba(180,140,40,0.015) 59px);
+  mix-blend-mode:normal; opacity:0.9;
+}
+:root[data-theme="asta"] .profile-badge .profile-avatar { box-shadow:0 0 0 3px var(--gold),0 0 0 5px var(--bb-crimson),0 8px 24px rgba(196,18,52,0.35); }
+:root[data-theme="asta"] .store-sign {
+  background:linear-gradient(to bottom,#100316 5%,#0a0214 40%,#070010 80%);
+  border-color:var(--bb-crimson);
+  box-shadow:inset 0 2px 4px rgba(196,18,52,0.12),4px 4px 0 #180308,0 0 20px rgba(196,18,52,0.3),0 0 60px rgba(196,18,52,0.1),8px 8px 20px rgba(0,0,0,0.8);
+}
+:root[data-theme="asta"] .store-name {
+  font-family:'BlackClover','Cinzel Decorative',serif; color:var(--text-cream); font-size:2.4rem;
+  text-shadow:0 0 18px var(--bb-crimson),0 0 40px rgba(196,18,52,0.3),2px 2px 8px rgba(0,0,0,0.9);
+  letter-spacing:0.07em;
+}
+:root[data-theme="asta"] .tagline { color:#e08090; text-shadow:0 0 8px rgba(200,30,60,0.4); }
+:root[data-theme="asta"] .contact-row a:hover { background:rgba(196,18,52,0.1); border-color:var(--bb-crimson); box-shadow:0 4px 12px rgba(196,18,52,0.25); color:#ffb0b8; }
+:root[data-theme="asta"] .section-title { font-family:'BlackClover','Cinzel',serif; text-shadow:0 0 12px rgba(196,18,52,0.4),2px 2px 6px rgba(0,0,0,0.9); letter-spacing:0.08em; }
+:root[data-theme="asta"] .section-title::after { background:linear-gradient(90deg,var(--demon-dark) 0%,var(--bb-crimson) 50%,transparent 100%); box-shadow:0 0 6px rgba(196,18,52,0.35); }
+:root[data-theme="asta"] .matcha-loader { display:none; }
+.grimoire-loader { width:34px; height:34px; margin-left:0.75rem; position:relative; display:none; align-items:center; justify-content:center; flex-shrink:0; }
+:root[data-theme="asta"] .grimoire-loader { display:flex; }
+.grimoire-loader svg { width:100%; height:100%; animation:glPulse 2.2s ease-in-out infinite; filter:drop-shadow(0 0 4px rgba(196,18,52,0.7)); }
+@keyframes glPulse {
+  0%,100%{filter:drop-shadow(0 0 3px rgba(196,18,52,0.5));transform:scale(1)}
+  50%{filter:drop-shadow(0 0 8px rgba(196,18,52,0.9)) drop-shadow(0 0 18px rgba(170,0,30,0.4));transform:scale(1.06)}
+}
+:root[data-theme="asta"] .shelf-unit { background:linear-gradient(155deg,#0a0316 15%,#070110 50%,#0e0318 100%); box-shadow:inset 0 2px 10px rgba(196,18,52,0.07),inset 0 -2px 10px rgba(0,0,0,0.5),0 0 0 1px rgba(196,18,52,0.1),0 10px 30px rgba(0,0,0,0.7); }
+:root[data-theme="asta"] .shelf-unit::before { opacity:0.1; }
+:root[data-theme="asta"] .edu-card { background:linear-gradient(135deg,rgba(196,18,52,0.04) 0%,rgba(12,4,18,0.6) 100%); border-color:rgba(196,18,52,0.25); }
+:root[data-theme="asta"] .edu-card h3 { font-family:'BlackClover','Cinzel',serif; }
+:root[data-theme="asta"] .vinyl-wrapper { box-shadow:5px 5px 0 0 #180410; }
+:root[data-theme="asta"] .vinyl-wrapper:hover { transform:translateY(-10px) rotate(2deg); box-shadow:0 0 0 2px rgba(196,18,52,0.5),0 0 20px rgba(196,18,52,0.4),8px 8px 20px rgba(0,0,0,0.7); }
+:root[data-theme="asta"] .vinyl-label { background:rgba(30,10,20,0.7); }
+:root[data-theme="asta"] .vinyl-text { background:rgba(20,5,12,0.85); }
+:root[data-theme="asta"] .album-info { background:rgba(10,3,8,0.9); }
+:root[data-theme="asta"] .vinyl-border { border-top-color:rgba(196,18,52,0.5); border-bottom-color:rgba(196,18,52,0.5); border-left-color:rgba(140,0,25,0.3); border-right-color:rgba(140,0,25,0.3); }
+:root[data-theme="asta"] .vinyl-center { background:#180410; }
+:root[data-theme="asta"] .tonearm-base,:root[data-theme="asta"] .tonearm-stick { background:#bb2233; }
+:root[data-theme="asta"] .vinyl-wrapper .vinyl-footer { background:rgba(8,3,14,0.8); }
+:root[data-theme="asta"] .vinyl-footer-text .footer-title { font-family:'BlackClover','Cinzel',serif; }
+:root[data-theme="asta"] .records-container::-webkit-scrollbar-thumb { background:var(--demon-dark); }
+:root[data-theme="asta"] .skill-category { background:linear-gradient(135deg,rgba(196,18,52,0.04) 0%,rgba(8,2,14,0.6) 100%); border-color:rgba(196,18,52,0.18); }
+:root[data-theme="asta"] .skill-category h3 { color:var(--bb-crimson); text-shadow:0 0 8px rgba(196,18,52,0.35); }
+:root[data-theme="asta"] .skill-tag { background:rgba(196,18,52,0.07); border-color:rgba(196,18,52,0.3); }
+:root[data-theme="asta"] .skill-tag:hover { background:var(--bb-crimson); color:#fff; box-shadow:0 2px 12px rgba(196,18,52,0.4); }
+/* Grimoire cards */
+.grimoire-card { width:155px; height:205px; position:relative; cursor:pointer; flex-shrink:0; margin-bottom:calc(var(--card-footer-height)+10px); transition:transform 0.3s ease,box-shadow 0.3s ease; background:linear-gradient(155deg,var(--wood-medium) 0%,var(--wood-dark) 60%,var(--wood-light) 100%); border-right:2px solid var(--gold-dark); border-top:2px solid var(--gold-dark); border-bottom:2px solid var(--gold-dark); border-left:0; border-radius:2px 6px 6px 2px; box-shadow:5px 5px 0 rgba(0,0,0,0.4); }
+.grimoire-card:hover { transform:translateY(-10px) rotate(1.5deg); box-shadow:0 15px 30px rgba(0,0,0,0.5); }
+.grimoire-spine { position:absolute; left:-10px; top:0; bottom:0; width:10px; background:linear-gradient(to right,var(--wood-dark),var(--wood-medium)); border-radius:3px 0 0 3px; border-left:1px solid var(--gold-dark); border-top:2px solid var(--gold-dark); border-bottom:2px solid var(--gold-dark); }
+.grimoire-card::before { content:''; position:absolute; top:7px; left:4px; right:4px; bottom:7px; border:1px solid rgba(219,178,94,0.35); border-radius:1px 3px 3px 1px; pointer-events:none; }
+.grimoire-card::after { content:''; position:absolute; top:2px; right:2px; width:16px; height:16px; border-top:1.5px solid rgba(219,178,94,0.7); border-right:1.5px solid rgba(219,178,94,0.7); pointer-events:none; }
+.grimoire-inner { padding:14px 10px 6px; display:flex; flex-direction:column; align-items:center; height:100%; }
+.grimoire-badge { width:60px; height:60px; border-radius:50%; background-size:cover; background-position:center; border:2px solid var(--gold-dark); margin-bottom:8px; box-shadow:0 2px 8px rgba(0,0,0,0.5),inset 0 0 6px rgba(0,0,0,0.3); flex-shrink:0; }
+:root[data-theme="asta"] .grimoire-badge { border-color:var(--gold); box-shadow:0 0 10px rgba(219,178,94,0.25),0 2px 8px rgba(0,0,0,0.6); }
+.grimoire-clover-icon { margin:4px 0 6px; opacity:0.75; flex-shrink:0; }
+:root[data-theme="asta"] .grimoire-clover-icon { opacity:1; filter:drop-shadow(0 0 3px rgba(196,18,52,0.5)); }
+.grimoire-title-text { font-family:'DM Serif Display',serif; font-size:0.78rem; color:var(--text-cream); text-align:center; line-height:1.2; padding:0 4px; flex-shrink:0; }
+:root[data-theme="asta"] .grimoire-title-text { font-family:'BlackClover','Cinzel',serif; font-size:0.68rem; color:var(--gold); text-shadow:0 0 8px rgba(219,178,94,0.3); }
+.grimoire-role-text { font-family:'Space Mono',monospace; font-size:0.6rem; color:var(--accent-sage); text-align:center; margin-top:3px; opacity:0.85; }
+:root[data-theme="asta"] .grimoire-card { background:linear-gradient(155deg,#140610 0%,#08030e 60%,#180612 100%); border-color:var(--gold); }
+:root[data-theme="asta"] .grimoire-spine { background:linear-gradient(to right,#040108,#0c040e); border-color:var(--gold); }
+:root[data-theme="asta"] .grimoire-card:hover { box-shadow:0 0 18px rgba(196,18,52,0.5),0 0 50px rgba(160,0,30,0.2),8px 8px 24px rgba(0,0,0,0.8); }
+:root[data-theme="asta"] .grimoire-card:hover .grimoire-clover-icon { filter:drop-shadow(0 0 6px rgba(196,18,52,0.8)) drop-shadow(0 0 12px rgba(196,18,52,0.4)); }
+.grimoire-card .vinyl-footer { position:absolute; left:-10px; right:0; bottom:calc(-1*var(--card-footer-height)); height:var(--card-footer-height); display:grid; grid-template-columns:var(--footer-icon-size) 1fr; align-items:center; gap:0.6rem; padding:0 0.85rem; background:rgba(20,20,20,0.65); border-radius:0 0 6px 6px; backdrop-filter:blur(6px); }
+:root[data-theme="asta"] .grimoire-card .vinyl-footer { background:rgba(8,3,14,0.8); box-shadow:inset 0 1px 0 rgba(196,18,52,0.12); }
+/* Mirror magic: asta theme TV overrides */
+:root[data-theme="asta"] .mini-tv { background:linear-gradient(135deg,#0e0820 0%,#080612 50%,#0a0818 100%) !important; border-color:var(--gold) !important; border-radius:50%/45%; padding:0.6rem; box-shadow:0 0 0 2px #5a4010,0 0 20px rgba(180,140,40,0.2),inset 0 2px 8px rgba(0,0,0,0.8),0 8px 24px rgba(0,0,0,0.6) !important; }
+:root[data-theme="asta"] .mini-bezel { background:none !important; box-shadow:none !important; padding:0 !important; border-radius:50%/45%; overflow:hidden; }
+:root[data-theme="asta"] .mini-screen { aspect-ratio:1/1 !important; border-radius:50% !important; box-shadow:inset 0 0 40px rgba(20,40,100,0.35),inset 0 0 80px rgba(0,0,0,0.5) !important; background:linear-gradient(135deg,#0a1830,#0a0f1e) !important; }
+:root[data-theme="asta"] .mini-screen::before { background:radial-gradient(ellipse at 30% 25%,rgba(160,200,255,0.18),rgba(255,255,255,0) 60%) !important; animation:mirrorShimmer 3s ease-in-out infinite; }
+:root[data-theme="asta"] .mini-screen::after { background:linear-gradient(135deg,rgba(160,200,255,0.22),rgba(255,255,255,0.04) 55%,rgba(255,255,255,0) 75%) !important; width:40% !important; height:35% !important; }
+:root[data-theme="asta"] .mini-video { filter:saturate(0.7) hue-rotate(200deg) brightness(0.85) !important; }
+:root[data-theme="asta"] .mini-static { filter:hue-rotate(190deg) saturate(0.5) brightness(0.6) !important; }
+:root[data-theme="asta"] .knobs { display:none !important; }
+:root[data-theme="asta"] .mini-channel-info { background:rgba(10,20,50,0.75) !important; border-color:rgba(180,150,50,0.4) !important; color:#aaccff !important; font-size:0.68rem !important; }
+@keyframes mirrorShimmer { 0%,100%{opacity:0.7} 50%{opacity:1} }
+/* Modal asta overrides */
+:root[data-theme="asta"] .modal-overlay { background:rgba(6,3,12,0.97); }
+:root[data-theme="asta"] .modal-content { background:linear-gradient(135deg,#0e0416 0%,#07020e 100%); border-color:rgba(196,18,52,0.35); box-shadow:0 20px 60px rgba(0,0,0,0.8),0 0 40px rgba(196,18,52,0.08); }
+:root[data-theme="asta"] .modal-vinyl-side { background:linear-gradient(135deg,#160618 0%,#08030e 100%); }
+:root[data-theme="asta"] .modal-vinyl-center { background:#180410; }
+:root[data-theme="asta"] .modal-info h2 { font-family:'BlackClover','Cinzel',serif; }
+:root[data-theme="asta"] .modal-info .period { color:#ff8090; }
+:root[data-theme="asta"] .modal-info li { border-left-color:var(--bb-crimson); background:rgba(196,18,52,0.04); }
+:root[data-theme="asta"] .modal-info li:hover { background:rgba(196,18,52,0.08); }
+:root[data-theme="asta"] .modal-info li::before { color:var(--bb-crimson); }
+:root[data-theme="asta"] .modal-info::-webkit-scrollbar-thumb { background:var(--demon-dark); }
+:root[data-theme="asta"] .close-modal { background:var(--demon-dark); border-color:var(--bb-crimson); color:#fff; box-shadow:0 0 10px rgba(196,18,52,0.4); }
+:root[data-theme="asta"] .bronify-btn { background:linear-gradient(135deg,#aa0022 0%,#7a0015 100%); border-color:var(--bb-crimson); color:#fff; box-shadow:0 0 10px rgba(196,18,52,0.3); }
+:root[data-theme="asta"] footer { border-top-color:rgba(196,18,52,0.25); }
+/* Theme trigger — naked SVG only */
+#asta-trigger { position:fixed; bottom:2rem; right:2rem; z-index:9990; background:none; border:none; padding:0; cursor:pointer; width:50px; height:50px; display:flex; align-items:center; justify-content:center; filter:drop-shadow(0 0 5px rgba(196,18,52,0.45)); transition:filter 0.2s,transform 0.2s; animation:triggerPulse 3s ease-in-out infinite; user-select:none; }
+#asta-trigger:hover { filter:drop-shadow(0 0 12px rgba(196,18,52,0.75)); transform:scale(1.12); }
+#asta-trigger.active-theme { filter:drop-shadow(0 0 5px rgba(219,178,94,0.35)); animation:none; }
+#asta-trigger.active-theme:hover { filter:drop-shadow(0 0 12px rgba(219,178,94,0.6)); }
+@keyframes triggerPulse { 0%,100%{filter:drop-shadow(0 0 4px rgba(196,18,52,0.3))} 50%{filter:drop-shadow(0 0 10px rgba(196,18,52,0.65))} }
+#trigger-grimoire-icon { display:flex; align-items:center; justify-content:center; }
+#trigger-matcha-icon { display:none; position:relative; }
+#asta-trigger.active-theme #trigger-grimoire-icon { display:none; }
+#asta-trigger.active-theme #trigger-matcha-icon { display:block; }
+#trigger-matcha-icon { width:20px; height:46px; transform:scale(0.85); transform-origin:center bottom; }
+#trigger-matcha-icon::after { content:""; position:absolute; inset:0; padding:2px 4px; border-top:1px solid #bbb6aa; border-bottom:4px solid #bbb6aa; background:linear-gradient(#7FB069 0 0) bottom no-repeat content-box,#e4e0d7; mix-blend-mode:darken; animation:drink 1.5s infinite linear; }
+#trigger-matcha-icon::before { content:""; position:absolute; inset:-14px calc(50% - 2px) 6px; background:#5D8C49; transform-origin:bottom; transform:rotate(8deg); }
+/* Takeover overlay */
+#takeover-overlay { position:fixed; inset:0; z-index:9995; display:flex; align-items:center; justify-content:center; background:radial-gradient(circle at 50% 50%,#1a0520 0%,#0a0214 40%,#000 100%); clip-path:circle(0% at 50% 50%); pointer-events:none; }
+#takeover-overlay.spreading { clip-path:circle(150% at 50% 50%); transition:clip-path 0.65s cubic-bezier(0.4,0,0.2,1); }
+#takeover-overlay.fading { opacity:0; transition:opacity 0.5s ease 0.5s; }
+#takeover-clover { opacity:0; transform:scale(0) rotate(-30deg); transition:all 0.6s cubic-bezier(0.34,1.56,0.64,1) 0.35s; filter:drop-shadow(0 0 30px rgba(196,18,52,0.8)) drop-shadow(0 0 80px rgba(160,0,30,0.5)); }
+#takeover-overlay.spreading #takeover-clover { opacity:1; transform:scale(1) rotate(0deg); }
+#takeover-clover svg { width:200px; height:200px; }
+#takeover-overlay.spreading #takeover-clover svg { animation:cloverSlash 0.8s cubic-bezier(0.22,1,0.36,1) 0.5s both; }
+@keyframes cloverSlash { 0%{transform:scale(0.8) rotate(-10deg);filter:brightness(3)} 40%{transform:scale(1.4) rotate(5deg);filter:brightness(2)} 70%{transform:scale(0.95) rotate(-3deg);filter:brightness(1.5)} 100%{transform:scale(1) rotate(0deg);filter:brightness(1)} }
+#antimag-canvas { position:fixed; inset:0; z-index:9994; pointer-events:none; opacity:0; }
+/* Grimoire scroll reveal */
+@keyframes grimoireSwoopIn { from{opacity:0;transform:translateY(-22px) rotate(-2deg) scale(0.96)} to{opacity:1;transform:none} }
+.grimoire-card.reveal { opacity:0; transform:translateY(-18px) scale(0.98); }
+.grimoire-card.reveal.is-visible { animation:grimoireSwoopIn 0.7s cubic-bezier(0.22,0.68,0.17,1) both; animation-delay:var(--reveal-delay,0ms); }
+/* Responsive grimoire */
+@media(max-width:768px) { .grimoire-card{width:130px;height:175px} .grimoire-badge{width:50px;height:50px} #asta-trigger{bottom:1rem;right:1rem} }
     </style>
 </head>
 <body>
@@ -1491,7 +1634,7 @@
                 <img src="images/mepfp.png" alt="Amine Nazih" class="profile-avatar">
             </div>
             <div class="store-sign">
-                <h1 class="store-name">amine's record shop</h1>
+                <h1 class="store-name" id="store-name-text">amine's record shop</h1>
             </div>
             <p class="tagline">amine nazih - full-stack developer</p>
             <div class="contact-row">
@@ -1501,11 +1644,22 @@
                 <a href="https://drive.google.com/file/d/19HEk77BZhkbU4vvRHmWVqe8yWGuUW5Ol/view?usp=sharing" target="_blank">resume</a>
             </div>
         </header>
-        
+
+        <!-- GRIMOIRE LOADER TEMPLATE -->
+        <template id="gl-tmpl">
+          <svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg">
+            <defs><linearGradient id="glA-INST" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e0c0a"/><stop offset="100%" stop-color="#1c0a0c"/></linearGradient><linearGradient id="glB-INST" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f2c84a"/><stop offset="50%" stop-color="#dbb25e"/><stop offset="100%" stop-color="#8a5f20"/></linearGradient></defs>
+            <rect x="5" y="3" width="90" height="124" rx="4" fill="url(#glA-INST)"/><rect x="5" y="3" width="90" height="124" rx="4" fill="none" stroke="url(#glB-INST)" stroke-width="2"/><rect x="9" y="8" width="82" height="114" rx="2" fill="none" stroke="url(#glB-INST)" stroke-width="0.8" opacity="0.5"/>
+            <path d="M9,8 L9,22 L14,22 L14,13 L24,13 L24,8 Z" fill="url(#glB-INST)" opacity="0.9"/><path d="M91,8 L79,8 L79,13 L86,13 L86,22 L91,22 Z" fill="url(#glB-INST)" opacity="0.9"/><path d="M9,122 L9,108 L14,108 L14,117 L24,117 L24,122 Z" fill="url(#glB-INST)" opacity="0.9"/><path d="M91,122 L79,122 L79,117 L86,117 L86,108 L91,108 Z" fill="url(#glB-INST)" opacity="0.9"/>
+            <g transform="translate(50,63)"><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(72)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(144)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(216)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.3"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.3" transform="rotate(72)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.3" transform="rotate(144)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.3" transform="rotate(216)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.3" transform="rotate(288)"/><circle cx="0" cy="0" r="5" fill="#040105"/><circle cx="0" cy="0" r="5" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4"/></g>
+            <line x1="18" y1="96" x2="82" y2="96" stroke="url(#glB-INST)" stroke-width="0.6" opacity="0.5"/><line x1="18" y1="101" x2="82" y2="101" stroke="url(#glB-INST)" stroke-width="0.4" opacity="0.3"/><line x1="18" y1="106" x2="82" y2="106" stroke="url(#glB-INST)" stroke-width="0.6" opacity="0.5"/>
+          </svg>
+        </template>
+
         <section>
             <h2 class="section-title">
                 education
-                <div class="matcha-loader"></div>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="1"></div>
             </h2>
             <div class="edu-card">
                 <h3>Northeastern University</h3>
@@ -1522,7 +1676,7 @@
         <section>
             <h2 class="section-title">
                 experience collection
-                <div class="matcha-loader"></div>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="2"></div>
             </h2>
             <div class="shelf-unit">
                 <div class="records-container" id="experience-grid">
@@ -1534,7 +1688,7 @@
         <section>
             <h2 class="section-title">
                 project releases
-                <div class="matcha-loader"></div>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="3"></div>
             </h2>
             <div class="shelf-unit">
                 <div class="records-container" id="projects-grid">
@@ -1546,11 +1700,11 @@
         <!-- Shop TV between projects and albums -->
         <section>
             <h2 class="section-title">
-                shop tv
-                <div class="matcha-loader"></div>
+                <span id="tv-section-label">shop tv</span>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="4"></div>
             </h2>
             <div class="shelf-unit tv-shelf">
-                <p class="tagline tv-tagline" style="text-align: center; color: var(--accent-sage);">
+                <p class="tagline tv-tagline" id="tv-tagline" style="text-align: center; color: var(--accent-sage);">
                     Take a break — vibe in the shop
                 </p>
                 <div class="tv-container single-tv" style="display:none">
@@ -1608,7 +1762,7 @@
         <section>
             <h2 class="section-title">
                 currently spinning
-                <div class="matcha-loader"></div>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="5"></div>
             </h2>
             <div class="shelf-unit">
                 <div class="records-container" id="music-grid">
@@ -1620,7 +1774,7 @@
         <section>
             <h2 class="section-title">
                 skills & technologies
-                <div class="matcha-loader"></div>
+                <div class="matcha-loader"></div><div class="grimoire-loader" data-gl="6"></div>
             </h2>
             <div class="skills-grid">
                 <div class="skill-category">
@@ -1678,7 +1832,7 @@
         </section>
         
         <footer>
-            <p>© 2026 amine nazih • spinning records & shipping code</p>
+            <p id="footer-text">© 2026 amine nazih • spinning records & shipping code</p>
         </footer>
     </div>
     
@@ -1703,7 +1857,17 @@
     
     <!-- Hidden global audio element for reliable autoplay -->
     <audio id="globalAudio" preload="auto" style="display:none"></audio>
-    
+
+    <!-- THEME TRIGGER: grimoire (base) / matcha (asta back) -->
+    <button id="asta-trigger" title="Toggle Black Bulls theme">
+      <span id="trigger-grimoire-icon"><svg viewBox="0 0 100 130" xmlns="http://www.w3.org/2000/svg" width="38" height="38"><defs><linearGradient id="ti1" x1="0%" y1="0%" x2="100%" y2="100%"><stop offset="0%" stop-color="#1e0c0a"/><stop offset="100%" stop-color="#1c0a0c"/></linearGradient><linearGradient id="ti2" x1="0%" y1="0%" x2="0%" y2="100%"><stop offset="0%" stop-color="#f2c84a"/><stop offset="50%" stop-color="#dbb25e"/><stop offset="100%" stop-color="#8a5f20"/></linearGradient></defs><rect x="5" y="3" width="90" height="124" rx="4" fill="url(#ti1)"/><rect x="5" y="3" width="90" height="124" rx="4" fill="none" stroke="url(#ti2)" stroke-width="2"/><rect x="9" y="8" width="82" height="114" rx="2" fill="none" stroke="url(#ti2)" stroke-width="0.8" opacity="0.5"/><path d="M9,8 L9,22 L14,22 L14,13 L24,13 L24,8 Z" fill="url(#ti2)" opacity="0.9"/><path d="M91,8 L79,8 L79,13 L86,13 L86,22 L91,22 Z" fill="url(#ti2)" opacity="0.9"/><path d="M9,122 L9,108 L14,108 L14,117 L24,117 L24,122 Z" fill="url(#ti2)" opacity="0.9"/><path d="M91,122 L79,122 L79,117 L86,117 L86,108 L91,108 Z" fill="url(#ti2)" opacity="0.9"/><g transform="translate(50,63)"><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(72)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(144)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(216)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="#050205" transform="rotate(288)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4" transform="rotate(72)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4" transform="rotate(144)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4" transform="rotate(216)"/><ellipse cx="0" cy="-17" rx="9" ry="13" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4" transform="rotate(288)"/><circle cx="0" cy="0" r="5" fill="#040105"/><circle cx="0" cy="0" r="5" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4"/></g><line x1="18" y1="96" x2="82" y2="96" stroke="url(#ti2)" stroke-width="0.6" opacity="0.5"/><line x1="18" y1="106" x2="82" y2="106" stroke="url(#ti2)" stroke-width="0.6" opacity="0.5"/></svg></span>
+      <div id="trigger-matcha-icon"></div>
+    </button>
+
+    <!-- Takeover overlay -->
+    <div id="takeover-overlay"><div id="takeover-clover"><svg viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="tcGlow" cx="50%" cy="50%" r="50%"><stop offset="0%" stop-color="#c41234" stop-opacity="0.8"/><stop offset="100%" stop-color="#7a0010" stop-opacity="0"/></radialGradient><filter id="tcF" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="6" result="blur"/><feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge></filter></defs><circle cx="100" cy="100" r="90" fill="url(#tcGlow)"/><circle cx="100" cy="100" r="75" fill="none" stroke="rgba(196,18,52,0.25)" stroke-width="1"/><g transform="translate(100,100)" filter="url(#tcF)" opacity="0.5"><ellipse cx="0" cy="-34" rx="20" ry="28" fill="#c41234"/><ellipse cx="0" cy="-34" rx="20" ry="28" fill="#c41234" transform="rotate(72)"/><ellipse cx="0" cy="-34" rx="20" ry="28" fill="#c41234" transform="rotate(144)"/><ellipse cx="0" cy="-34" rx="20" ry="28" fill="#c41234" transform="rotate(216)"/><ellipse cx="0" cy="-34" rx="20" ry="28" fill="#c41234" transform="rotate(288)"/><circle cx="0" cy="0" r="14" fill="#c41234"/></g><g transform="translate(100,100)"><ellipse cx="0" cy="-34" rx="18" ry="26" fill="#050108"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="#050108" transform="rotate(72)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="#050108" transform="rotate(144)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="#050108" transform="rotate(216)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="#050108" transform="rotate(288)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.35"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.35" transform="rotate(72)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.35" transform="rotate(144)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.35" transform="rotate(216)"/><ellipse cx="0" cy="-34" rx="18" ry="26" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.35" transform="rotate(288)"/><line x1="0" y1="-2" x2="0" y2="-58" stroke="#1a0510" stroke-width="1.5"/><line x1="0" y1="-2" x2="0" y2="-58" stroke="#1a0510" stroke-width="1.5" transform="rotate(72)"/><line x1="0" y1="-2" x2="0" y2="-58" stroke="#1a0510" stroke-width="1.5" transform="rotate(144)"/><line x1="0" y1="-2" x2="0" y2="-58" stroke="#1a0510" stroke-width="1.5" transform="rotate(216)"/><line x1="0" y1="-2" x2="0" y2="-58" stroke="#1a0510" stroke-width="1.5" transform="rotate(288)"/><circle cx="0" cy="0" r="12" fill="#030106"/><circle cx="0" cy="0" r="12" fill="none" stroke="#dbb25e" stroke-width="1" opacity="0.5"/><circle cx="0" cy="0" r="5" fill="#dbb25e" opacity="0.4"/></g></svg></div></div>
+    <canvas id="antimag-canvas"></canvas>
+
     <script>
         // Experience data
         const experiences = [
@@ -2754,13 +2918,219 @@ this.channels = [
                 };
                 cycle();
             }
+            retuneAll() {
+                this.currentlyPlaying.clear();
+                this.container.querySelectorAll('.mini-tv').forEach(tv => {
+                    clearTimeout(tv.__timer);
+                    this.tuneToRandom(tv, { showStatic: true });
+                    this.scheduleChannel(tv);
+                });
+            }
         }
 
+        let tvWallInstance = null;
         document.addEventListener('DOMContentLoaded', () => {
             if (document.getElementById('tvWall')) {
-                new TVWall('tvWall');
+                tvWallInstance = new TVWall('tvWall');
             }
         });
+
+        // ═══════════════════════════════════
+        //  BLACK CLOVER THEME — GRIMOIRE + TOGGLE
+        // ═══════════════════════════════════
+        // BC-exclusive music (only shown in asta theme)
+        const bcMusicAlbums = [
+            { id:'bc-harukamirai', name:'Harukamira', artist:'KANKAKU PIERO', label:'HARUKA', image:'black_clover_album/album_covers/harukamirai.jpeg', spotifyUrl:'https://open.spotify.com/track/2vDPSojrX4aL7aiCPD7kja', audioSample:'black_clover_album/songs/Harukamirai.mp3', tracklist:[{number:1,name:'Harukamira',duration:'3:52'}] },
+            { id:'bc-paint-it-black', name:'PAiNT it BLACK', artist:'BiSH', label:'PAiNT', image:'black_clover_album/album_covers/paint_it_black.jpeg', spotifyUrl:'https://open.spotify.com/album/397tzAaw1SrdHdfzwfFX8Q', audioSample:'black_clover_album/songs/PAiNT it Black.mp3', tracklist:[{number:1,name:'PAiNT it BLACK',duration:'4:07'}] },
+            { id:'bc-black-rover', name:'Black Rover', artist:'Vickeblanka', label:'ROVER', image:'black_clover_album/album_covers/black_rover.jpeg', spotifyUrl:'https://open.spotify.com/track/0OGw7V8wAI6OsZIQ12JkTP', audioSample:'black_clover_album/songs/Black Rover.mp3', tracklist:[{number:1,name:'Black Rover',duration:'3:53'}] },
+            { id:'bc-black-catcher', name:'Black Catcher', artist:'Vickeblanka', label:'CATCHER', image:'black_clover_album/album_covers/black_catcher.jpeg', spotifyUrl:'https://open.spotify.com/album/55JDu3ogkzlmUKgJt3nSd3', audioSample:'black_clover_album/songs/Black-Catcher.mp3', tracklist:[{number:1,name:'Black Catcher',duration:'4:15'}] },
+            { id:'bc-demon-time', name:'Demon Time', artist:'Trippie Redd ft. Ski Mask', label:'DEMON', image:'black_clover_album/album_covers/demon_time.jpg', spotifyUrl:'https://open.spotify.com/track/1hE8iI3YK9x1VUBDtSzg3x', audioSample:'black_clover_album/songs/Trippie Redd – Demon Time.mp3', tracklist:[{number:1,name:'Demon Time (feat. Ski Mask The Slump God)',duration:'2:34'}] }
+        ];
+
+        // BC-exclusive edit channels (only shown in asta mirrors)
+        const bcChannels = [
+            'https://i.imgur.com/Vk1F8QJ.mp4','https://i.imgur.com/5pr4c7z.mp4','https://i.imgur.com/arveC0P.mp4',
+            'https://i.imgur.com/a6JGDa2.mp4','https://i.imgur.com/4BvoJZt.mp4','https://i.imgur.com/GVeQMm1.mp4',
+            'https://i.imgur.com/GTp61nb.mp4','https://i.imgur.com/eZ7L2JX.mp4','https://i.imgur.com/Vd3RaTY.mp4',
+            'https://i.imgur.com/LJgmomJ.mp4','https://i.imgur.com/tI9eh2O.mp4','https://i.imgur.com/ooMqvJJ.mp4',
+            'https://i.imgur.com/veNUyNJ.mp4','https://i.imgur.com/IvqWnd2.mp4','https://i.imgur.com/Vj5MJIw.mp4',
+            'https://i.imgur.com/pa1Pa9p.mp4','https://i.imgur.com/QtVRYot.mp4','https://i.imgur.com/maJGPCK.mp4',
+            'https://i.imgur.com/1bA4Qrt.mp4','https://i.imgur.com/ZTDQl7S.mp4','https://i.imgur.com/9rRTxMY.mp4',
+            'https://i.imgur.com/YlC0hp0.mp4','https://i.imgur.com/hKg39YB.mp4','https://i.imgur.com/87tPNHC.mp4',
+            'https://i.imgur.com/s3tYr6e.mp4'
+        ];
+        const ogChannels = window.__channelsForWall ? [...window.__channelsForWall] : [];
+
+        const CLOVER_MINI = `<svg width="22" height="22" viewBox="0 0 50 50" xmlns="http://www.w3.org/2000/svg"><g transform="translate(25,25)"><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="#050105"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="#050105" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="#050105" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="#050105" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="#050105" transform="rotate(288)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="none" stroke="#dbb25e" stroke-width="0.6" opacity="0.45"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="none" stroke="#dbb25e" stroke-width="0.6" opacity="0.45" transform="rotate(72)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="none" stroke="#dbb25e" stroke-width="0.6" opacity="0.45" transform="rotate(144)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="none" stroke="#dbb25e" stroke-width="0.6" opacity="0.45" transform="rotate(216)"/><ellipse cx="0" cy="-11" rx="5.5" ry="8.5" fill="none" stroke="#dbb25e" stroke-width="0.6" opacity="0.45" transform="rotate(288)"/><circle cx="0" cy="0" r="3.5" fill="#040105"/><circle cx="0" cy="0" r="3.5" fill="none" stroke="#dbb25e" stroke-width="0.5" opacity="0.4"/></g></svg>`;
+
+        function createGrimoire(item, type) {
+            const card = document.createElement('div');
+            card.className = 'grimoire-card';
+            card.onclick = () => openModal(item.id, type);
+            const title = item.company || item.name;
+            const sub = item.role || item.artist || '';
+            const logo = item.image || '';
+            card.innerHTML = `<div class="grimoire-spine"></div><div class="grimoire-inner">${logo ? `<div class="grimoire-badge" style="background-image:url('${logo}')"></div>` : '<div class="grimoire-badge"></div>'}<div class="grimoire-clover-icon">${CLOVER_MINI}</div><div class="grimoire-title-text">${title}</div><div class="grimoire-role-text">${sub}</div></div><div class="vinyl-footer">${logo ? `<div class="vinyl-footer-logo" style="background-image:url('${logo}')"></div>` : ''}<div class="vinyl-footer-text"><div class="footer-title">${title}</div>${sub ? `<div class="footer-sub">${sub}</div>` : ''}</div></div>`;
+            return card;
+        }
+
+        function initGrimoireLoaders() {
+            const tmpl = document.getElementById('gl-tmpl');
+            if (!tmpl) return;
+            document.querySelectorAll('[data-gl]').forEach((el, i) => {
+                const clone = tmpl.content.cloneNode(true);
+                const svg = clone.querySelector('svg');
+                svg.innerHTML = svg.innerHTML.replace(/glA-INST/g, `glA-${i}`).replace(/glB-INST/g, `glB-${i}`);
+                el.appendChild(clone);
+            });
+        }
+
+        // Theme state
+        let astaActive = false;
+        const AstaTrigger = document.getElementById('asta-trigger');
+        const TakeoverOverlay = document.getElementById('takeover-overlay');
+
+        if (AstaTrigger) {
+            AstaTrigger.addEventListener('click', () => {
+                astaActive ? deactivateAstaTheme() : activateAstaTheme();
+            });
+        }
+
+        function activateAstaTheme() {
+            astaActive = true;
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;inset:0;background:#000;z-index:9999;pointer-events:none;opacity:0;';
+            document.body.appendChild(flash);
+            flash.animate([{opacity:0},{opacity:1},{opacity:0}],{duration:130,easing:'ease-in-out'}).addEventListener('finish',()=>flash.remove());
+
+            setTimeout(() => {
+                TakeoverOverlay.classList.add('spreading');
+                setTimeout(() => {
+                    document.documentElement.setAttribute('data-theme','asta');
+                    AstaTrigger.classList.add('active-theme');
+                    document.getElementById('store-name-text').textContent = "amine's grimoire shop";
+                    document.getElementById('footer-text').textContent = "\u00a9 2026 amine nazih \u00b7 black bulls magic";
+                    // Swap exp/project vinyls → grimoire cards
+                    const eg = document.getElementById('experience-grid');
+                    const pg = document.getElementById('projects-grid');
+                    eg.innerHTML = ''; pg.innerHTML = '';
+                    experiences.forEach(e => eg.appendChild(createGrimoire(e, 'experience')));
+                    projects.forEach(p => pg.appendChild(createGrimoire(p, 'project')));
+                    // Re-observe grimoire cards for scroll reveal
+                    document.querySelectorAll('#experience-grid .grimoire-card, #projects-grid .grimoire-card').forEach((el, i) => {
+                        el.classList.add('reveal'); el.style.setProperty('--reveal-delay', `${Math.min(i,8)*70}ms`);
+                        el.classList.add('is-visible');
+                    });
+                    // TV section labels
+                    document.getElementById('tv-section-label').textContent = "gauche\u2019s mirrors";
+                    document.getElementById('tv-tagline').textContent = "Gauche\u2019s Mirror Magic \u2014 active surveillance";
+                    // Swap music grid → BC songs only
+                    const mg = document.getElementById('music-grid');
+                    mg.innerHTML = '';
+                    bcMusicAlbums.forEach(a => mg.appendChild(createVinyl(a, 'music')));
+                    document.querySelectorAll('#music-grid .vinyl-wrapper').forEach((el, i) => {
+                        el.classList.add('reveal','is-visible'); el.style.setProperty('--reveal-delay', `${Math.min(i,8)*70}ms`);
+                    });
+                    // Swap TV wall channels → BC edits only
+                    if (tvWallInstance) { tvWallInstance.channels = bcChannels; tvWallInstance.retuneAll(); }
+                    document.querySelectorAll('.mini-static').forEach(c => c.style.filter = 'hue-rotate(190deg) saturate(0.5) brightness(0.6)');
+                    document.querySelectorAll('.mini-video').forEach(v => v.style.filter = 'saturate(0.7) hue-rotate(200deg) brightness(0.85)');
+                }, 340);
+                setTimeout(() => {
+                    TakeoverOverlay.classList.add('fading');
+                    setTimeout(() => { TakeoverOverlay.classList.remove('spreading','fading'); TakeoverOverlay.style.opacity = ''; }, 600);
+                }, 950);
+            }, 80);
+        }
+
+        function deactivateAstaTheme() {
+            astaActive = false;
+            const flash = document.createElement('div');
+            flash.style.cssText = 'position:fixed;inset:0;background:#fff;z-index:9999;pointer-events:none;opacity:0;';
+            document.body.appendChild(flash);
+            flash.animate([{opacity:0},{opacity:0.25},{opacity:0}],{duration:200}).addEventListener('finish',()=>flash.remove());
+            document.documentElement.removeAttribute('data-theme');
+            AstaTrigger.classList.remove('active-theme');
+            document.getElementById('store-name-text').textContent = "amine's record shop";
+            document.getElementById('footer-text').innerHTML = "\u00a9 2026 amine nazih \u2022 spinning records &amp; shipping code";
+            const eg = document.getElementById('experience-grid');
+            const pg = document.getElementById('projects-grid');
+            eg.innerHTML = ''; pg.innerHTML = '';
+            experiences.forEach(e => eg.appendChild(createVinyl(e, 'experience')));
+            projects.forEach(p => pg.appendChild(createVinyl(p, 'project')));
+            document.querySelectorAll('#experience-grid .vinyl-wrapper, #projects-grid .vinyl-wrapper').forEach((el, i) => {
+                el.classList.add('reveal','is-visible'); el.style.setProperty('--reveal-delay', `${Math.min(i,8)*70}ms`);
+            });
+            // Restore music grid → OG albums
+            const mg = document.getElementById('music-grid');
+            mg.innerHTML = '';
+            musicAlbums.forEach(a => mg.appendChild(createVinyl(a, 'music')));
+            document.querySelectorAll('#music-grid .vinyl-wrapper').forEach((el, i) => {
+                el.classList.add('reveal','is-visible'); el.style.setProperty('--reveal-delay', `${Math.min(i,8)*70}ms`);
+            });
+            document.getElementById('tv-section-label').textContent = 'shop tv';
+            document.getElementById('tv-tagline').textContent = 'Take a break \u2014 vibe in the shop';
+            // Restore TV wall channels → OG
+            if (tvWallInstance) { tvWallInstance.channels = ogChannels; tvWallInstance.retuneAll(); }
+            document.querySelectorAll('.mini-static,.mini-video').forEach(el => el.style.filter = '');
+        }
+
+        // Anti-magic lightning (asta theme only)
+        const antimagCanvas = document.getElementById('antimag-canvas');
+        const antimagCtx = antimagCanvas ? antimagCanvas.getContext('2d') : null;
+        function resizeAntimag() { if (!antimagCanvas) return; antimagCanvas.width = window.innerWidth; antimagCanvas.height = window.innerHeight; }
+        window.addEventListener('resize', resizeAntimag); resizeAntimag();
+
+        document.addEventListener('click', e => {
+            if (!astaActive || !antimagCtx) return;
+            if (e.target.closest('#asta-trigger') || e.target.closest('#modal') || e.target.closest('#takeover-overlay')) return;
+            triggerLightning(e.clientX, e.clientY);
+        });
+
+        function triggerLightning(x, y) {
+            antimagCanvas.style.opacity = '1';
+            antimagCtx.clearRect(0, 0, antimagCanvas.width, antimagCanvas.height);
+            const numBolts = 3 + Math.floor(Math.random() * 3);
+            for (let b = 0; b < numBolts; b++) {
+                const angle = (b / numBolts) * Math.PI * 2 + (Math.random() - 0.5) * 0.8;
+                const len = 55 + Math.random() * 100;
+                const alpha = 0.65 + Math.random() * 0.35;
+                antimagCtx.save();
+                antimagCtx.globalAlpha = alpha;
+                antimagCtx.strokeStyle = b % 3 === 0 ? '#ff2244' : b % 3 === 1 ? '#000010' : '#c41234';
+                antimagCtx.lineWidth = b === 0 ? 2.5 : 1.2;
+                antimagCtx.shadowColor = '#c41234'; antimagCtx.shadowBlur = 14;
+                drawBolt(antimagCtx, x, y, angle, len);
+                if (Math.random() > 0.4) { antimagCtx.globalAlpha = alpha * 0.45; antimagCtx.lineWidth = 0.7; drawBolt(antimagCtx, x, y, angle + (Math.random()-0.5)*1.1, len*0.45); }
+                antimagCtx.restore();
+            }
+            document.body.style.transform = `translate(${(Math.random()-0.5)*3}px,${(Math.random()-0.5)*3}px)`;
+            setTimeout(() => document.body.style.transform = '', 70);
+            antimagCanvas.animate([{opacity:1},{opacity:0}],{duration:260,fill:'forwards'}).addEventListener('finish',() => { antimagCanvas.style.opacity = '0'; antimagCtx.clearRect(0,0,antimagCanvas.width,antimagCanvas.height); });
+        }
+
+        function drawBolt(ctx, sx, sy, angle, totalLen) {
+            const segs = 6 + Math.floor(Math.random()*5), segLen = totalLen/segs;
+            let cx = sx, cy = sy;
+            ctx.beginPath(); ctx.moveTo(cx, cy);
+            for (let i = 0; i < segs; i++) {
+                const spread = (Math.random()-0.5)*26*(1-i/segs*0.5);
+                cx += Math.cos(angle)*segLen + Math.cos(angle+Math.PI/2)*spread;
+                cy += Math.sin(angle)*segLen + Math.sin(angle+Math.PI/2)*spread;
+                ctx.lineTo(cx, cy);
+            }
+            ctx.stroke();
+        }
+
+        // Init grimoire loaders on DOMContentLoaded
+        document.addEventListener('DOMContentLoaded', () => {
+            initGrimoireLoaders();
+        });
+
+        /* ── ASTA WALKER — currently disabled ──
+        // To re-enable: uncomment this block and add <canvas id="asta-edu-canvas" class="asta-walker-canvas"> inside edu-card-wrap
+        // (function(){ ... asta walker code ... })();
+        */
     </script>
 </body>
 </html>
