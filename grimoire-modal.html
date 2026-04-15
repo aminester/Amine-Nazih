@@ -1,0 +1,991 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Grimoire Modal — Component</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Cinzel+Decorative:wght@400;700&family=DM+Serif+Display:ital@0;1&family=IM+Fell+English:ital@0;1&family=Space+Mono&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════════════════════════
+   GRIMOIRE MODAL — SKEUOMORPHIC 3-D BOOK
+   Drop this entire style block + HTML structure + JS
+   into your index.html just before closing body tag.
+   Call: openGrimoireModal(itemObject) to open.
+   ══════════════════════════════════════════════════════════════ */
+
+/* ── Custom properties ── */
+:root {
+  --parch-lt:   #f5e8be;
+  --parch-mid:  #ecd9a0;
+  --parch-dk:   #e0c888;
+  --ink-main:   #1c0d03;
+  --ink-med:    #38190a;
+  --ink-red:    #6e1018;
+  --gold-hi:    #dbb25e;
+  --gold-dk:    #8a5820;
+  --cover-void: #050109;
+  --glow-red:   #c41234;
+  --gutter-w:   26px;
+  --pad:        26px;
+}
+
+/* ── Overlay ── */
+.grm-overlay {
+  position: fixed; inset: 0; z-index: 14000;
+  display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(ellipse at center, rgba(6,2,12,0.96) 0%, rgba(2,1,5,0.99) 100%);
+  backdrop-filter: blur(14px) saturate(0.6);
+  opacity: 0; pointer-events: none;
+  transition: opacity 0.35s ease;
+}
+.grm-overlay.grm-on {
+  opacity: 1; pointer-events: all;
+}
+
+/* ── Scene ── */
+.grm-scene {
+  position: relative;
+  display: flex; align-items: center; justify-content: center;
+}
+
+/* ══════════════════════════════════════════
+   CLOSED COVER
+   ══════════════════════════════════════════ */
+.grm-cover {
+  width: 276px; height: 414px;
+  position: relative;
+  border-radius: 3px 11px 11px 3px;
+  opacity: 0;
+  transform: translateY(18px) scale(0.94);
+  transition: opacity 0.35s ease, transform 0.35s ease;
+  /* Permanent anti-magic red bloom */
+  filter: drop-shadow(0 0 18px rgba(196,18,52,0.35)) drop-shadow(0 0 40px rgba(196,18,52,0.12));
+  flex-shrink: 0;
+}
+.grm-cover.grm-cover-in {
+  opacity: 1; transform: translateY(0) scale(1);
+}
+.grm-cover.grm-cover-fold {
+  animation: coverFold 0.78s cubic-bezier(0.65,0,0.28,1) forwards;
+}
+@keyframes coverFold {
+  0%   { transform: perspective(900px) rotateY(0deg) scale(1); opacity: 1; }
+  44%  { transform: perspective(900px) rotateY(-90deg) scale(0.97); opacity: 1; }
+  52%  { transform: perspective(900px) rotateY(-90deg) scale(0.97); opacity: 0; }
+  100% { transform: perspective(900px) rotateY(-180deg) scale(0.9); opacity: 0; pointer-events: none; }
+}
+
+/* Cover surface */
+.grm-cover-face {
+  position: absolute; inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px;
+  /* Scorched demon leather */
+  background:
+    radial-gradient(ellipse at 50% 46%, rgba(196,18,52,0.11) 0%, rgba(180,10,40,0.04) 38%, transparent 65%),
+    radial-gradient(ellipse at 18% 18%, rgba(10,3,0,0.7) 0%, transparent 42%),
+    radial-gradient(ellipse at 82% 82%, rgba(8,2,0,0.6) 0%, transparent 38%),
+    radial-gradient(ellipse at 75% 12%, rgba(25,8,2,0.4) 0%, transparent 32%),
+    radial-gradient(ellipse at 22% 88%, rgba(20,5,1,0.35) 0%, transparent 28%),
+    linear-gradient(148deg, #100212 0%, #060009 28%, #0c010e 55%, #040108 78%, #080010 100%);
+  box-shadow:
+    inset 0 0 70px rgba(0,0,0,0.95),
+    inset 2px 0 14px rgba(255,255,255,0.025),
+    inset -2px 0 10px rgba(0,0,0,0.6);
+}
+
+/* Spine strip */
+.grm-cover-face::before {
+  content: '';
+  position: absolute; left: 0; top: 0; bottom: 0; width: 16px;
+  background: linear-gradient(to right, #020006, #07000b, #050009);
+  border-right: 1px solid rgba(50,20,5,0.3);
+  /* Stitching */
+  background-image: repeating-linear-gradient(to bottom,
+    transparent 0px, transparent 5px,
+    rgba(80,45,10,0.35) 5px, rgba(80,45,10,0.35) 6px,
+    transparent 6px, transparent 10px
+  );
+  border-radius: 3px 0 0 3px;
+}
+
+/* Gold filigree border on cover */
+.grm-cover-border {
+  position: absolute;
+  top: 10px; left: 20px; right: 8px; bottom: 10px;
+  border: 1px solid rgba(219,178,94,0.13);
+  border-radius: 1px 7px 7px 1px;
+  pointer-events: none;
+}
+.grm-cover-border::before {
+  content: '';
+  position: absolute; top: 5px; left: 5px; right: 5px; bottom: 5px;
+  border: 0.5px solid rgba(219,178,94,0.065);
+  border-radius: 0 4px 4px 0;
+}
+/* Corner ticks on the inner border */
+.grm-cover-border::after {
+  content: '✦';
+  position: absolute; top: -6px; right: -6px;
+  font-size: 8px; color: rgba(219,178,94,0.3);
+}
+
+/* Cover 5-leaf clover */
+.grm-cover-clover {
+  opacity: 0.19;
+  filter: drop-shadow(0 0 10px rgba(196,18,52,0.6));
+  flex-shrink: 0;
+}
+
+/* Embossed company title on cover */
+.grm-cover-label {
+  font-family: 'Cinzel', serif;
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: rgba(219,178,94,0.42);
+  text-align: center;
+  padding: 0 22px;
+  line-height: 1.5;
+  text-shadow: 0 0 12px rgba(196,18,52,0.2);
+}
+
+/* Cover bottom ornament */
+.grm-cover-bottom {
+  font-size: 0.55rem;
+  color: rgba(219,178,94,0.2);
+  letter-spacing: 0.3em;
+}
+
+/* ══════════════════════════════════════════
+   TWO-PAGE SPREAD
+   ══════════════════════════════════════════ */
+.grm-spread {
+  position: absolute;
+  width: min(830px, 96vw);
+  height: min(540px, 88vh);
+  display: flex;
+  opacity: 0; pointer-events: none;
+  transform: perspective(1100px) rotateX(5deg) scale(0.95);
+  /* Overall book box-shadow */
+  border-radius: 4px 13px 13px 4px;
+  box-shadow:
+    0 30px 90px rgba(0,0,0,0.9),
+    0 10px 30px rgba(0,0,0,0.6),
+    0  3px 10px rgba(0,0,0,0.4),
+    0 0 0 1px rgba(219,178,94,0.12),
+    inset 0 0 0 1px rgba(219,178,94,0.04);
+}
+.grm-spread.grm-spread-rise {
+  animation: spreadRise 0.55s cubic-bezier(0.22,0.68,0.17,1) forwards;
+}
+.grm-spread.grm-spread-steady {
+  opacity: 1; pointer-events: all;
+  transform: perspective(1100px) rotateX(1.5deg) scale(1);
+}
+@keyframes spreadRise {
+  from { opacity: 0; transform: perspective(1100px) rotateX(8deg) scale(0.93); }
+  to   { opacity: 1; transform: perspective(1100px) rotateX(1.5deg) scale(1); }
+}
+/* Impact shake (fires with brand) */
+.grm-spread.grm-impact {
+  animation: bookImpact 0.38s cubic-bezier(0.36,0.07,0.19,0.97) both;
+}
+@keyframes bookImpact {
+  0%,100% { transform: perspective(1100px) rotateX(1.5deg) translate(0,0) scale(1); }
+  18%  { transform: perspective(1100px) rotateX(1.5deg) translate(-3px,-2px) scale(1); }
+  35%  { transform: perspective(1100px) rotateX(1.5deg) translate(4px, 1px) scale(1); }
+  52%  { transform: perspective(1100px) rotateX(1.5deg) translate(-2px, 2px) scale(1); }
+  70%  { transform: perspective(1100px) rotateX(1.5deg) translate(2px,-1px) scale(1); }
+  85%  { transform: perspective(1100px) rotateX(1.5deg) translate(-1px, 0) scale(1); }
+}
+
+/* ── Parchment page base ── */
+.grm-page {
+  flex: 1;
+  position: relative;
+  overflow: hidden;
+  padding: var(--pad);
+}
+/* Aged parchment background */
+.grm-page-left {
+  background:
+    /* Char at corners */
+    radial-gradient(ellipse at 0%   0%,   rgba(90,45,8,0.20) 0%, transparent 30%),
+    radial-gradient(ellipse at 100% 0%,   rgba(75,35,5,0.14) 0%, transparent 24%),
+    radial-gradient(ellipse at 0%   100%, rgba(75,35,5,0.16) 0%, transparent 26%),
+    radial-gradient(ellipse at 100% 100%, rgba(90,45,8,0.20) 0%, transparent 30%),
+    /* Foxing / stains */
+    radial-gradient(ellipse at 28% 38%, rgba(150,105,40,0.08) 0%, transparent 32%),
+    radial-gradient(ellipse at 72% 62%, rgba(130,90,30,0.06) 0%, transparent 26%),
+    radial-gradient(ellipse at 55% 18%, rgba(165,125,55,0.05) 0%, transparent 22%),
+    radial-gradient(ellipse at 15% 72%, rgba(145,100,35,0.05) 0%, transparent 20%),
+    /* Noise tile */
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"),
+    /* Base parchment */
+    linear-gradient(162deg, #f6e9be 0%, #ecd79c 16%, #f2e1a8 32%, #e9d394 52%, #eedad4 54%, #f0dba6 72%, #e5ce8e 88%, #efdfa8 100%);
+  border-radius: 4px 0 0 4px;
+  /* Gutter cast shadow on right edge */
+  box-shadow: inset -18px 0 36px rgba(0,0,0,0.22), inset -1px 0 4px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+}
+.grm-page-right {
+  background:
+    radial-gradient(ellipse at 0%   0%,   rgba(75,35,5,0.14) 0%, transparent 24%),
+    radial-gradient(ellipse at 100% 0%,   rgba(90,45,8,0.20) 0%, transparent 30%),
+    radial-gradient(ellipse at 0%   100%, rgba(90,45,8,0.20) 0%, transparent 30%),
+    radial-gradient(ellipse at 100% 100%, rgba(75,35,5,0.14) 0%, transparent 24%),
+    radial-gradient(ellipse at 72% 35%, rgba(150,105,40,0.07) 0%, transparent 28%),
+    radial-gradient(ellipse at 25% 68%, rgba(130,90,30,0.05) 0%, transparent 24%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.038'/%3E%3C/svg%3E"),
+    linear-gradient(162deg, #eedba4 0%, #f3e4b2 15%, #e8d295 30%, #f1dfab 50%, #e9d498 70%, #f2e2aa 85%, #e8d09a 100%);
+  border-radius: 0 13px 13px 0;
+  box-shadow: inset 18px 0 36px rgba(0,0,0,0.22), inset 1px 0 4px rgba(0,0,0,0.12);
+  display: flex; flex-direction: column;
+  padding-top: calc(var(--pad) + 2px);
+}
+
+/* Runic background text (barely visible) */
+.grm-page-left::before,
+.grm-page-right::before {
+  content: 'ᚠᚢᚦᚨᚱᚲ ᚷᚹᚺᚾᛁᛃᛇ ᛈᛉᛊᛏᛒᛗᛚ ᛜᛞᛟᚠᚢᚦᚨ ᚱᚲᚷᚹᚺᚾᛁ ᛃᛇᛈᛉᛊᛏᛒᛗ ᛚᛜᛞᛟᚠᚢ ᚦᚨᚱᚲᚷᚹᚺ ᚾᛁᛃᛇᛈᛉᛊᛏ ᛒᛗᛚᛜᛞᛟᚠᚢᚦ ᚨᚱᚲᚷᚹᚺᚾᛁ ᛃᛇᛈᛉᛊᛏᛒᛗᛚ ᛜᛞᛟᚠᚢᚦᚨᚱ ᚲᚷᚹᚺᚾᛁᛃᛇ ᛈᛉᛊᛏᛒᛗᛚᛜ ᛞᛟᚠᚢᚦᚨᚱᚲ ᚷᚹᚺᚾᛁᛃᛇᛈ ᛉᛊᛏᛒᛗᛚᛜᛞᛟ ᚠᚢᚦᚨᚱᚲᚷ ᚹᚺᚾᛁᛃᛇᛈᛉ ᛊᛏᛒᛗᛚᛜᛞᛟᚠ ᚢᚦᚨᚱᚲᚷᚹᚺ';
+  position: absolute; inset: 0;
+  padding: 18px;
+  font-size: 0.82rem; line-height: 1.85;
+  color: rgba(90,55,12,0.052);
+  word-break: break-all; overflow: hidden;
+  pointer-events: none;
+  font-family: 'Times New Roman', serif;
+  letter-spacing: 0.06em;
+  user-select: none;
+}
+
+/* Page corner brackets */
+.grm-corners { position: absolute; inset: 0; pointer-events: none; }
+.grm-c {
+  position: absolute; width: 18px; height: 18px;
+  border-color: rgba(110,72,18,0.32); border-style: solid;
+}
+.grm-c.tl { top: 9px;  left: 9px;  border-width: 1.5px 0 0 1.5px; }
+.grm-c.tr { top: 9px;  right: 9px; border-width: 1.5px 1.5px 0 0; }
+.grm-c.bl { bottom: 9px; left: 9px;  border-width: 0 0 1.5px 1.5px; }
+.grm-c.br { bottom: 9px; right: 9px; border-width: 0 1.5px 1.5px 0; }
+/* Inner frame */
+.grm-frame {
+  position: absolute; top: 14px; left: 14px; right: 14px; bottom: 14px;
+  border: 0.75px solid rgba(110,72,18,0.16);
+  pointer-events: none;
+}
+/* Star ornaments at midpoints of inner frame */
+.grm-frame::before {
+  content: '✦';
+  position: absolute; top: -6px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px; color: rgba(110,72,18,0.3);
+}
+.grm-frame::after {
+  content: '✦';
+  position: absolute; bottom: -6px; left: 50%;
+  transform: translateX(-50%);
+  font-size: 8px; color: rgba(110,72,18,0.3);
+}
+/* Page number */
+.grm-pnum {
+  position: absolute; bottom: 18px;
+  font-family: 'Cinzel', serif; font-size: 0.58rem;
+  letter-spacing: 0.14em; color: rgba(90,55,12,0.38);
+  user-select: none;
+}
+.grm-page-left .grm-pnum  { right: 22px; }
+.grm-page-right .grm-pnum { left: 22px; }
+
+/* ══════════════════════════════════════════
+   LEFT PAGE CONTENT
+   ══════════════════════════════════════════ */
+
+/* Decorative header line */
+.grm-lp-topline {
+  width: 70%; height: 0.5px;
+  background: linear-gradient(to right, transparent, rgba(110,72,18,0.35) 30%, rgba(110,72,18,0.35) 70%, transparent);
+  margin-bottom: 18px; flex-shrink: 0;
+  opacity: 0;
+}
+.grm-lp-topline.appear { animation: grm-fadein 0.4s ease-out forwards; }
+
+/* Logo frame — the "branding iron" target */
+.grm-logo-frame {
+  width: 126px; height: 126px; flex-shrink: 0;
+  position: relative; overflow: hidden;
+  border-radius: 6px;
+  border: 1.5px solid rgba(110,72,18,0.38);
+  background: rgba(235,215,175,0.35);
+  box-shadow:
+    inset 0 0 18px rgba(0,0,0,0.1),
+    0 3px 10px rgba(0,0,0,0.18);
+  opacity: 0;
+}
+/* Burn-edge vignette */
+.grm-logo-frame::before {
+  content: ''; position: absolute; inset: 0; border-radius: inherit;
+  background: radial-gradient(ellipse at 50% 50%, transparent 55%, rgba(80,40,8,0.22) 100%);
+  z-index: 2; pointer-events: none;
+}
+.grm-logo-img {
+  width: 100%; height: 100%; object-fit: contain;
+  padding: 10px; display: block; position: relative; z-index: 1;
+}
+/* Brand-burn animation */
+.grm-logo-frame.brand {
+  animation: brandBurn 1.15s cubic-bezier(0.22,0.68,0.17,1) forwards;
+}
+@keyframes brandBurn {
+  0%  { opacity:0; transform:scale(2.2) rotate(-7deg);
+        filter:blur(12px) brightness(0); box-shadow:none; }
+
+  11% { opacity:1; transform:scale(0.86) rotate(3.5deg);
+        filter:brightness(6) blur(0) saturate(3)
+               drop-shadow(0 0 22px #ff2244)
+               drop-shadow(0 0 45px rgba(196,18,52,0.9))
+               drop-shadow(0 0 70px rgba(255,40,70,0.5));
+        box-shadow: inset 0 0 25px rgba(255,30,50,0.7), 0 0 30px rgba(196,18,52,0.8); }
+
+  24% { transform:scale(1.10) rotate(-2deg);
+        filter:brightness(3.5) drop-shadow(0 0 16px rgba(196,18,52,0.7));
+        box-shadow: inset 0 0 18px rgba(200,80,30,0.6), 0 4px 14px rgba(0,0,0,0.3); }
+
+  48% { transform:scale(0.96) rotate(0.8deg);
+        filter:brightness(1.9) drop-shadow(0 0 10px rgba(196,18,52,0.4));
+        box-shadow: inset 0 0 12px rgba(160,80,20,0.45), 0 4px 14px rgba(0,0,0,0.25); }
+
+  100%{ opacity:1; transform:scale(1) rotate(0deg);
+        filter:brightness(1) drop-shadow(0 0 2px rgba(196,18,52,0.15));
+        box-shadow: inset 0 0 8px rgba(100,50,10,0.3),
+                    inset 0 0 20px rgba(150,90,20,0.12),
+                    0 3px 10px rgba(0,0,0,0.22); }
+}
+
+/* Company name */
+.grm-company {
+  margin-top: 14px; flex-shrink: 0;
+  font-family: 'Cinzel', serif; font-size: 0.82rem; font-weight: 600;
+  letter-spacing: 0.20em; text-transform: uppercase;
+  color: var(--ink-med); text-align: center;
+  opacity: 0;
+}
+.grm-company.appear { animation: grm-fadein 0.45s ease-out forwards; }
+
+/* Location · Period */
+.grm-meta {
+  margin-top: 7px; flex-shrink: 0;
+  font-family: 'IM Fell English', 'DM Serif Display', serif;
+  font-style: italic; font-size: 0.70rem;
+  color: var(--ink-red); opacity: 0.8;
+  text-align: center; padding: 0 14px; line-height: 1.5;
+}
+.grm-meta.appear { animation: grm-fadein 0.45s ease-out 0.12s forwards; }
+
+/* Clover ornament divider */
+.grm-divider {
+  margin-top: 16px; flex-shrink: 0;
+  display: flex; align-items: center; gap: 7px;
+  width: 72%; opacity: 0;
+}
+.grm-divider.appear { animation: grm-fadein 0.45s ease-out 0.22s forwards; }
+.grm-div-line { flex: 1; height: 0.6px; background: rgba(110,72,18,0.3); }
+.grm-div-mark { font-size: 0.62rem; color: rgba(110,72,18,0.45); }
+
+/* Generic appear */
+@keyframes grm-fadein {
+  from { opacity:0; transform:translateY(5px); }
+  to   { opacity:1; transform:translateY(0); }
+}
+
+/* ══════════════════════════════════════════
+   GUTTER / BINDING
+   ══════════════════════════════════════════ */
+.grm-gutter {
+  width: var(--gutter-w); flex-shrink: 0; position: relative;
+  background: linear-gradient(to right,
+    rgba(0,0,0,0.42) 0%,
+    rgba(35,18,5,0.28) 30%,
+    rgba(55,28,8,0.18) 50%,
+    rgba(35,18,5,0.28) 70%,
+    rgba(0,0,0,0.42) 100%
+  );
+  box-shadow: 0 0 20px rgba(0,0,0,0.35);
+  overflow: hidden;
+}
+/* Binding thread stitches */
+.grm-gutter::before {
+  content: ''; position: absolute;
+  top: 0; bottom: 0; left: 50%; width: 1px;
+  transform: translateX(-50%);
+  background: repeating-linear-gradient(to bottom,
+    rgba(85,50,12,0.55) 0px, rgba(85,50,12,0.55) 7px,
+    transparent 7px, transparent 13px
+  );
+}
+/* Gutter leather texture */
+.grm-gutter::after {
+  content: ''; position: absolute; inset: 0;
+  background: repeating-linear-gradient(to bottom,
+    transparent 0px, transparent 3px,
+    rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 4px
+  );
+}
+
+/* ══════════════════════════════════════════
+   RIGHT PAGE CONTENT
+   ══════════════════════════════════════════ */
+
+/* Role / spell name */
+.grm-role {
+  text-align: center; flex-shrink: 0;
+  font-family: 'Cinzel Decorative', 'Cinzel', serif;
+  font-size: 0.95rem; font-weight: 700;
+  letter-spacing: 0.09em; line-height: 1.35;
+  color: var(--ink-main); margin-bottom: 8px;
+  opacity: 0;
+}
+.grm-role.appear { animation: grm-fadein 0.45s ease-out forwards; }
+
+/* Role divider */
+.grm-rolediv {
+  display: flex; align-items: center; gap: 7px;
+  margin-bottom: 14px; flex-shrink: 0;
+  opacity: 0;
+}
+.grm-rolediv.appear { animation: grm-fadein 0.38s ease-out 0.10s forwards; }
+.grm-rolediv-line { flex:1; height:0.75px; background:linear-gradient(to right, transparent, rgba(130,82,22,0.45), transparent); }
+.grm-rolediv-rune { font-size:0.6rem; color:rgba(130,82,22,0.5); letter-spacing:0.08em; }
+
+/* Bullet list */
+.grm-list {
+  list-style: none; padding: 0; margin: 0;
+  flex: 1; overflow-y: auto;
+  scrollbar-width: none;
+}
+.grm-list::-webkit-scrollbar { display: none; }
+
+/* Individual bullet */
+.grm-item {
+  position: relative;
+  padding: 6px 8px 6px 20px;
+  margin-bottom: 5px;
+  font-family: 'IM Fell English', 'DM Serif Display', serif;
+  font-size: 0.775rem; line-height: 1.58;
+  color: var(--ink-main);
+  border-left: 1.5px solid rgba(160,95,25,0.22);
+  border-radius: 0 2px 2px 0;
+  background: rgba(190,150,55,0.04);
+  /* Hidden until written */
+  opacity: 0; transform: translateX(-10px);
+}
+/* Diamond marker */
+.grm-item::before {
+  content: '◈'; position: absolute;
+  left: 5px; top: 6px;
+  font-size: 0.5rem; line-height: 1.58;
+  color: rgba(160,80,18,0.52);
+}
+/* The writing-spark orb */
+.grm-item.writing::after {
+  content: ''; position: absolute;
+  left: -4px; top: 50%;
+  transform: translateY(-50%);
+  width: 7px; height: 7px; border-radius: 50%;
+  background: var(--glow-red);
+  box-shadow: 0 0 7px var(--glow-red), 0 0 16px rgba(196,18,52,0.55), 0 0 26px rgba(219,178,94,0.18);
+  animation: sparkLife 0.55s ease-out forwards;
+  pointer-events: none; z-index: 10;
+}
+@keyframes sparkLife {
+  0%   { opacity:1; transform:translateY(-50%) scale(1.8); }
+  65%  { opacity:0.7; }
+  100% { opacity:0; transform:translateY(-50%) scale(0.15); }
+}
+/* Ink-write animation */
+.grm-item.writing {
+  animation: inkWrite 0.6s cubic-bezier(0.22,0.68,0.17,1) forwards;
+}
+@keyframes inkWrite {
+  0%   { opacity:0; transform:translateX(-14px); filter:blur(3px); }
+  28%  { opacity:0.55; transform:translateX(4px); filter:blur(0.8px); }
+  62%  { opacity:0.9; transform:translateX(-2px); filter:blur(0); }
+  100% { opacity:1; transform:translateX(0); filter:blur(0); }
+}
+.grm-item.written { opacity:1; transform:translateX(0); }
+
+/* Scroll links */
+.grm-links { margin-top: 10px; display:flex; flex-wrap:wrap; gap:7px; flex-shrink:0; opacity:0; }
+.grm-links.appear { animation: grm-fadein 0.4s ease-out forwards; }
+.grm-scroll {
+  display:inline-flex; align-items:center; gap:5px;
+  padding: 5px 11px;
+  background: linear-gradient(135deg, rgba(138,88,30,0.11), rgba(105,65,18,0.07));
+  border: 1px solid rgba(130,82,22,0.28);
+  border-radius: 2px;
+  color: var(--ink-red); font-family:'Cinzel',serif;
+  font-size:0.66rem; letter-spacing:0.09em;
+  text-decoration:none; transition:all 0.2s;
+  position:relative;
+}
+.grm-scroll::before { content:'❧'; font-size:0.62rem; color:rgba(130,82,22,0.4); }
+.grm-scroll::after  { content:'❧'; font-size:0.62rem; color:rgba(130,82,22,0.4); transform:scaleX(-1); display:inline-block; }
+.grm-scroll:hover {
+  background: linear-gradient(135deg, rgba(196,18,52,0.1), rgba(160,15,28,0.06));
+  border-color: rgba(196,18,52,0.38);
+  color: #700018;
+  box-shadow: 0 2px 9px rgba(196,18,52,0.12);
+  transform: translateY(-1px);
+}
+
+/* ══════════════════════════════════════════
+   WAX SEAL CLOSE BUTTON
+   ══════════════════════════════════════════ */
+.grm-seal-btn {
+  position: absolute;
+  bottom: -26px; left: 50%;
+  transform: translateX(-50%);
+  width: 50px; height: 50px; border-radius: 50%;
+  background: radial-gradient(circle at 38% 32%, #c84555 0%, #8c0022 52%, #580012 100%);
+  border: 2px solid rgba(219,178,94,0.45);
+  box-shadow:
+    0 5px 18px rgba(0,0,0,0.7),
+    0 0 22px rgba(196,18,52,0.32),
+    inset 0 2px 5px rgba(255,180,180,0.18),
+    inset 0 -2px 4px rgba(0,0,0,0.5);
+  cursor: pointer;
+  display: flex; align-items: center; justify-content: center;
+  color: rgba(255,220,210,0.9); font-size: 1.1rem;
+  transition: transform 0.2s, box-shadow 0.2s;
+  opacity: 0; pointer-events: none;
+  /* Five-pointed seal design */
+  font-family: serif;
+}
+.grm-seal-btn::before {
+  content: '✕';
+  position: absolute;
+  font-size: 0.75rem; font-weight: bold;
+  color: rgba(255,200,195,0.85);
+}
+.grm-seal-btn.grm-seal-in {
+  opacity: 1; pointer-events: all;
+  animation: sealDrop 0.45s cubic-bezier(0.34,1.56,0.64,1) forwards;
+}
+.grm-seal-btn:hover {
+  transform: translateX(-50%) scale(1.12);
+  box-shadow: 0 7px 22px rgba(0,0,0,0.7), 0 0 32px rgba(196,18,52,0.48);
+}
+@keyframes sealDrop {
+  from { opacity:0; transform:translateX(-50%) scale(0.2) rotate(-25deg); }
+  to   { opacity:1; transform:translateX(-50%) scale(1) rotate(0deg); }
+}
+
+/* ══════════════════════════════════════════
+   RESPONSIVE
+   ══════════════════════════════════════════ */
+@media (max-width: 860px) {
+  .grm-spread {
+    width: 98vw; height: 88vh;
+    flex-direction: column;
+    border-radius: 4px 4px 13px 13px;
+  }
+  .grm-page-left {
+    border-radius: 4px 4px 0 0; flex: 0 0 auto; min-height: 200px;
+    box-shadow: inset 0 -18px 36px rgba(0,0,0,0.2);
+    padding: 18px var(--pad);
+  }
+  .grm-page-right {
+    border-radius: 0 0 13px 13px; flex: 1;
+    box-shadow: inset 0 18px 36px rgba(0,0,0,0.2);
+    padding-top: 16px;
+  }
+  .grm-gutter {
+    width: 100%; height: 22px;
+    background: linear-gradient(to bottom,
+      rgba(0,0,0,0.38) 0%, rgba(35,18,5,0.25) 40%, rgba(35,18,5,0.25) 60%, rgba(0,0,0,0.38) 100%
+    );
+  }
+  .grm-gutter::before {
+    top:50%; bottom:auto; left:0; right:0; width:100%; height:1px;
+    background: repeating-linear-gradient(to right,
+      rgba(85,50,12,0.55) 0px, rgba(85,50,12,0.55) 7px,
+      transparent 7px, transparent 13px
+    );
+    transform: none;
+  }
+  .grm-logo-frame { width: 82px; height: 82px; }
+  .grm-lp-topline { margin-bottom: 10px; }
+  .grm-company { font-size: 0.72rem; }
+  .grm-role { font-size: 0.82rem; }
+  .grm-item { font-size: 0.72rem; }
+  .grm-cover { width: 230px; height: 345px; }
+  .grm-seal-btn { bottom: -22px; width: 42px; height: 42px; }
+}
+</style>
+</head>
+
+<body style="background:#030106;display:flex;align-items:center;justify-content:center;min-height:100vh;margin:0;flex-direction:column;gap:12px;">
+
+<!-- ── Demo triggers (remove from main site) ── -->
+<p style="font-family:Cinzel,serif;color:rgba(219,178,94,0.5);font-size:0.72rem;letter-spacing:0.18em;text-transform:uppercase;margin:0 0 4px;">Click a grimoire to open</p>
+<div style="display:flex;gap:12px;flex-wrap:wrap;justify-content:center;">
+  <button class="_demo-btn" onclick="openGrimoireModal({
+    company:'Expedia', role:'SDE Intern',
+    location:'Seattle, WA', period:'June 2025 – August 2025',
+    image:'https://upload.wikimedia.org/wikipedia/commons/thumb/5/52/Expedia_2012_logo.svg/320px-Expedia_2012_logo.svg.png',
+    details:[
+      'Optimized large-scale search infrastructure in Kotlin + Spring Boot, reducing end-to-end latency by approximately 99%',
+      'Developed AI-powered query handling for flexible search inputs, integrating multiple backend services with dynamic UI components',
+      'Built monitoring and validation pipelines with SQL and observability tools ensuring sub-second reliability'
+    ],
+    links:[{text:'expedia.com', url:'https://expedia.com', icon:'🌐'}]
+  })">📖 Expedia</button>
+
+  <button class="_demo-btn" onclick="openGrimoireModal({
+    company:'NBER', role:'Software Engineering Intern',
+    location:'Cambridge, MA', period:'Jan 2025 – June 2025',
+    image:'https://www.nber.org/img/NBER_logo_short.gif',
+    details:[
+      'Modernized subscriber analytics dashboard with React, enabling real-time insights across 500k+ data points',
+      'Built automated whitespace analyzer with Playwright & Gemini API, cutting design QA by 20 hours per sprint',
+      'Engineered ETL pipelines and GA4 dashboards, reducing report prep time by 60%'
+    ]
+  })">📖 NBER</button>
+
+  <button class="_demo-btn" onclick="openGrimoireModal({
+    name:'Bronify', role:'Creator',
+    period:'March 2025',
+    image:'https://placehold.co/130x130/120010/dbb25e?text=B',
+    details:[
+      '7.8M+ page views in 48 hours with 75,000 peak concurrent users and 1M+ video plays',
+      'Engineered fullstack with Next.js, React, Tailwind, and Cloudflare R2',
+      'Sparked viral trend with 37.5M+ TikTok hashtag views; earned recognition from LeBron James'
+    ],
+    links:[
+      {text:'Visit Bronify', url:'https://bronifytest.vercel.app', icon:'🌐'},
+      {text:'GitHub', url:'https://github.com/aminester/bronify', icon:'💻'}
+    ]
+  })">📖 Bronify</button>
+</div>
+<style>
+._demo-btn{padding:10px 20px;background:rgba(196,18,52,0.15);color:rgba(219,178,94,0.85);border:1px solid rgba(196,18,52,0.35);border-radius:3px;cursor:pointer;font-family:Cinzel,serif;font-size:0.8rem;letter-spacing:0.1em;transition:all 0.2s;}
+._demo-btn:hover{background:rgba(196,18,52,0.25);border-color:rgba(196,18,52,0.6);color:#dbb25e;}
+</style>
+
+<!-- ════════════════════════════════════════════
+     GRIMOIRE MODAL — paste this HTML block into
+     your index.html just before </body>
+     ════════════════════════════════════════════ -->
+<div class="grm-overlay" id="grm-overlay">
+  <div class="grm-scene">
+
+    <!-- CLOSED COVER -->
+    <div class="grm-cover" id="grm-cover">
+      <div class="grm-cover-face">
+        <div class="grm-cover-border"></div>
+        <!-- 5-leaf clover on cover -->
+        <div class="grm-cover-clover">
+          <svg viewBox="0 0 90 90" width="90" height="90" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <radialGradient id="cc-glow" cx="50%" cy="50%" r="50%">
+                <stop offset="0%" stop-color="rgba(196,18,52,0.25)"/>
+                <stop offset="100%" stop-color="rgba(196,18,52,0)"/>
+              </radialGradient>
+            </defs>
+            <circle cx="45" cy="45" r="42" fill="url(#cc-glow)"/>
+            <g transform="translate(45,45)">
+              <ellipse cx="0" cy="-20" rx="12.5" ry="18" fill="#180410" stroke="rgba(196,18,52,0.35)" stroke-width="0.7"/>
+              <ellipse cx="0" cy="-20" rx="12.5" ry="18" fill="#180410" stroke="rgba(196,18,52,0.35)" stroke-width="0.7" transform="rotate(72)"/>
+              <ellipse cx="0" cy="-20" rx="12.5" ry="18" fill="#180410" stroke="rgba(196,18,52,0.35)" stroke-width="0.7" transform="rotate(144)"/>
+              <ellipse cx="0" cy="-20" rx="12.5" ry="18" fill="#180410" stroke="rgba(196,18,52,0.35)" stroke-width="0.7" transform="rotate(216)"/>
+              <ellipse cx="0" cy="-20" rx="12.5" ry="18" fill="#180410" stroke="rgba(196,18,52,0.35)" stroke-width="0.7" transform="rotate(288)"/>
+              <line x1="0" y1="-2" x2="0" y2="-36" stroke="rgba(196,18,52,0.22)" stroke-width="0.8"/>
+              <line x1="0" y1="-2" x2="0" y2="-36" stroke="rgba(196,18,52,0.22)" stroke-width="0.8" transform="rotate(72)"/>
+              <line x1="0" y1="-2" x2="0" y2="-36" stroke="rgba(196,18,52,0.22)" stroke-width="0.8" transform="rotate(144)"/>
+              <line x1="0" y1="-2" x2="0" y2="-36" stroke="rgba(196,18,52,0.22)" stroke-width="0.8" transform="rotate(216)"/>
+              <line x1="0" y1="-2" x2="0" y2="-36" stroke="rgba(196,18,52,0.22)" stroke-width="0.8" transform="rotate(288)"/>
+              <circle cx="0" cy="0" r="7" fill="#100208" stroke="rgba(196,18,52,0.28)" stroke-width="0.7"/>
+              <circle cx="0" cy="0" r="2.5" fill="rgba(196,18,52,0.18)"/>
+            </g>
+          </svg>
+        </div>
+        <div class="grm-cover-label" id="grm-cover-label">—</div>
+        <div class="grm-cover-bottom">— ᚠ ᚢ ᚦ —</div>
+      </div>
+    </div>
+
+    <!-- TWO-PAGE SPREAD -->
+    <div class="grm-spread" id="grm-spread">
+
+      <!-- ── LEFT PAGE ── -->
+      <div class="grm-page grm-page-left" id="grm-page-left">
+        <div class="grm-corners">
+          <div class="grm-c tl"></div><div class="grm-c tr"></div>
+          <div class="grm-c bl"></div><div class="grm-c br"></div>
+        </div>
+        <div class="grm-frame"></div>
+
+        <div class="grm-lp-topline" id="grm-topline"></div>
+
+        <div class="grm-logo-frame" id="grm-logo-frame">
+          <img class="grm-logo-img" id="grm-logo-img" src="" alt="">
+        </div>
+
+        <div class="grm-company" id="grm-company"></div>
+        <div class="grm-meta" id="grm-meta"></div>
+
+        <div class="grm-divider" id="grm-divider">
+          <div class="grm-div-line"></div>
+          <svg viewBox="0 0 28 28" width="18" height="18" style="opacity:0.4;flex-shrink:0;">
+            <g transform="translate(14,14)">
+              <ellipse cx="0" cy="-6" rx="3.5" ry="5.5" fill="rgba(90,50,10,0.7)"/>
+              <ellipse cx="0" cy="-6" rx="3.5" ry="5.5" fill="rgba(90,50,10,0.7)" transform="rotate(72)"/>
+              <ellipse cx="0" cy="-6" rx="3.5" ry="5.5" fill="rgba(90,50,10,0.7)" transform="rotate(144)"/>
+              <ellipse cx="0" cy="-6" rx="3.5" ry="5.5" fill="rgba(90,50,10,0.7)" transform="rotate(216)"/>
+              <ellipse cx="0" cy="-6" rx="3.5" ry="5.5" fill="rgba(90,50,10,0.7)" transform="rotate(288)"/>
+              <circle cx="0" cy="0" r="2.5" fill="rgba(70,35,8,0.8)"/>
+            </g>
+          </svg>
+          <div class="grm-div-line"></div>
+        </div>
+
+        <div class="grm-pnum">I</div>
+      </div>
+
+      <!-- ── GUTTER ── -->
+      <div class="grm-gutter"></div>
+
+      <!-- ── RIGHT PAGE ── -->
+      <div class="grm-page grm-page-right">
+        <div class="grm-corners">
+          <div class="grm-c tl"></div><div class="grm-c tr"></div>
+          <div class="grm-c bl"></div><div class="grm-c br"></div>
+        </div>
+        <div class="grm-frame"></div>
+
+        <div class="grm-role" id="grm-role"></div>
+
+        <div class="grm-rolediv" id="grm-rolediv">
+          <div class="grm-rolediv-line"></div>
+          <span class="grm-rolediv-rune">ᛖ ᛚ ᛊ ᛁ</span>
+          <div class="grm-rolediv-line"></div>
+        </div>
+
+        <ul class="grm-list" id="grm-list"></ul>
+
+        <div class="grm-links" id="grm-links"></div>
+
+        <div class="grm-pnum">II</div>
+      </div>
+    </div>
+
+    <!-- WAX SEAL CLOSE -->
+    <button class="grm-seal-btn" id="grm-seal-btn" onclick="closeGrimoireModal()"></button>
+
+  </div>
+</div>
+
+
+<script>
+/* ════════════════════════════════════════════
+   GRIMOIRE MODAL — JS
+   Paste this <script> block into your index.html
+   ════════════════════════════════════════════ */
+(function () {
+  let grmTimers = [];
+  let grmIsOpen = false;
+
+  function _t(fn, ms) { const id = setTimeout(fn, ms); grmTimers.push(id); }
+
+  /* ── Public API ── */
+  window.openGrimoireModal = function (item) {
+    if (grmIsOpen) { closeGrimoireModal(true); }
+    grmIsOpen = true;
+
+    // Clear pending timers
+    grmTimers.forEach(clearTimeout); grmTimers = [];
+
+    const overlay  = document.getElementById('grm-overlay');
+    const cover    = document.getElementById('grm-cover');
+    const spread   = document.getElementById('grm-spread');
+    const seal     = document.getElementById('grm-seal-btn');
+
+    // ── Populate ──────────────────────────────────────────────
+    const label   = item.company || item.name || '';
+    document.getElementById('grm-cover-label').textContent = label.toUpperCase();
+    document.getElementById('grm-company').textContent     = label.toUpperCase();
+    document.getElementById('grm-meta').textContent        =
+      [item.location, item.period].filter(Boolean).join(' · ');
+    document.getElementById('grm-role').textContent        = item.role || item.name || '';
+
+    const logoImg   = document.getElementById('grm-logo-img');
+    const logoFrame = document.getElementById('grm-logo-frame');
+    logoImg.src = item.image || '';
+    logoImg.alt = label;
+
+    const list = document.getElementById('grm-list');
+    list.innerHTML = '';
+    (item.details || []).forEach(d => {
+      const li = document.createElement('li');
+      li.className = 'grm-item';
+      li.textContent = d;
+      list.appendChild(li);
+    });
+
+    const linksEl = document.getElementById('grm-links');
+    linksEl.innerHTML = '';
+    (item.links || []).forEach(lk => {
+      const a = document.createElement('a');
+      a.href = lk.url; a.target = '_blank';
+      a.className = 'grm-scroll';
+      a.innerHTML = `<span style="margin:0 3px">${lk.icon||''} ${lk.text}</span>`;
+      linksEl.appendChild(a);
+    });
+
+    // ── Reset ─────────────────────────────────────────────────
+    logoFrame.style.opacity   = '0';
+    logoFrame.className       = 'grm-logo-frame';
+
+    const resetEl = (id, cls) => {
+      const el = document.getElementById(id);
+      el.className = cls; el.style.opacity = '0';
+      return el;
+    };
+    const compEl    = resetEl('grm-company',  'grm-company');
+    const metaEl    = resetEl('grm-meta',     'grm-meta');
+    const divEl     = resetEl('grm-divider',  'grm-divider');
+    const topEl     = resetEl('grm-topline',  'grm-lp-topline');
+    const roleEl    = resetEl('grm-role',     'grm-role');
+    const roledivEl = resetEl('grm-rolediv',  'grm-rolediv');
+    linksEl.className = 'grm-links'; linksEl.style.opacity = '0';
+
+    cover.className  = 'grm-cover';
+    spread.className = 'grm-spread';
+    seal.className   = 'grm-seal-btn';
+
+    document.body.style.overflow = 'hidden';
+
+    // ── Animation sequence ────────────────────────────────────
+    // t=0ms   : overlay fades in
+    overlay.classList.add('grm-on');
+
+    // t=60ms  : closed cover materialises
+    _t(() => cover.classList.add('grm-cover-in'), 60);
+
+    // t=380ms : cover starts to fold open
+    _t(() => cover.classList.add('grm-cover-fold'), 380);
+
+    // t=720ms : spread rises from behind the folding cover
+    _t(() => {
+      spread.classList.add('grm-spread-rise');
+      _t(() => spread.classList.add('grm-spread-steady'), 560);
+    }, 720);
+
+    // t=940ms : logo BRANDS in + impact shake
+    _t(() => {
+      logoFrame.style.opacity = '1';
+      logoFrame.classList.add('brand');
+      // Flash at moment of impact (~12% into 1.15s anim = ~138ms)
+      _t(() => {
+        _grmFlash();
+        spread.classList.add('grm-impact');
+        _t(() => spread.classList.remove('grm-impact'), 400);
+      }, 130);
+    }, 940);
+
+    // t=1060ms : top decorative line
+    _t(() => topEl.classList.add('appear'), 1060);
+    // t=1130ms : company name
+    _t(() => { compEl.style.opacity=''; compEl.classList.add('appear'); }, 1130);
+    // t=1220ms : meta
+    _t(() => { metaEl.style.opacity=''; metaEl.classList.add('appear'); }, 1220);
+    // t=1310ms : ornament divider
+    _t(() => { divEl.style.opacity=''; divEl.classList.add('appear'); }, 1310);
+
+    // t=1080ms : role title
+    _t(() => { roleEl.style.opacity=''; roleEl.classList.add('appear'); }, 1080);
+    // t=1165ms : role divider
+    _t(() => { roledivEl.style.opacity=''; roledivEl.classList.add('appear'); }, 1165);
+
+    // t=1340ms+ : bullet points written in one by one
+    const items = list.querySelectorAll('.grm-item');
+    const WRITE_INTERVAL = 290;
+    items.forEach((li, i) => {
+      _t(() => {
+        li.classList.add('writing');
+        _t(() => { li.classList.remove('writing'); li.classList.add('written'); }, 660);
+      }, 1340 + i * WRITE_INTERVAL);
+    });
+
+    // Links appear after all bullets
+    const linksDelay = 1340 + items.length * WRITE_INTERVAL + 160;
+    _t(() => { linksEl.style.opacity=''; linksEl.classList.add('appear'); }, linksDelay);
+
+    // Wax seal close button appears last
+    _t(() => seal.classList.add('grm-seal-in'), linksDelay + 320);
+  };
+
+  window.closeGrimoireModal = function (immediate = false) {
+    grmIsOpen = false;
+    grmTimers.forEach(clearTimeout); grmTimers = [];
+
+    const overlay = document.getElementById('grm-overlay');
+    const cover   = document.getElementById('grm-cover');
+    const spread  = document.getElementById('grm-spread');
+    const seal    = document.getElementById('grm-seal-btn');
+
+    if (immediate) {
+      overlay.classList.remove('grm-on');
+      cover.className  = 'grm-cover';
+      spread.className = 'grm-spread';
+      seal.className   = 'grm-seal-btn';
+      document.body.style.overflow = '';
+      return;
+    }
+
+    const orig = overlay.style.transition;
+    overlay.style.transition = 'opacity 0.3s ease';
+    overlay.classList.remove('grm-on');
+
+    setTimeout(() => {
+      cover.className  = 'grm-cover';
+      spread.className = 'grm-spread';
+      seal.className   = 'grm-seal-btn';
+      overlay.style.transition = orig;
+      document.body.style.overflow = '';
+    }, 320);
+  };
+
+  /* ── Red impact flash ── */
+  function _grmFlash() {
+    const f = document.createElement('div');
+    f.style.cssText =
+      'position:fixed;inset:0;background:rgba(196,18,52,0.32);z-index:15000;pointer-events:none;';
+    document.body.appendChild(f);
+    f.animate([{opacity:1},{opacity:0}], {duration:220, easing:'ease-out'})
+     .addEventListener('finish', () => f.remove());
+  }
+
+  /* ── Close on overlay click ── */
+  document.addEventListener('DOMContentLoaded', () => {
+    const ov = document.getElementById('grm-overlay');
+    if (!ov) return;
+    ov.addEventListener('click', e => {
+      if (e.target === ov) closeGrimoireModal();
+    });
+  });
+
+  /* ── ESC key ── */
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape' && grmIsOpen) closeGrimoireModal();
+  });
+})();
+</script>
+</body>
+</html>
